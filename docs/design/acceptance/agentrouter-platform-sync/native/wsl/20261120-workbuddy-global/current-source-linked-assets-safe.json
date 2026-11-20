@@ -1,0 +1,70 @@
+{
+  "requests": [
+    {
+      "name": "client-3",
+      "requestedUrl": "https://download.codebuddy.ai/web/workbuddy/05fd33c3609bc9cf5ae1fc387a142a2ad0fab64e/assets/const-DJsdnJqH.js",
+      "observedAtUtc": "2026-11-20T01:59:30.897638+00:00",
+      "method": "GET",
+      "tlsVerificationDisabled": false,
+      "httpStatus": 200,
+      "finalUrl": "https://download.codebuddy.ai/web/workbuddy/05fd33c3609bc9cf5ae1fc387a142a2ad0fab64e/assets/const-DJsdnJqH.js",
+      "bytesRead": 902,
+      "sha256": "9f902ab7df7b180f7c7e62f380d3840fa60b4ab99bb86a29bcccaef12dc0d8bd",
+      "contentType": "application/javascript",
+      "boundedAtBytes": 3000001,
+      "Content-Length": "902",
+      "ETag": "\"c3140d5eaf55553eef2ba1de2c4fc44a\"",
+      "Last-Modified": "Mon, 09 Nov 2026 06:07:59 GMT"
+    },
+    {
+      "name": "client-22",
+      "requestedUrl": "https://download.codebuddy.ai/web/workbuddy/05fd33c3609bc9cf5ae1fc387a142a2ad0fab64e/assets/main-BRdG_dvT.js",
+      "observedAtUtc": "2026-11-20T01:59:30.897923+00:00",
+      "method": "GET",
+      "tlsVerificationDisabled": false,
+      "httpStatus": 200,
+      "finalUrl": "https://download.codebuddy.ai/web/workbuddy/05fd33c3609bc9cf5ae1fc387a142a2ad0fab64e/assets/main-BRdG_dvT.js",
+      "bytesRead": 131765,
+      "sha256": "3497fc3fdf246bdf6b14fb7a9ab358a652f47aed9e150bf83fb17b517d45672c",
+      "contentType": "application/javascript",
+      "boundedAtBytes": 3000001,
+      "Content-Length": "131765",
+      "ETag": "\"7d9c32e725d9f011b0bf58fba07ea672\"",
+      "Last-Modified": "Mon, 09 Nov 2026 06:59:10 GMT"
+    },
+    {
+      "name": "client-27",
+      "requestedUrl": "https://download.codebuddy.ai/web/workbuddy/05fd33c3609bc9cf5ae1fc387a142a2ad0fab64e/assets/index-BmVazjpd.js",
+      "observedAtUtc": "2026-11-20T01:59:30.898138+00:00",
+      "method": "GET",
+      "tlsVerificationDisabled": false,
+      "httpStatus": 200,
+      "finalUrl": "https://download.codebuddy.ai/web/workbuddy/05fd33c3609bc9cf5ae1fc387a142a2ad0fab64e/assets/index-BmVazjpd.js",
+      "bytesRead": 848,
+      "sha256": "d610cc5cd666ef387947f7c231896c57af80746e67cfd0664b11e7efe507fd3b",
+      "contentType": "application/javascript",
+      "boundedAtBytes": 3000001,
+      "Content-Length": "848",
+      "ETag": "\"9cdf1de98ec512a783a24e531ae14e77\"",
+      "Last-Modified": "Mon, 09 Nov 2026 06:07:59 GMT"
+    },
+    {
+      "name": "client-31",
+      "requestedUrl": "https://download.codebuddy.ai/web/workbuddy/05fd33c3609bc9cf5ae1fc387a142a2ad0fab64e/assets/download-anchors-CH3CoK18.js",
+      "observedAtUtc": "2026-11-20T01:59:30.898348+00:00",
+      "method": "GET",
+      "tlsVerificationDisabled": false,
+      "httpStatus": 200,
+      "finalUrl": "https://download.codebuddy.ai/web/workbuddy/05fd33c3609bc9cf5ae1fc387a142a2ad0fab64e/assets/download-anchors-CH3CoK18.js",
+      "bytesRead": 78,
+      "sha256": "4db0cec2942e83ef794c0ef99a77f4862150cbc2a746c304f5931a2ed6093854",
+      "contentType": "application/javascript",
+      "boundedAtBytes": 3000001,
+      "Content-Length": "78",
+      "ETag": "\"27b56f78dab181a1b9a5e34df4994f45\"",
+      "Last-Modified": "Mon, 09 Nov 2026 06:07:59 GMT"
+    }
+  ],
+  "source": "homepage.public-body",
+  "assetsSelectedFromActualLinks": true
+}

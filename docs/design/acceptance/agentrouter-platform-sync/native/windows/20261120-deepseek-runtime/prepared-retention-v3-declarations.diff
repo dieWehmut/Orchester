@@ -1,0 +1,15 @@
+--- prepared/ds-retention-native-v2.cs
++++ prepared/ds-retention-native-v3.cs
+@@ -32,7 +32,12 @@
+   public string MetadataScope="native file IDs, names, kind, size, creation/mtime, attributes, link reparse bytes/target identity; last-access excluded";
+   public string BudgetBoundary="900s checks between native/filesystem operations; blocking calls require executor deadline";
+  }
++ public sealed class NodeProof {
++  public string Key,Kind,PhysicalPath,MetadataSha256,ReparseSha256,TargetPathSha256,ContentSha256,JsonBase64;
++  public bool Directory; public long Size;
++ }
+  public sealed class SnapshotResult {
++  public string OriginalPhysicalRoot; public List<NodeProof> Nodes=new List<NodeProof>();
+   public RootProof NativeProof=new RootProof(); public TreeProof Tree=new TreeProof(); public bool BaselineUsable;
+   public HandleReleaseProof HandleRelease=new HandleReleaseProof();
+   public string Status="not_started"; public string FailureCode; public int NativeErrorCode;

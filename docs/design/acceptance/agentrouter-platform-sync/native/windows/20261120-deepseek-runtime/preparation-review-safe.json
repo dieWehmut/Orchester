@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "reviewedAtUtc": "2026-11-20T02:18:05.922288+00:00",
+  "preparedNativeExecutionPerformed": false,
+  "preparedSources": [
+    {
+      "sourceLabel": "ds-official-runtime-v2.ps1",
+      "bytes": 170785,
+      "sha256": "21e5fa2cc600d1b6e0d82142e1a97701056734d4f7a6aea400cbc0ff2511909d",
+      "matchesOriginalPreparation": true
+    },
+    {
+      "sourceLabel": "ds-data-retention-v2.ps1",
+      "bytes": 34225,
+      "sha256": "62bd839118de4fe4d39b04c7c82ecaec111917681ebc856f5f7659669f1a08f3",
+      "matchesOriginalPreparation": true
+    },
+    {
+      "sourceLabel": "ds-retention-native-v2.cs",
+      "bytes": 20455,
+      "sha256": "7b69020f0d6bdb356697208b23f190e76531bb431e7a17a87b220595e3aeea52",
+      "matchesOriginalPreparation": true
+    },
+    {
+      "sourceLabel": "ds-retention-json-v2.cs",
+      "bytes": 2727,
+      "sha256": "dd2324f1c9fc5f30dcf39d6519ba248805d79b1ede429b2c0b575f6e5119ab16",
+      "matchesOriginalPreparation": true
+    }
+  ],
+  "originalEmbeddedHomeAndQuitHashesUnchanged": {
+    "homeBase64": "6bb58303bfb8f79b9aa7d9437fe4f6719363723cbc432ba9e75d15c091d91a95",
+    "quitBase64": "9b6d0f04e856d76ab3f03ee3eedb208ce5052aea2b8c83bb977dc620155eb33b",
+    "runtimeNative": "6e4686cc67fcf108a04dfe3b48928ecfb1189c030d01ef9c554ad4a26e72e839"
+  },
+  "nativeAstParseErrors": 0,
+  "nativeAstSources": 4,
+  "nativeCSharpRuntimeCompiled": true,
+  "nativeCSharpJsonComparatorCompiled": true,
+  "nativeCSharpRetentionV2Compiled": false,
+  "retentionV2CompileRootCause": "SnapshotResult.OriginalPhysicalRoot and SnapshotResult.Nodes are referenced but not declared; NodeProof is also referenced but absent.",
+  "preparedSuccessorCorrection": "Add NodeProof with the referenced fields and add OriginalPhysicalRoot and List<NodeProof> Nodes to SnapshotResult; update the guard embedding and outer guard hash in private successor copies.",
+  "originalV2SourcesModified": false,
+  "preparedSuccessorNativeCompileVerified": false,
+  "preparedSuccessorRuntimeExecuted": false,
+  "successorNativeCopyFailure": {
+    "errno": 5,
+    "kind": "WSL Windows-volume I/O error",
+    "nativeAppFailureInferred": false
+  },
+  "sourceReviewBoundaries": [
+    "Prepared runtime checks only existing official image processes, so it does not itself exclude the four original DataElement processes observed by the separate current probe.",
+    "Prepared finally block retains owned app handles until natural terminal without a deadline if readiness or normal quit fails; it cannot guarantee a bounded short launch.",
+    "Product main window Close hides to background; the prepared caption Exit route or pristine welcome Close is needed for normal quit.",
+    "Product quit asks confirmation for active/scheduled/unknown work; no confirmation approval is authorized or performed.",
+    "Historical shared-home digest remains historical; no fresh current snapshot or after-startup retention proof was collected while the original application remains active."
+  ],
+  "appLaunches": 0,
+  "processSignals": 0,
+  "authActions": 0,
+  "modelCalls": 0
+}

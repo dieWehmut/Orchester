@@ -1,0 +1,56 @@
+{
+  "observedAtUtc": "2026-11-16T10:37:27.737566+00:00",
+  "scope": "Current source-supported global docs and separately domestic historical package table; no all-version absence claim",
+  "documentFacts": [
+    {
+      "name": "global-changelog-page",
+      "sourceHtmlBytes": 31651,
+      "sourceHtmlSha256": "5afe7cbcff5399dfac341e3f8f8801e457918d3e9d6f7a891f6266b2a0bdaf1b",
+      "renderedTextBytes": 6338,
+      "renderedTextSha256": "baa2c1f89b605d35e913db3a736d26fe23f16df854ffc6c006e2c21a45163583",
+      "linuxMentionCount": 1,
+      "allPackageLinksCount": 0,
+      "linuxPackageLinks": [],
+      "internationalLinuxPackageLinks": [],
+      "domesticHistoryNotSubstituted": true
+    },
+    {
+      "name": "global-quickstart-page",
+      "sourceHtmlBytes": 31357,
+      "sourceHtmlSha256": "a53263da847bfdd498b499dc84a28e5fcf82d88e673fd24df8e1f24a1f366d6d",
+      "renderedTextBytes": 4756,
+      "renderedTextSha256": "ce4fd77ad2099b85dec154ffd0f40f3baeaa53bcb5d95565aea00158db0cc457",
+      "linuxMentionCount": 0,
+      "allPackageLinksCount": 0,
+      "linuxPackageLinks": [],
+      "internationalLinuxPackageLinks": [],
+      "domesticHistoryNotSubstituted": true
+    },
+    {
+      "name": "global-faq-page",
+      "sourceHtmlBytes": 65438,
+      "sourceHtmlSha256": "71f070050ed867bc4d87ad8e6becbe2ed058dde283b2ede7afa5082d8f073ee9",
+      "renderedTextBytes": 19385,
+      "renderedTextSha256": "6dba86fc0c550b902e2435833a97148ebf1a769e31e2a6e95a8eaa26e59799dd",
+      "linuxMentionCount": 0,
+      "allPackageLinksCount": 0,
+      "linuxPackageLinks": [],
+      "internationalLinuxPackageLinks": [],
+      "domesticHistoryNotSubstituted": true
+    },
+    {
+      "name": "domestic-history-page",
+      "sourceHtmlBytes": 116246,
+      "sourceHtmlSha256": "f6f647cb970cb8831710c250650e6dc8999afe0800b7db535509d048fc107df6",
+      "renderedTextBytes": 11527,
+      "renderedTextSha256": "ddba0e38d43d5359da3493c63b946c11edf6e16549c8abbd8d83f92ef893f1dc",
+      "linuxMentionCount": 0,
+      "allPackageLinksCount": 261,
+      "linuxPackageLinks": [],
+      "internationalLinuxPackageLinks": [],
+      "domesticHistoryNotSubstituted": true
+    }
+  ],
+  "nativeOrInstallationActions": 0,
+  "privateStateRead": false
+}

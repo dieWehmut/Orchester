@@ -1,0 +1,46 @@
+{
+  "source": "docs-home.public-body",
+  "requests": [
+    {
+      "name": "current-docs-metadata",
+      "requestedUrl": "https://download.codebuddy.ai/web/docs/432ddbdc5163b609ba369b67c6df80135f705555/docs/static/chunks/metadata.871a46c3.js",
+      "observedAtUtc": "2026-11-20T02:01:47.380000+00:00",
+      "method": "GET",
+      "tlsVerificationDisabled": false,
+      "errorType": "URLError",
+      "error": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1082)>"
+    },
+    {
+      "name": "current-docs-app",
+      "requestedUrl": "https://download.codebuddy.ai/web/docs/432ddbdc5163b609ba369b67c6df80135f705555/docs/static/app.Cl716uuQ.js",
+      "observedAtUtc": "2026-11-20T02:01:47.380436+00:00",
+      "method": "GET",
+      "tlsVerificationDisabled": false,
+      "httpStatus": 200,
+      "finalUrl": "https://download.codebuddy.ai/web/docs/432ddbdc5163b609ba369b67c6df80135f705555/docs/static/app.Cl716uuQ.js",
+      "bytesRead": 1388,
+      "sha256": "a91b29a94293dcef4ca7e458c42a6d2b96ea136ada5d2bcc977add59646ae2e0",
+      "contentType": "application/javascript",
+      "boundedAtBytes": 3000001,
+      "Content-Length": "1388",
+      "ETag": "\"6db39a087773e2d3485c33b239c8f54a\"",
+      "Last-Modified": "Thu, 19 Nov 2026 11:24:19 GMT"
+    },
+    {
+      "name": "current-docs-sidebar",
+      "requestedUrl": "https://download.codebuddy.ai/web/docs/432ddbdc5163b609ba369b67c6df80135f705555/docs/static/chunks/sidebar.DuBPZQsN.js",
+      "observedAtUtc": "2026-11-20T02:01:47.380803+00:00",
+      "method": "GET",
+      "tlsVerificationDisabled": false,
+      "httpStatus": 200,
+      "finalUrl": "https://download.codebuddy.ai/web/docs/432ddbdc5163b609ba369b67c6df80135f705555/docs/static/chunks/sidebar.DuBPZQsN.js",
+      "bytesRead": 106488,
+      "sha256": "f9b2a1d6ea7672f770756643f229b1fd54ef0a45aaa3a9a5a20c21ae6ace28eb",
+      "contentType": "application/javascript",
+      "boundedAtBytes": 3000001,
+      "Content-Length": "106488",
+      "ETag": "\"2e642f391f2d382c2fcab8878151d7a6\"",
+      "Last-Modified": "Thu, 19 Nov 2026 11:24:31 GMT"
+    }
+  ]
+}

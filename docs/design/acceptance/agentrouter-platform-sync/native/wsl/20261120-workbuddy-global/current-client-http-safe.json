@@ -1,0 +1,54 @@
+{
+  "requests": [
+    {
+      "name": "current-client-download-ui",
+      "requestedUrl": "https://download.codebuddy.ai/web/workbuddy/05fd33c3609bc9cf5ae1fc387a142a2ad0fab64e/assets/index-DbGPyZE0.js",
+      "observedAtUtc": "2026-11-20T02:00:52.080380+00:00",
+      "method": "GET",
+      "tlsVerificationDisabled": false,
+      "httpStatus": 200,
+      "finalUrl": "https://download.codebuddy.ai/web/workbuddy/05fd33c3609bc9cf5ae1fc387a142a2ad0fab64e/assets/index-DbGPyZE0.js",
+      "bytesRead": 34026,
+      "sha256": "6f2d9e1d437ec6e33b956ccd5cd064ca443dbd2ed64d172c951a7515b5f73636",
+      "contentType": "application/javascript",
+      "boundedAtBytes": 3000001,
+      "Content-Length": "34026",
+      "ETag": "\"52cc3a6a8f0c9cecfe2210015760d122\"",
+      "Last-Modified": "Mon, 09 Nov 2026 06:59:10 GMT"
+    },
+    {
+      "name": "current-client-update-api",
+      "requestedUrl": "https://download.codebuddy.ai/web/workbuddy/05fd33c3609bc9cf5ae1fc387a142a2ad0fab64e/assets/invite-BP67xNKo.js",
+      "observedAtUtc": "2026-11-20T02:00:52.080760+00:00",
+      "method": "GET",
+      "tlsVerificationDisabled": false,
+      "httpStatus": 200,
+      "finalUrl": "https://download.codebuddy.ai/web/workbuddy/05fd33c3609bc9cf5ae1fc387a142a2ad0fab64e/assets/invite-BP67xNKo.js",
+      "bytesRead": 14769,
+      "sha256": "5968800cf7f19124e8428683fa70ce4dda5f21beb66ffe7732fe0aff1f6efa66",
+      "contentType": "application/javascript",
+      "boundedAtBytes": 3000001,
+      "Content-Length": "14769",
+      "ETag": "\"783547ca03a47387d14d15d4c413845f\"",
+      "Last-Modified": "Mon, 09 Nov 2026 06:07:59 GMT"
+    },
+    {
+      "name": "current-client-platform-list",
+      "requestedUrl": "https://download.codebuddy.ai/web/workbuddy/05fd33c3609bc9cf5ae1fc387a142a2ad0fab64e/assets/index-CQPC66NS.js",
+      "observedAtUtc": "2026-11-20T02:00:52.081039+00:00",
+      "method": "GET",
+      "tlsVerificationDisabled": false,
+      "httpStatus": 200,
+      "finalUrl": "https://download.codebuddy.ai/web/workbuddy/05fd33c3609bc9cf5ae1fc387a142a2ad0fab64e/assets/index-CQPC66NS.js",
+      "bytesRead": 43963,
+      "sha256": "e73890ee007f851f59e4f41a85fb1e23629279a83697fd65b3ab6c1bc77b261d",
+      "contentType": "application/javascript",
+      "boundedAtBytes": 3000001,
+      "Content-Length": "43963",
+      "ETag": "\"a2a9f0b7547226693aeb383dceb6bc29\"",
+      "Last-Modified": "Mon, 09 Nov 2026 06:07:59 GMT"
+    }
+  ],
+  "actualHomepageLinksOnly": true,
+  "clientExecuted": false
+}

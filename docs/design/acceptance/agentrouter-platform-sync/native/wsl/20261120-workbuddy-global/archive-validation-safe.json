@@ -1,0 +1,13 @@
+{
+  "observedAtUtc": "2026-11-20T02:13:33.155298+00:00",
+  "jsonDocumentsParsedBeforeManifest": 24,
+  "sixSourceSupportedFeedStatusesVerified": true,
+  "sixUniqueExactFeedReturnedPayload404StatusesVerified": true,
+  "currentDocsMetadataHistoryBoundaryVerified": true,
+  "publicHomepageAndThreeDownloadClientSourceBytesComparedWith20261116": true,
+  "tenHistoricalReceiptHashesVerified": true,
+  "nativeDomesticExecutableHashVerified": true,
+  "globalInstallAndProfileClaimsRemainFalse": true,
+  "privateStateRead": false,
+  "allChecksPassed": true
+}

@@ -1,0 +1,23 @@
+{
+  "observedAtUtc": "2026-11-16T10:37:54.901191+00:00",
+  "url": "https://www.workbuddy.ai/v2/update?platform=workbuddy-linux-x64-deb&version=5.2.7",
+  "knownHistoricalVersionSource": "https://www.workbuddy.ai/docs/workbuddy/Changelog lists5.2.7",
+  "sourceSupportsVersionAsCurrentClientVersionNotArchiveSelector": true,
+  "curlExit": 0,
+  "httpStatus": 200,
+  "bytes": 267,
+  "sha256": "466b3060f0c4113fdbfea6fc5f32e7613e2e0741849927aa19033d56b58635d1",
+  "publicResponse": {
+    "version": "5.5.2.37849279",
+    "url": "https://download.codebuddy.ai/workbuddy/saas/linux-x64-deb/WorkBuddy-linux-x64-deb-5.5.2.37849279-910352f0.deb",
+    "productVersion": "5.5.2.37849279",
+    "sha256hash": "",
+    "timestamp": 1788572479,
+    "hash": "",
+    "name": "",
+    "supportsFastUpdate": false
+  },
+  "error": "",
+  "nativeRunsOrInstallations": 0,
+  "privateStateRead": false
+}

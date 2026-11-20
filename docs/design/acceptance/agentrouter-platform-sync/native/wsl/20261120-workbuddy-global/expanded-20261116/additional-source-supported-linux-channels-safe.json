@@ -1,0 +1,64 @@
+{
+  "observedAtUtc": "2026-11-16T10:38:37.014823+00:00",
+  "scope": "Additional exact platform identifiers derived from installed international public Linux update implementation; AppImage enterprise-only route is separate from public SaaS acceptance until actual bundle identity proves it",
+  "sourceEntry": "main/appimage-self-update.js",
+  "sourceSha256": "9457413ddcc7c48f5b719beb30c0c8306d0f578def88535508b12ee93e76b6b7",
+  "requests": [
+    {
+      "platform": "workbuddy-linux-x64-appimage",
+      "url": "https://www.workbuddy.ai/v2/update?platform=workbuddy-linux-x64-appimage&version=5.2.7",
+      "curlExit": 0,
+      "httpStatus": 400,
+      "bytes": 157,
+      "sha256": "178fc260d69b6fc2ab55c2d90e352a495f6cf0617db333c2790663defb75e2cf",
+      "publicResponse": {
+        "code": 10001,
+        "msg": "10001:no upgrade config found for clientType=workbuddy, platform=linux-x64-appimage",
+        "requestId": "6dddc18f-933d-4ddc-b14c-0e23e8710b14"
+      },
+      "error": ""
+    },
+    {
+      "platform": "workbuddy-linux-uos-x64",
+      "url": "https://www.workbuddy.ai/v2/update?platform=workbuddy-linux-uos-x64&version=5.2.7",
+      "curlExit": 0,
+      "httpStatus": 200,
+      "bytes": 267,
+      "sha256": "4900b327ee1057551951623cc5feb817af93c1543f7b7251b2707534f27ace93",
+      "publicResponse": {
+        "version": "5.5.2.37849279",
+        "url": "https://download.codebuddy.ai/workbuddy/saas/linux-uos-x64/WorkBuddy-linux-uos-x64-5.5.2.37849279-910352f0.deb",
+        "productVersion": "5.5.2.37849279",
+        "sha256hash": "",
+        "timestamp": 1788572479,
+        "hash": "",
+        "name": "",
+        "supportsFastUpdate": false
+      },
+      "error": ""
+    },
+    {
+      "platform": "workbuddy-linux-kylin-x64",
+      "url": "https://www.workbuddy.ai/v2/update?platform=workbuddy-linux-kylin-x64&version=5.2.7",
+      "curlExit": 0,
+      "httpStatus": 200,
+      "bytes": 271,
+      "sha256": "81a3d0e2987d7e3bb6e6c8052531c32ea5e764db7b759770e701abec66003a79",
+      "publicResponse": {
+        "version": "5.5.2.37849279",
+        "url": "https://download.codebuddy.ai/workbuddy/saas/linux-kylin-x64/WorkBuddy-linux-kylin-x64-5.5.2.37849279-910352f0.deb",
+        "productVersion": "5.5.2.37849279",
+        "sha256hash": "",
+        "timestamp": 1788572479,
+        "hash": "",
+        "name": "",
+        "supportsFastUpdate": false
+      },
+      "error": ""
+    }
+  ],
+  "platformNamesGuessed": false,
+  "noAllVersionAbsenceClaim": true,
+  "nativeOrInstallationActions": 0,
+  "privateStateRead": false
+}

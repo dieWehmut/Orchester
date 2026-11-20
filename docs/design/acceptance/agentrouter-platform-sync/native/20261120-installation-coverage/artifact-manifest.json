@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "artifacts": {
+    "current-public-entry-audit-safe.json": {
+      "bytes": 38741,
+      "sha256": "e7fb9cf3a57eacdd29098b097bb7f12fdfd1cd49e4888e205137135ac54e5087"
+    },
+    "audit.py": {
+      "bytes": 6242,
+      "sha256": "7d906dd847984e7d59b664c24940ea6d9e65d58611209af22f74dfa94babe933"
+    },
+    "coverage.md": {
+      "bytes": 6205,
+      "sha256": "3cf5e4a58f944fd824981d46a3d5d0e9aa5fc6ec7bd1b82a9a017dd71fa834b1"
+    }
+  },
+  "validation": "86 selected planned checks; 45 WSL files observed, 41 Windows unavailable; source digests verified; six current WSL bindings match"
+}

@@ -1,0 +1,78 @@
+{
+  "observedAtUtc": "2026-11-16T10:32:39.236871+00:00",
+  "publicExactSourceSupportedFeedVersionParameters": true,
+  "requests": [
+    {
+      "name": "official-docs",
+      "requestedUrl": "https://www.workbuddy.ai/docs/workbuddy/",
+      "curlExit": 0,
+      "httpStatus": 200,
+      "finalUrl": "https://www.workbuddy.ai/docs/workbuddy/",
+      "bytes": 4041,
+      "sha256": "050b1e0bc00f0081c8722380cd243a6c7764e6a46119ab0001e3ad6fb8e1ae61",
+      "error": ""
+    },
+    {
+      "name": "robots",
+      "requestedUrl": "https://www.workbuddy.ai/robots.txt",
+      "curlExit": 0,
+      "httpStatus": 200,
+      "finalUrl": "https://www.workbuddy.ai/robots.txt",
+      "bytes": 8664,
+      "sha256": "609c1089389a3dccef637a59dd4737185179a5cf1b6f6bb6dcd7054c630aa005",
+      "error": ""
+    },
+    {
+      "name": "linux-feed-installed-version",
+      "requestedUrl": "https://www.workbuddy.ai/v2/update?platform=workbuddy-linux-x64-deb&version=5.9.4",
+      "curlExit": 0,
+      "httpStatus": 204,
+      "finalUrl": "https://www.workbuddy.ai/v2/update?platform=workbuddy-linux-x64-deb&version=5.9.4",
+      "bytes": 0,
+      "sha256": null,
+      "error": ""
+    },
+    {
+      "name": "linux-feed-prior-linux-version",
+      "requestedUrl": "https://www.workbuddy.ai/v2/update?platform=workbuddy-linux-x64-deb&version=5.5.2.37849279",
+      "curlExit": 0,
+      "httpStatus": 204,
+      "finalUrl": "https://www.workbuddy.ai/v2/update?platform=workbuddy-linux-x64-deb&version=5.5.2.37849279",
+      "bytes": 0,
+      "sha256": null,
+      "error": ""
+    },
+    {
+      "name": "client-common",
+      "requestedUrl": "https://download.codebuddy.ai/web/workbuddy/05fd33c3609bc9cf5ae1fc387a142a2ad0fab64e/assets/common-CMXEyHEy.js",
+      "curlExit": 0,
+      "httpStatus": 200,
+      "finalUrl": "https://download.codebuddy.ai/web/workbuddy/05fd33c3609bc9cf5ae1fc387a142a2ad0fab64e/assets/common-CMXEyHEy.js",
+      "bytes": 63174,
+      "sha256": "768be4bd223cce3073464b63e2ce68fb2cacdd5b2f01e4cd7c5ab2dfb04033e4",
+      "error": ""
+    },
+    {
+      "name": "client-vendor-utils",
+      "requestedUrl": "https://download.codebuddy.ai/web/workbuddy/05fd33c3609bc9cf5ae1fc387a142a2ad0fab64e/assets/vendor-utils-B4NJYydS.js",
+      "curlExit": 0,
+      "httpStatus": 200,
+      "finalUrl": "https://download.codebuddy.ai/web/workbuddy/05fd33c3609bc9cf5ae1fc387a142a2ad0fab64e/assets/vendor-utils-B4NJYydS.js",
+      "bytes": 207994,
+      "sha256": "b3cc9a6dbabe4c45179f501056ea1f6e65b969e8021496def1a0cbe134b8ed13",
+      "error": ""
+    },
+    {
+      "name": "client-const",
+      "requestedUrl": "https://download.codebuddy.ai/web/workbuddy/05fd33c3609bc9cf5ae1fc387a142a2ad0fab64e/assets/const-DJsdnJqH.js",
+      "curlExit": 0,
+      "httpStatus": 200,
+      "finalUrl": "https://download.codebuddy.ai/web/workbuddy/05fd33c3609bc9cf5ae1fc387a142a2ad0fab64e/assets/const-DJsdnJqH.js",
+      "bytes": 902,
+      "sha256": "9f902ab7df7b180f7c7e62f380d3840fa60b4ab99bb86a29bcccaef12dc0d8bd",
+      "error": ""
+    }
+  ],
+  "installationsOrRuntimeActions": 0,
+  "trustVerificationDisabled": false
+}

@@ -1,0 +1,64 @@
+{
+  "observedAtUtc": "2026-11-20T02:12:38.345134+00:00",
+  "scope": "Current linked public website static source and previously hash-bound official international Windows public app source. Static code was read, not executed. Windows source is channel-discovery evidence only.",
+  "bindings": [
+    {
+      "sourceArtifact": "homepage.public-body",
+      "sourceSha256": "ff62ba37882024c40571f2f9733284fce5620f460f4766023153a533c3ce9e20",
+      "characterOffset": 5525,
+      "excerpt": "\"operatingSystem\": \"Windows, macOS\",\n            \"featureList\": [\n                \"Runs on a folder "
+    },
+    {
+      "sourceArtifact": "current-client-platform-list.public-body",
+      "sourceSha256": "e73890ee007f851f59e4f41a85fb1e23629279a83697fd65b3ab6c1bc77b261d",
+      "characterOffset": 3151,
+      "excerpt": "U=[{key:\"mac\",icon:ce,labelKey:\"homeV2.download.platform.mac\"},{key:\"windows\",icon:Dr,labelKey:\"homeV2.download.platform.windows\",menuLabelKey:\"homeV2.download.menu.windows\"},{key:\"harmonyDesktop\",icon:Ir,labelKey:\"homeV2.download.platform.harmonyDesktop\",domesticOnly:!0},{key:\"linux\",icon:Ar,labelKey:\"homeV2.download.platform.linux\",domesticOnly:!0,appStoreOnly:!0}],Sr=[{key:\"ios\",icon:Er,labelKey:\"homeV2.download.platform.ios\",menuLabelKey:\"hom"
+    },
+    {
+      "sourceArtifact": "current-client-platform-list.public-body",
+      "sourceSha256": "e73890ee007f851f59e4f41a85fb1e23629279a83697fd65b3ab6c1bc77b261d",
+      "characterOffset": 3983,
+      "excerpt": "_s=[{key:\"macArm64\",icon:ce,labelKey:\"home.hero.archArm64\"},{key:\"macX64\",icon:ce,labelKey:\"home.hero.archX64\"},U[1],{key:\"useOnline\",icon:Rr,labelKey:\"homeV2.download.platform.useOnline\",external:!0}],W=12,ye=12,Tr=224,Ur=(n,a,o)=>Math.min(Math"
+    },
+    {
+      "sourceArtifact": "current-client-download-ui.public-body",
+      "sourceSha256": "6f2d9e1d437ec6e33b956ccd5cd064ca443dbd2ed64d172c951a7515b5f73636",
+      "characterOffset": 5061,
+      "excerpt": "Ze=s=>s.filter(t=>!(g&&t.domesticOnly)),ee={macArm64:V.WORK_"
+    },
+    {
+      "sourceArtifact": "current-client-update-api.public-body",
+      "sourceSha256": "5968800cf7f19124e8428683fa70ce4dda5f21beb66ffe7732fe0aff1f6efa66",
+      "characterOffset": 6544,
+      "excerpt": "Te=[{key:\"linux-x64-deb\",platform:\"workbuddy-linux-x64-deb\"},{key:\"linux-x64-rpm\",platform:\"workbuddy-linux-x64-rpm\"},{key:\"linux-arm64-deb\",platform:\"workbuddy-linux-arm64-deb\"},{key:\"linux-arm64-rpm\",platform:\"workbuddy-linux-arm64-rpm\"}],ge={ide:\"/#download-section\",workbuddy:\"/#download-section\"},W={ios:\"https://apps.apple.c"
+    },
+    {
+      "sourceArtifact": "current-client-update-api.public-body",
+      "sourceSha256": "5968800cf7f19124e8428683fa70ce4dda5f21beb66ffe7732fe0aff1f6efa66",
+      "characterOffset": 9466,
+      "excerpt": "const F=e=>{const n=E();return q.get(\"/v2/update\",{params:{platform:e,...n?{channel_id:n}:{}}})},x=new Map,b=new Map;function K(e=\"ide\"){const n=x.get"
+    },
+    {
+      "sourceArtifact": "20261116-public-installed-Windows/main__appimage-self-update.js.public-source",
+      "sourceSha256": "9457413ddcc7c48f5b719beb30c0c8306d0f578def88535508b12ee93e76b6b7",
+      "characterOffset": 1207,
+      "excerpt": "function resolveLinuxUpdateTarget(e,t,n){let r=e===`arm64`?`arm64`:`x64`,i=resolveLinuxDistro(t??readSystemOsRelease()),a=resolveLegacyTarget(i,r);return!n||!isEnterpriseDeploymentType(n.deploymentType)?a:n.appImagePath?.trim()&&n.appImageDirectoryWritable?{destination:`appimage-self-update`,platformAssetId:`${legacyPlatformPrefix(i)}-${r}-appimage`}:{destination:`contact-admin`,platformAssetId:a.platformAssetId}}function isEnterpriseDeploymentType(e){let t=e?.trim().toLowerCase();return t===`cloud-hosted`||t===`self-hosted`}function resolveLinuxDistro(e){let t=readOsReleaseField(e,`ID`),n=readOsReleaseField(e,`NAME`);return t===`uos`||n.includes(`uniontech os`)||/\\buos\\b/.test(n)?`uos`:t===`kylin`?`kylin`:`other`}function resolveLegacyTarget(e,t){return e===`uos`?{destination:`uos-store`,platformAssetId:`linux-uos-${t}`}:e===`kylin`?{destination:`kylin-store`,platformAssetId:`linux-kylin-${t}`}:{destination:`official-website`,platformAssetId:`linux-${t}-deb`}}function legacyPlatformPrefix(e){return e===`uos`?`linux-uos`:e===`kylin`?`linux-kylin`:`linux`}function readOsReleaseField(e,t){let n=`${t}=`;return(e.split(/\\r?\\n/).find(e=>e.startsWith(n))?.slice(n.length).trim()??``).replace(/^(['\"])(.*)\\1$/,`$2`).toLowerCase()}function ",
+      "isActualLinuxPackageProof": false
+    },
+    {
+      "sourceArtifact": "20261116-public-installed-Windows/main__update-service.js.public-source",
+      "sourceSha256": "17c5e3992f4f79cc79b772591fa4397f20e1ca78244a45c9a4d853b7ea9c830c",
+      "characterOffset": 518,
+      "excerpt": "function resolveDownloadCandidates(e){let t=[],n=new Set,push=(e,r)=>{let i=e.trim();n.has(i)||(n.add(i),t.push({url:i,source:r}))};if(e&&Array.isArray(e.downloadUrls))for(let t of e.downloadUrls){if(typeof t==`string`){isSupportedDownloadUrl(t)&&push(t,`unknown`);continue}t&&typeof t==`object`&&isSupportedDownloadUrl(t.url)&&push(t.url,normalizeSource(t.source))}return t.length>0||e&&isSupportedDownloadUrl(e.url)&&push(e.url,`default`),t}function shouldFallbackToNextCandidate(e){return e instanceof Error?e.name!==`AbortError`&&!e.message.toLowerCase().includes(`sha256`):!0}function describeCandidate(e,t,n){return`${t+1}/${n}(${e.source})`}n.f();function decideForceUpgrade(e){if(!e||typeof e!=`object`)return{hi",
+      "isActualLinuxPackageProof": false
+    },
+    {
+      "sourceArtifact": "20261116-public-installed-Windows/main__update-service.js.public-source",
+      "sourceSha256": "17c5e3992f4f79cc79b772591fa4397f20e1ca78244a45c9a4d853b7ea9c830c",
+      "characterOffset": 3817,
+      "excerpt": "buildUpdateFeedUrl(){let e=this.updateBaseUrlProvider?.getUpdateBaseUrl()||`https://copilot.tencent.com`,t=this.getPlatformAssetId(),r=this.version,i=`${e}/v2/update?platform=${resolveUpdateClientTypePrefix(n.C()?.applicationName)}-${t}&version=${r}`,a=this.userInfoProvider?.getUserId();a&&(i+=`&x-user-id=${a}`);let o=this.userInfoProvider?.getEnterpriseId();return o&&(i+=`&x-tenant-id=${o}`),i}getPlatformAssetId(){let e=process.platform,t=process.arch===`arm64`?`arm64`:`x64`",
+      "isActualLinuxPackageProof": false
+    }
+  ],
+  "priorSourceManifest": "expanded-20261116/public-installed-windows-source-bindings-safe.json"
+}

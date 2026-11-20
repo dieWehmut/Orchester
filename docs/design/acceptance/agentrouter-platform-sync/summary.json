@@ -518,6 +518,18 @@
     {
       "scope": "Nov19 correctWindows originalfive GET5/decrypt5/one saved7337GET200; originalXML and fourstoragepairs retained;21products42loadedimages/PTY input-output-exit and ownrelease; sameStudio actual44.193s syncNov16/analysisNov19; historical native4/7339resize kept separately.",
       "proof": "native/android/20261119-original-five-and-studio/summary-safe.json"
+    },
+    {
+      "scope": "Native official DeepSeek installation rechecked0/Valid signature/current-user versionrc1, originalDataElement retained. Four existing original processes prevent shared-home GUI duplication; no login/model requirement inferred.",
+      "proof": "native/windows/20261120-deepseek-runtime/summary-safe.json"
+    },
+    {
+      "scope": "Original21+additional6 product coverage mapped;45 accessibleWSLfiles exist,41Windowsentries unobservable aftermountI/O. WSL Codex package metadata0.171.0 differs prior executed0.167.1; noCodexcommands executed.",
+      "proof": "native/20261120-installation-coverage/current-public-entry-audit-safe.json"
+    },
+    {
+      "scope": "CurrentofficialWorkBuddyGlobal docsbuild432ddbdc516;6source-supported Linuxfeeds200 but all6 exact returnedpackageURLs404;AppImage400. Domestic retained; global Linux installation remains incomplete.",
+      "proof": "native/wsl/20261120-workbuddy-global/current-global-linux-result-safe.json"
     }
   ],
   "completedHistoricalEpochs": [
@@ -553,7 +565,7 @@
   "historicalObservationsAreNotCurrentProcessLiveness": true,
   "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsIncluded": false,
   "historical38Unmodified": true,
-  "updatedAt": "2026-11-20T02:22:50.426646+00:00",
+  "updatedAt": "2026-11-20T02:28:22.742781+00:00",
   "currentCompiledInputUnionCount": 731,
   "currentWindowsCoreGateCount": 16,
   "currentWindowsCoreGatesPassed": true,
@@ -1115,5 +1127,18 @@
   "currentAndroidStudioContinuationProof": "native/android/20261119-original-five-and-studio/requirements-coverage-safe.json",
   "currentAndroidContinuation7337ResizeRerun": false,
   "currentAndroidStudioUnitTaskNoSource": true,
-  "currentAndroidStudioCurrentInstanceSyncMilliseconds": 44193
+  "currentAndroidStudioCurrentInstanceSyncMilliseconds": 44193,
+  "currentInstallationCoverageProof": "native/20261120-installation-coverage/current-public-entry-audit-safe.json",
+  "currentWorkBuddyGlobalLinuxProof": "native/wsl/20261120-workbuddy-global/current-global-linux-result-safe.json",
+  "currentWorkBuddyGlobalLinuxInstalled": false,
+  "currentWorkBuddyGlobalLinuxExactAdvertisedPayloadHttpStatuses": [
+    404,
+    404,
+    404,
+    404,
+    404,
+    404
+  ],
+  "currentWindowsDeepSeekInstallationRecheckProof": "native/windows/20261120-deepseek-runtime/summary-safe.json",
+  "currentWindowsDeepSeekGuiRuntimeIsAdditionalAssurance": true
 }

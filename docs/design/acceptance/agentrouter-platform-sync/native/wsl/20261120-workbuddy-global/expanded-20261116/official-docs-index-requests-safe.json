@@ -1,0 +1,57 @@
+{
+  "observedAtUtc": "2026-11-16T10:33:38.849531+00:00",
+  "requests": [
+    {
+      "name": "root-sitemap",
+      "url": "https://www.workbuddy.ai/sitemap.xml",
+      "curlExit": 0,
+      "httpStatus": 200,
+      "finalUrl": "https://www.workbuddy.ai/sitemap.xml",
+      "bytes": 1491,
+      "sha256": "5201c5056e5d9805b8755b32d6ad98d188b91b897b5b1684ea29b1831dcb419c",
+      "error": ""
+    },
+    {
+      "name": "docs-sitemap",
+      "url": "https://www.workbuddy.ai/docs/sitemap.xml",
+      "curlExit": 0,
+      "httpStatus": 200,
+      "finalUrl": "https://www.workbuddy.ai/docs/sitemap.xml",
+      "bytes": 709,
+      "sha256": "3a2cbd40bb060c42c8af93088fab4c6a3bd29d9cb6ea40d6744ea868ab06880c",
+      "error": ""
+    },
+    {
+      "name": "docs-metadata",
+      "url": "https://download.codebuddy.ai/web/docs/0dac6a52efc8f0ff38fbaadc81a771177042ff33/docs/static/chunks/metadata.e39e7d8e.js",
+      "curlExit": 0,
+      "httpStatus": 200,
+      "finalUrl": "https://download.codebuddy.ai/web/docs/0dac6a52efc8f0ff38fbaadc81a771177042ff33/docs/static/chunks/metadata.e39e7d8e.js",
+      "bytes": 180438,
+      "sha256": "e39e7d8ecc0182ccea5848fbc41aa1d335ee2452ee561eb9941ae58464a6f28c",
+      "error": ""
+    },
+    {
+      "name": "docs-index-lean",
+      "url": "https://download.codebuddy.ai/web/docs/0dac6a52efc8f0ff38fbaadc81a771177042ff33/docs/static/workbuddy_index.md.CNSy468t.lean.js",
+      "curlExit": 0,
+      "httpStatus": 200,
+      "finalUrl": "https://download.codebuddy.ai/web/docs/0dac6a52efc8f0ff38fbaadc81a771177042ff33/docs/static/workbuddy_index.md.CNSy468t.lean.js",
+      "bytes": 862,
+      "sha256": "9a23ef559b91857e9340238f45bed32b99defa210db976eff1ab8d11773d7189",
+      "error": ""
+    },
+    {
+      "name": "docs-sidebar",
+      "url": "https://download.codebuddy.ai/web/docs/0dac6a52efc8f0ff38fbaadc81a771177042ff33/docs/static/chunks/sidebar.B9MHNsns.js",
+      "curlExit": 0,
+      "httpStatus": 200,
+      "finalUrl": "https://download.codebuddy.ai/web/docs/0dac6a52efc8f0ff38fbaadc81a771177042ff33/docs/static/chunks/sidebar.B9MHNsns.js",
+      "bytes": 106388,
+      "sha256": "3c54d20281b6dde845f4c85c9f1fab1bf8c47d2f6f1ef2a82cdfe3ef955b032e",
+      "error": ""
+    }
+  ],
+  "nativeRuns": 0,
+  "privateStateRead": false
+}
