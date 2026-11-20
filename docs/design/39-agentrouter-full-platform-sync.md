@@ -14,6 +14,8 @@
 
 [国际 WorkBuddy Linux 官方渠道续查](acceptance/agentrouter-platform-sync/native/wsl/20261120-workbuddy-global/README.md)仍未取得可安装包。最新官方文档构建为 `432ddbdc516`；6 个来源明确的 Linux 更新渠道均返回 `5.5.2.37849279`，但原样返回的 6 个下载地址全部为 HTTP 404，企业 AppImage 接口为 HTTP 400。国内版程序摘要不变，未将国内版充作国际版；此项原生安装及配置隔离仍未完成，需要可用的官方国际版 Linux 包。
 
+[缓存与分支续审](acceptance/agentrouter-platform-sync/maintenance/20261120-cache-and-branch-continuation/README.md)补存此前 5 个 Linux、8 个 Windows 缓存目录及 4 个本地分支、3 个工作树、2 个远程分支的清理摘要。本次另清理闲置 npm 下载缓存 191,672,408 逻辑字节，实际退出 0，37 项归档检查通过；未重复计入此前 11.44 GB 增量缓存。未合并分支和有改动的工作树保留，Windows I/O 错误不作当前缓存不存在或 C 盘释放量的证明。
+
 ## 此前检查点
 
 本轮扩展范围与此前[38 的桌面/手机交付历史](38-desktop-mobile-final-delivery.md)分别归档，原源码、失败和退出边界保留。本检查点生产源码为 `71def643cb08b208cc79687f79255c504eb14dc6`。此前十三轮检查点已推送并合并到 main `3f01075b3490f6920cd7e42d730fd339456728d9`；其中新增六种 CLI 的 Windows / WSL 共 12 个安装单元及常用命令均通过版本检查，见[追加安装记录](40-additional-agent-installations.md)。执行跨 2026-11-11 至 2026-11-13（Asia/Shanghai），原 receipt UTC 日期和 `20261111` 目录保持原值。监控目录分别展示 WorkBuddy 国内、国际两版，共 21 providers、7 services、42 项主题映射与 24 份官方图标。
