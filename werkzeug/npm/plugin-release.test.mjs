@@ -13,6 +13,10 @@ import {
 
 const moduleDirectory = path.dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = path.resolve(moduleDirectory, '../..');
+const cliVersion = JSON.parse(
+  fs.readFileSync(path.join(repositoryRoot, 'apps/cli/package.json'), 'utf8'),
+).version;
+const mismatchedVersion = '99.99.99';
 
 function fixture(t) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'orchester-plugin-release-'));
@@ -39,7 +43,7 @@ function fixture(t) {
 
 test('repository exposes the exact version-locked official plugin matrix', () => {
   const verified = verifyOfficialAgentPlugins({
-    expectedVersion: '0.1.2',
+    expectedVersion: cliVersion,
     repositoryRoot,
   });
 
@@ -48,9 +52,9 @@ test('repository exposes the exact version-locked official plugin matrix', () =>
     packageName,
     version,
   })), [
-    { name: 'claude', packageName: '@orchester/claude', version: '0.1.2' },
-    { name: 'codex', packageName: '@orchester/codex', version: '0.1.2' },
-    { name: 'opencode', packageName: '@orchester/opencode', version: '0.1.2' },
+    { name: 'claude', packageName: '@orchester/claude', version: cliVersion },
+    { name: 'codex', packageName: '@orchester/codex', version: cliVersion },
+    { name: 'opencode', packageName: '@orchester/opencode', version: cliVersion },
   ]);
 });
 
@@ -60,7 +64,7 @@ test('release matrix rejects missing and unexpected plugin directories', (t) => 
   fs.mkdirSync(path.join(root, 'npm/plugins/foreign'));
 
   assert.throws(
-    () => verifyOfficialAgentPlugins({ expectedVersion: '0.1.2', repositoryRoot: root }),
+    () => verifyOfficialAgentPlugins({ expectedVersion: cliVersion, repositoryRoot: root }),
     (error) => error?.code === 'ORCHESTER_PLUGIN_RELEASE_MATRIX',
   );
 });
@@ -69,7 +73,7 @@ test('release matrix version must match the CLI package', (t) => {
   const root = fixture(t);
 
   assert.throws(
-    () => verifyOfficialAgentPlugins({ expectedVersion: '0.1.3', repositoryRoot: root }),
+    () => verifyOfficialAgentPlugins({ expectedVersion: mismatchedVersion, repositoryRoot: root }),
     (error) => error?.code === 'ORCHESTER_PLUGIN_RELEASE_VERSION',
   );
 });
@@ -78,7 +82,7 @@ test('command line verifies the repository plugin matrix', () => {
   const result = spawnSync(process.execPath, [
     path.join(moduleDirectory, 'plugin-release.mjs'),
     '--version',
-    '0.1.2',
+    cliVersion,
   ], { encoding: 'utf8', timeout: 10_000 });
 
   assert.equal(result.status, 0);

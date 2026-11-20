@@ -44,14 +44,13 @@ export function buildManagerPlan(name, sandbox, tarball) {
   } else if (name === 'pnpm') {
     common.installArgs = [
       'add', '--global', tarball,
-      '--global-dir', sandbox.globalDirectory,
-      '--global-bin-dir', sandbox.binDirectory,
       '--store-dir', sandbox.storeDirectory,
-      '--cache-dir', sandbox.cacheDirectory,
       '--registry', sandbox.registry,
-      '--offline', '--ignore-scripts',
+      '--ignore-scripts',
     ];
-    common.removeArgs = ['remove', '--global', '--global-dir', sandbox.globalDirectory, FIXTURE_NAME];
+    // pnpm 10 accepts global-bin-dir/global-dir/cache-dir as configuration,
+    // not as add/remove flags. The isolated environment supplies these values.
+    common.removeArgs = ['remove', '--global', FIXTURE_NAME];
     common.shimRoots = [sandbox.binDirectory];
     common.packageRoots = [path.join(sandbox.globalDirectory, 'node_modules', FIXTURE_NAME)];
   } else if (name === 'yarn') {

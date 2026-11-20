@@ -40,7 +40,7 @@ use orchester_laufzeit::harness::StreamingRedactor;
 use orchester_laufzeit::{Conductor, ConductorError, SessionRecord, SessionStore};
 use orchester_modell::ModelEventSink;
 use orchester_protokoll::{Outcome, RunResult, Task};
-use orchester_verzeichnis::{standard_plugin_roots, PluginRootError, Registry};
+use orchester_verzeichnis::{standard_plugin_roots, PluginRoot, PluginRootError, Registry};
 
 use args::{Cli, Command, PluginCommand, PluginInstallArgs, PluginRemoveArgs, PluginStatusArgs};
 use interactive::{
@@ -91,7 +91,17 @@ async fn run(cli: Cli) -> Result<ExitCode, CliError> {
         && !auto
         && prompt.is_none();
 
-    let registry = discover_registry()?;
+    if orchester_laufzeit::harness::orchester_home().is_none()
+        && !matches!(&command, Some(Command::List | Command::Doctor(_)))
+    {
+        return Err(CliError::MissingOrchesterHome);
+    }
+
+    let registry = if matches!(&command, Some(Command::List | Command::Doctor(_))) {
+        discover_inventory_registry()?
+    } else {
+        discover_registry()?
+    };
 
     if no_arg_launch {
         return run_interactive(registry).await;
@@ -2249,6 +2259,22 @@ fn discover_registry() -> Result<Registry, CliError> {
     ))
 }
 
+fn discover_inventory_registry() -> Result<Registry, CliError> {
+    let project_directory = std::env::current_dir()?;
+    let plugin_roots = match orchester_laufzeit::harness::orchester_home() {
+        Some(home) => standard_plugin_roots(home, &project_directory)?
+            .into_iter()
+            .collect(),
+        None => vec![PluginRoot::project(
+            project_directory.join("node_modules").join("@orchester"),
+        )],
+    };
+    Ok(Registry::discover_with_plugin_roots(
+        project_directory.join(MANIFEST_DIR),
+        plugin_roots,
+    ))
+}
+
 fn plugin_command(action: PluginAction) -> PluginCommand {
     match action {
         PluginAction::List => PluginCommand::List,
@@ -2488,6 +2514,8 @@ fn read_prompt(arg: Option<String>) -> Result<String, CliError> {
 
 #[derive(Debug, thiserror::Error)]
 enum CliError {
+    #[error("could not resolve Orchester home; set HOME or ORCHESTER_HOME")]
+    MissingOrchesterHome,
     #[error("no agent given; pass --agent <name> (or run `orchester list`)")]
     MissingAgent,
     #[error("no prompt given; pass a prompt argument or `-` to read stdin")]

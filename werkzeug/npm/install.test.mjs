@@ -39,14 +39,13 @@ test('builds exact isolated global install and removal commands', (t) => {
 
   const pnpm = buildManagerPlan('pnpm', sandbox, tarball);
   assert.deepEqual(pnpm.installArgs.slice(0, 3), ['add', '--global', tarball]);
-  assert.deepEqual(pnpm.removeArgs, [
-    'remove',
-    '--global',
-    '--global-dir',
-    sandbox.globalDirectory,
-    'orchester-install-smoke-fixture',
-  ]);
-  for (const forbidden of ['--global-bin-dir', '--offline', '--ignore-scripts']) {
+  assert.deepEqual(pnpm.removeArgs, ['remove', '--global', 'orchester-install-smoke-fixture']);
+  for (const forbidden of ['--global-dir', '--global-bin-dir', '--cache-dir', '--offline']) {
+    assert.equal(pnpm.installArgs.includes(forbidden), false);
+    assert.equal(pnpm.removeArgs.includes(forbidden), false);
+  }
+  assert.ok(pnpm.installArgs.includes('--ignore-scripts'));
+  for (const forbidden of ['--global-dir', '--global-bin-dir', '--cache-dir', '--offline', '--ignore-scripts']) {
     assert.equal(pnpm.removeArgs.includes(forbidden), false);
   }
 
@@ -103,6 +102,13 @@ test('isolates every package-manager home, prefix, store, cache, and registry', 
   }
   assert.equal(sandbox.env.BUN_INSTALL, sandbox.bunInstall);
   assert.equal(sandbox.env.PNPM_HOME, sandbox.binDirectory);
+  assert.equal(sandbox.env.PNPM_CONFIG_GLOBAL_DIR, sandbox.globalDirectory);
+  assert.equal(sandbox.env.PNPM_CONFIG_GLOBAL_BIN_DIR, sandbox.binDirectory);
+  assert.equal(sandbox.env.PNPM_CONFIG_STORE_DIR, sandbox.storeDirectory);
+  assert.equal(sandbox.env.PNPM_CONFIG_CACHE_DIR, sandbox.cacheDirectory);
+  assert.equal(sandbox.env.PNPM_CONFIG_REGISTRY, sandbox.registry);
+  assert.equal(sandbox.env.PNPM_CONFIG_OFFLINE, 'true');
+  assert.equal(sandbox.env.PNPM_CONFIG_IGNORE_SCRIPTS, 'true');
   assert.match(sandbox.env.npm_config_registry, /^http:\/\/127\.0\.0\.1:\d+\/$/);
   for (const variable of [
     'NODE_OPTIONS',

@@ -9,6 +9,9 @@ const workflowPath = path.join(repositoryRoot, '.github/workflows/npm-release.ym
 const targets = JSON.parse(
   fs.readFileSync(path.join(repositoryRoot, 'apps/cli/targets.json'), 'utf8'),
 );
+const cliVersion = JSON.parse(
+  fs.readFileSync(path.join(repositoryRoot, 'apps/cli/package.json'), 'utf8'),
+).version;
 
 function readWorkflow() {
   return fs.readFileSync(workflowPath, 'utf8').replace(/\r\n/g, '\n');
@@ -99,7 +102,7 @@ test('release artifact contains the exact verified official plugin matrix', () =
   assert.match(stageJob, /-name '\*\.tgz' \| wc -l\) -eq 10/);
 });
 
-test('one dispatch tags, publishes, releases, and verifies v0.1.2 in dependency order', () => {
+test(`one dispatch tags, publishes, releases, and verifies v${cliVersion} in dependency order`, () => {
   const workflow = readWorkflow();
   const tagJob = workflow.indexOf('\n  tag:');
   const publishJob = workflow.indexOf('\n  publish:');
@@ -113,7 +116,8 @@ test('one dispatch tags, publishes, releases, and verifies v0.1.2 in dependency 
 
   assert.ok(tagJob > 0);
   assert.ok(publishJob > 0);
-  assert.match(workflow, /workflow_dispatch:\n\s+inputs:\n\s+version:\n\s+description: [^\n]+\n\s+required: true\n\s+default: "0\.1\.2"\n\s+type: string/);
+  const dispatchVersion = /workflow_dispatch:\n\s+inputs:\n\s+version:\n\s+description: [^\n]+\n\s+required: true\n\s+default: "([^"]+)"\n\s+type: string/.exec(workflow)?.[1];
+  assert.equal(dispatchVersion, cliVersion);
   assert.equal(workflow.includes('submit:'), false);
   assert.equal(workflow.includes('inputs.submit'), false);
   assert.match(workflow.slice(tagJob, publishJob), /permissions:\n\s+contents: write/);

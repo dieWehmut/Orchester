@@ -37,6 +37,16 @@ test('desktop release config enables per-user NSIS installers with the bundled w
 
 test('desktop release workflow builds both Windows architectures before staging', () => {
   const workflow = readWorkflow();
+  const desktopManifest = JSON.parse(fs.readFileSync(
+    path.join(repositoryRoot, 'apps/desktop/package.json'), 'utf8'));
+  const tauri = readConfig();
+  const cargoToml = fs.readFileSync(
+    path.join(repositoryRoot, 'apps/desktop/src-tauri/Cargo.toml'), 'utf8');
+  const cargoVersion = /^version = "([^"]+)"/m.exec(cargoToml)?.[1];
+  const dispatchDefault = /workflow_dispatch:[\s\S]*?inputs:[\s\S]*?version:[\s\S]*?default: "([^"]+)"/.exec(workflow)?.[1];
+  assert.equal(desktopManifest.version, tauri.version);
+  assert.equal(desktopManifest.version, cargoVersion);
+  assert.equal(dispatchDefault, desktopManifest.version, 'default dispatch must validate against current desktop manifests');
   assert.match(workflow, /arch: x64\n\s+runner: windows-2025\n\s+rust_target: x86_64-pc-windows-msvc/);
   assert.match(workflow, /arch: arm64\n\s+runner: windows-11-arm\n\s+rust_target: aarch64-pc-windows-msvc/);
   assert.match(workflow, /node werkzeug\/desktop\/build-installer\.mjs/);
