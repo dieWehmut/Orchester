@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "observedAtUtc": "2026-11-20T02:58:19.495944+00:00",
+  "status": "six-reviewed-continuation-changes-merged-and-pushed-to-remote-main",
+  "steps": [
+    {
+      "scope": "claude-installations",
+      "commit": "3d6209251d41496aa7c96f26829bb6ad5e9de072",
+      "mainMergeCommit": "42bd4a7375260e36e673a25c14e8c8fb29893993",
+      "secondMergeParentMatchesFeatureCommit": true,
+      "ancestorOfVerifiedMain": true
+    },
+    {
+      "scope": "android-original-five-and-studio",
+      "commit": "6b16dc156eaceb67d7af295d9861debab84e1937",
+      "mainMergeCommit": "2d5ca8ea8d5a8f068f46968d8ed4799b949b8395",
+      "secondMergeParentMatchesFeatureCommit": true,
+      "ancestorOfVerifiedMain": true
+    },
+    {
+      "scope": "native-installation-coverage",
+      "commit": "39f683623b7a918e59f7f08791dad2ffd6893e71",
+      "mainMergeCommit": "35957f2537a794fa700d3e8a33ab6bbf48a62e8f",
+      "secondMergeParentMatchesFeatureCommit": true,
+      "ancestorOfVerifiedMain": true
+    },
+    {
+      "scope": "cache-and-branch-maintenance",
+      "commit": "5da07c970d76ea75677b54d1d3d3dffb6f85cec6",
+      "mainMergeCommit": "c777db13f6c56b81c63600240c2ce37c03152616",
+      "secondMergeParentMatchesFeatureCommit": true,
+      "ancestorOfVerifiedMain": true
+    },
+    {
+      "scope": "pages-and-source-verification",
+      "commit": "5014b38db52a934684245abbab471cadc8f084bd",
+      "mainMergeCommit": "5be1c098d05b79c92bcd94c81d97369573065707",
+      "secondMergeParentMatchesFeatureCommit": true,
+      "ancestorOfVerifiedMain": true
+    },
+    {
+      "scope": "default-runtime-and-state-retention",
+      "commit": "b0a8e911d428436c6f3c5623a14ab06537beee2b",
+      "mainMergeCommit": "15b62b9621bfdd1eb17909dd307158792fa0c912",
+      "secondMergeParentMatchesFeatureCommit": true,
+      "ancestorOfVerifiedMain": true
+    }
+  ],
+  "remoteReadback": {
+    "command": "git -c http.version=HTTP/1.1 ls-remote origin refs/heads/main refs/heads/feat/workbuddy-qwen-openclaw-monitors",
+    "actualExitCode": 0,
+    "refs/heads/main": "15b62b9621bfdd1eb17909dd307158792fa0c912",
+    "refs/heads/feat/workbuddy-qwen-openclaw-monitors": "b0a8e911d428436c6f3c5623a14ab06537beee2b",
+    "matchesLocalMainAndFeature": true
+  },
+  "successfulAtomicPushes": 5,
+  "pushFailureBoundary": {
+    "maintenanceAndPagesInitialPushesFailed": true,
+    "exitCodes": [
+      128,
+      128
+    ],
+    "error": "GnuTLS recv error (-110): TLS connection was non-properly terminated",
+    "laterBoundedHttp11AtomicPushExitCode": 0,
+    "maintenanceAndPagesChangesBothIncludedInSuccessfulPush": true
+  },
+  "perStepValidation": {
+    "claude": "Offline55-file archive, original source rehash and17 semantic/signature negative cases passed.",
+    "android": "57 listed artifacts validated on Python3.10/3.14;12 semantic negative cases rejected.",
+    "installationCoverage": "Source-supported metadata and manifest checks passed; official WorkBuddyGlobal Linux absence remains actual package gap. DeepSeek10-file archive and6 negative cases passed.",
+    "maintenance": "37 archive checks passed; actual additional npm cleanup exit0.",
+    "pages": "Actual live browser/resource checks passed after preserved transient failures; source731 comparison distinguishes728 unchanged/three reviewedchanges.",
+    "defaultRuntime": "113 listed artifacts passed offline source/event/exit/role checks plus three source-binding negative controls; historical actual exits0 proven, current revalidation failure retained."
+  },
+  "allListedArchiveIndexBlobsVerifiedBeforeContentCommits": true,
+  "nativeRevalidationPassedClaimed": false,
+  "fullObjectiveComplete": false,
+  "remainingRealScopes": [
+    "Restore observable Windows access and complete current managed Remote7338 validation after guard failure; original saved credential wire remains unproved.",
+    "Obtain genuine downloadable official international WorkBuddy Linux package and complete isolated native install."
+  ],
+  "receiptBoundary": "This receipt records the six preceding content commits and their actual remote readback. Its own later receipt commit is outside these recorded revision values."
+}

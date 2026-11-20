@@ -576,7 +576,7 @@
   "historicalObservationsAreNotCurrentProcessLiveness": true,
   "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsIncluded": false,
   "historical38Unmodified": true,
-  "updatedAt": "2026-11-20T02:43:31.637826+00:00",
+  "updatedAt": "2026-11-20T02:58:19.495944+00:00",
   "currentCompiledInputUnionCount": 731,
   "currentWindowsCoreGateCount": 16,
   "currentWindowsCoreGatesPassed": true,
@@ -593,7 +593,7 @@
   "currentAndroidPartialNativeBuildInstallTestsVerified": true,
   "currentAndroidActualIDESyncVerified": true,
   "currentAndroidNativeUI21Providers42ImagesVerified": true,
-  "documentedPublishedMainRevision": "50ad5616b3f71f51cccb69d43c8b36ca20209f69",
+  "documentedPublishedMainRevision": "15b62b9621bfdd1eb17909dd307158792fa0c912",
   "productionSourceRevisionStillFrozen71": true,
   "currentCorrectionArchiveGitCommitted": true,
   "originalWindowsCredentialsDamagedOrUnrecoverableClaimed": false,
@@ -657,7 +657,7 @@
   "historicalUnregisteredSuspendedChildClaimedOrSignaled": false,
   "currentDocumentationExecutionDateRangeAsiaShanghai": [
     "2026-11-11",
-    "2026-11-12"
+    "2026-11-20"
   ],
   "historicalReceiptUtcDatesAnd20261111PathsUnmodified": true,
   "currentAndroidNativeUnicodeEnterVerified": true,
@@ -1196,5 +1196,9 @@
     "mountStatErrno": 5,
     "currentNativeProcessStatusVerified": false,
     "loopback7338ConnectionRefusedDoesNotProveNativeServerStopped": true
-  }
+  },
+  "documentedPublishedMainRevisionScope": "Six preceding content changes before the delivery receipt commit; actual ls-remote readback.",
+  "currentContinuationDeliveryProof": "maintenance/git-delivery/20261120-six-step-delivery-safe.json",
+  "currentContinuationContentCommitCount": 6,
+  "currentContinuationPeakAgentConcurrencyIncludingRoot": 9
 }
