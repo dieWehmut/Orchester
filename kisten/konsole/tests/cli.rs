@@ -6,7 +6,7 @@ mod loopback_responses;
 mod secure_config;
 
 use std::io::Write;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::process::Command;
 use std::process::Stdio;
 
@@ -103,6 +103,17 @@ result = {{ event = "result", text = "text" }}
             .current_dir(&self.root);
         command
     }
+
+    fn command_without_home(&self) -> Command {
+        let mut command = orchester();
+        command
+            .env_remove("ORCHESTER_HOME")
+            .env_remove("HOME")
+            .current_dir(&self.root);
+        #[cfg(windows)]
+        command.env_remove("USERPROFILE");
+        command
+    }
 }
 
 impl Drop for AgentFixture {
@@ -116,6 +127,24 @@ fn json_events(output: &std::process::Output) -> Vec<serde_json::Value> {
         .lines()
         .map(|line| serde_json::from_str(line).expect("valid Event JSONL"))
         .collect()
+}
+
+fn install_repository_plugin(destination: &Path, name: &str, marker: &str) {
+    let source = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("../..")
+        .join("npm/plugins")
+        .join(name);
+    std::fs::create_dir_all(destination.join("manifests")).unwrap();
+    for relative in ["package.json", "orchester-plugin.json"] {
+        std::fs::copy(source.join(relative), destination.join(relative)).unwrap();
+    }
+    let manifest = std::fs::read_to_string(source.join(format!("manifests/{name}.toml")))
+        .unwrap()
+        .replace(
+            "kinds = [\"code\", \"chat\"]",
+            &format!("kinds = [\"{marker}\"]"),
+        );
+    std::fs::write(destination.join(format!("manifests/{name}.toml")), manifest).unwrap();
 }
 
 #[test]
@@ -133,6 +162,74 @@ fn list_shows_builtin_adapters() {
     assert!(
         !out.contains("mock"),
         "test adapter leaked into list:\n{out}"
+    );
+}
+
+#[test]
+fn list_works_without_user_home_and_discovers_project_manifest() {
+    let fixture = AgentFixture::new("list-without-home");
+    let output = fixture
+        .command_without_home()
+        .arg("list")
+        .output()
+        .expect("run orchester list without user home");
+
+    assert!(output.status.success(), "stderr:\n{}", stderr(&output));
+    let out = stdout(&output);
+    for name in ["claude", "codex", "opencode", "fixture"] {
+        assert!(out.contains(name), "missing adapter {name} in:\n{out}");
+    }
+}
+
+#[test]
+fn list_without_user_home_discovers_project_plugins_but_skips_managed_plugins() {
+    let fixture = AgentFixture::new("list-project-plugin-without-home");
+    install_repository_plugin(
+        &fixture.root.join("node_modules/@orchester/opencode"),
+        "opencode",
+        "project-plugin-marker",
+    );
+    install_repository_plugin(
+        &fixture
+            .root
+            .join(".orchester/plugins/npm/node_modules/@orchester/claude"),
+        "claude",
+        "managed-plugin-marker",
+    );
+
+    let output = fixture
+        .command_without_home()
+        .arg("list")
+        .output()
+        .expect("list project plugins without user home");
+
+    assert!(output.status.success(), "stderr:\n{}", stderr(&output));
+    let out = stdout(&output);
+    assert!(out.contains("project-plugin-marker"), "list output:\n{out}");
+    assert!(
+        !out.contains("managed-plugin-marker"),
+        "list output:\n{out}"
+    );
+}
+
+#[test]
+fn config_requires_user_home_without_creating_project_state() {
+    let fixture = AgentFixture::new("config-without-home");
+    let output = fixture
+        .command_without_home()
+        .arg("config")
+        .output()
+        .expect("run config without user home");
+
+    assert!(!output.status.success());
+    assert!(
+        stderr(&output).contains("could not resolve Orchester home"),
+        "stderr:\n{}",
+        stderr(&output)
+    );
+    assert!(
+        !fixture.root.join(".orchester").exists(),
+        "config created relative project state without a user home"
     );
 }
 
@@ -176,6 +273,25 @@ fn doctor_reports_manifest_subprocess_available() {
         !out.contains("mock"),
         "test adapter leaked into doctor:\n{out}"
     );
+}
+
+#[test]
+fn doctor_works_without_user_home_and_discovers_project_manifest() {
+    let fixture = AgentFixture::new("doctor-without-home");
+    let output = fixture
+        .command_without_home()
+        .arg("doctor")
+        .output()
+        .expect("run orchester doctor without user home");
+
+    assert!(output.status.success(), "stderr:\n{}", stderr(&output));
+    let out = stdout(&output);
+    let check = out
+        .lines()
+        .find(|line| line.contains("\tfixture\t"))
+        .expect("doctor should discover the project manifest");
+    assert!(check.contains("ok"), "fixture check:\n{check}");
+    assert!(check.contains("found "), "fixture check:\n{check}");
 }
 
 #[test]
