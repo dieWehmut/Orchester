@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "status": "successor-native-runtime-sources-prepared",
+  "originalSourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "sources": {
+    "06-successor-managed-7338.ps1": "a55066cbd1b7f19b835e50b1d55962c1ff60ab6e74bd862cbd1af38e35b6b48b",
+    "04-successor-native-ui.mjs": "bc7c6a3c08c3f8b67f0baf4c33041e6880c48d0a9f0593f124951569a9b598e6",
+    "03-successor-original-retention.mjs": "964d1b5482b103d1694de60bfc0a230b056c48483631003c7600de6f9deb6487",
+    "05-successor-default-runtime.ps1": "dc2a2bfeb0b6e19d86d6cf34d2aebd47281eb71040f40e03b0841879eea11f02"
+  },
+  "originalFailuresPreserved": true,
+  "newWslImageReason": "original-manager-exact-native-unknown-wsl.exe-image-sha-plus-current-valid-Microsoft-signature",
+  "rawImgSrcMembershipAndDecodedByteIdentityRequired": true,
+  "preflightOriginalRetainedRowsStaticBytesAndAppendOnlyLogsRequired": true,
+  "normalMsaaTrayQuitUnmodified": true,
+  "forcedTerminations": 0
+}

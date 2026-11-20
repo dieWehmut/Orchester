@@ -2,6 +2,10 @@
 
 ## 11 月 19–20 日续验
 
+[默认 Desktop / Remote 原生验收](acceptance/agentrouter-platform-sync/native/windows/20261119-default-runtime/README.md)已恢复原执行器的实际退出证据。11 月 19 日默认桌面保留 213 条原记录，显示 21 个产品、42 张图标，并通过原生托盘正常退出；GUI、Node 和外部执行器均退出 0。默认 Remote 7338 完成 60.38 秒、107 次采样，17 项资源、138 条原始数据库行和 6 份备份保留通过，匿名认证门返回 401，实际外部执行器退出 0。更新方法仍为此前已验证的默认目录原子替换，未执行 NSIS 安装器。
+
+11 月 20 日的 Remote 最终复查仍未通过：一次完整阶段检查后在创建固定摘要文件处实际退出 1，源码与既有同名文件指向重名冲突；后续修正仍有退出 2 及身份守卫失败。最后一次原生短探针成功于 01:59:37 UTC；随后 Windows 挂载 `/mnt/c` 持续返回 I/O errno 5，当前进程状态无法继续核验。历史成功不替代这次复验；Remote 7338 原保存令牌的实际请求及开机自动启动也未在此归档中验证。原进程、用户应用和持久实例未被本轮重启或强制停止。
+
 [Claude 官方安装归档](acceptance/agentrouter-platform-sync/native/claude/20261119-official-installations/README.md)已补齐 Windows 与 WSL 的安装缺口：Windows Store 原生安装退出 0，当前用户注册包为 `5.11492.5.0`，已安装 EXE / ASAR 为 `5.11492.5`，Anthropic 签名 Valid；WSL 官方签名仓库、deb、实际 APT 安装与版本命令构成完整来源链。Linux 独立 WSLg 窗口实际显示地域限制页面，Ctrl+Q 后退出 0，16 个原 pidfd 全部终止。Windows 独立 GUI 测试因已有外部应用进程而未执行；安装通过不代表登录或模型可用。55 个归档文件的离线校验及 17 个语义、签名负向用例通过，原始失败和版本纠正记录均保留。
 
 [Windows Android 原五条续验](acceptance/agentrouter-platform-sync/native/android/20261119-original-five-and-studio/README.md)已通过：正确 Medium AVD、已安装 APK 与冻结产物匹配，原五条凭据读取和解密均为 5/5，原保存的 7337 地址单次显式请求为 200、名称匹配。其 Linux owner 与 11 月 16 日重启、自启动回执为同一 boot / listener 身份。实际产品的 21 项目录、42 张图标、自有终端输入输出与正常 exit、原 XML 和四项持久化数据摘要保留均有记录；自有通道正常释放，manager 历史 MemoryError 与最终退出 1 保留。

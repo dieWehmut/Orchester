@@ -1,0 +1,13 @@
+{
+    "status":  "uia-menu-unavailable-before-msaa",
+    "stage":  "native-popup-accessibility",
+    "popupCount":  1,
+    "itemCount":  0,
+    "lastUiaErrorType":  null,
+    "knownMenuLabels":  [
+
+                        ],
+    "unknownLabelCount":  0,
+    "menuInvoked":  false,
+    "modelCalls":  0
+}

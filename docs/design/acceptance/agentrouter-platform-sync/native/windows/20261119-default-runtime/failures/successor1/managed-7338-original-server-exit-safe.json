@@ -1,0 +1,12 @@
+{
+    "schemaVersion":  1,
+    "status":  "original-server-native-exit-observed",
+    "observedAtUtc":  "2026-11-19T06:44:46.1703197Z",
+    "remotePid":  9844,
+    "remoteCreatedFileTimeExact":  "134395440680673328",
+    "actualNativeServerExitCode":  0,
+    "originalCreatorProcessAndKernelHandleRetainedUntilExit":  true,
+    "normalQuitRequested":  true,
+    "forcedTerminations":  0,
+    "privateValuesIncluded":  false
+}

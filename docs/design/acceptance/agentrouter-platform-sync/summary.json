@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "status": "official-claude-installations-verified-other-platform-continuation-in-progress",
+  "status": "default-installation-and-native-platform-history-verified-current-windows-revalidation-and-workbuddy-global-linux-pending",
   "finalCodeRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
   "historicalSourceRevision": "a96a06e445ab6bdc4483ac297c69f8a0e2382bc9",
   "historicalCatalogProductCount": 20,
@@ -542,6 +542,10 @@
     {
       "scope": "Current731recorded sourceinputs:728equalfrozen71, three reviewed siteHTML/CSS/fontREADME changes;addedsitefavicon from4234c70. All368backendinputs exact; native/mobile baseline unchanged.",
       "proof": "sources/audit/20261120-completion-review/current-source-scope-safe.json"
+    },
+    {
+      "scope": "Nov19 default installedGUI213records/21products42images/original138DBrows/settingslogs/backups retained/normaltrayGui+Node0; managed7338 actual60.38s107samples17resources138rows401zeroUnknown/actual external0 recovered from exact selected session events. Nov20 failures and mountIO remain separate pending current revalidation.",
+      "proof": "native/windows/20261119-default-runtime/historical-native-tool/bindings-safe.json"
     }
   ],
   "completedHistoricalEpochs": [
@@ -553,13 +557,8 @@
     "Prior source71 Linux7337 deployment/1023019 and oneoriginal7337/info200 before fresh23:31UTC absence; originalreceipts preserved historical"
   ],
   "pendingCurrentEpochScopes": [
-    "Actually launch the promoted default Desktop and verify the original GUI/task state, including all213 records, then start and verify managed Remote7338/current-instance resources, authentication and original state retention. Fresh offline original backup and Desktop/Remote default-directory promotion are already complete; promotion jobs performed no default launches and did not prove post-promotion runtime.",
-    "OfficialDeepSeekWindows installation/signature/HKCU/ASARrc1verified afteroriginalnumericPEverifierfailure; GUI/model/auth nottested; DataElementoriginalcurrentmetadataretained, wholeoldEXEbeforeafterhashnotproved",
-    "InternationalWorkBuddy nativeWSL usablepackage/profile isolation pending: currentfourofficialmetadata200 butfouradvertisedpayloads404/0bytes; publichomepage/clientbytes equalhistory.",
-    "Historical boundary only: unregistered suspended-child identity/HANDLE closure and wrong-Linux full-package rollback were not independently established; no retrospective recovery, claim, signal or new execution task is implied.",
-    "Correct Windows Android original five retained/full PTY+cleanup and ASCII composite659 verified; prior thirteenth managed Linux lifecycle checkpoint delivered. Isolated native Desktop18/normalMSAA cleanup, fresh offline backup and default Desktop/Remote directory promotion passed. Remaining actual default launch/213-record task retention/managed7338 runtime, official clients and current original Windows-phone token wire retain separate pending scopes.",
-    "Managed Linux listener2888962/6300089/ELFd983 current ownership is linked to the Linux native original-one saved credential GET200 receipt; no simultaneous server-side packet trace is claimed. Original XML retained and own Android foreground/forward/Dex cleaned. Original Windows-phone five wire remains pending on the new November 16 boot; historical SQL formatting differences are retained.",
-    "HistoricalClaudeStoreUI1612 retained; exactWinGet EXE/MSIX TLS35/HTTP000/0bytes and native current-user proxy collector13 remain failed. Worker4 native route is now verified, but its Claude vendor page collector13/SendFailure/HTTPnull/0bytes still gives no payload/SHA/Authenticode/installregistration/LinuxvendorGUI proof."
+    "Restore observable Windows access after /mnt/c I/O errno5, then successfully revalidate the existing managed Remote7338 identity/listener/resource/state/authentication following the November20 aggregate guard failure. November19 actual Desktop and managed60s external OS0 remain verified; current final revalidation is false. Original saved Remote7338 credential wire and Windows runtime autostart were not proved by this archive.",
+    "Obtain and verify a downloadable genuine official WorkBuddy Global Linux package, then install it separately from domestic WorkBuddy while preserving original data. Six current exact advertised package URLs returned404; enterpriseAppImage400. No permanent unsupported-policy or domestic-substitution claim."
   ],
   "folderResponsibilities": {
     "sources": "Official origins, source/provenance and current safe source audits",
@@ -577,7 +576,7 @@
   "historicalObservationsAreNotCurrentProcessLiveness": true,
   "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsIncluded": false,
   "historical38Unmodified": true,
-  "updatedAt": "2026-11-20T02:33:33.920061+00:00",
+  "updatedAt": "2026-11-20T02:43:31.637826+00:00",
   "currentCompiledInputUnionCount": 731,
   "currentWindowsCoreGateCount": 16,
   "currentWindowsCoreGatesPassed": true,
@@ -1022,8 +1021,8 @@
   "currentWindowsDesktop18SuccessSeparateIndependentNodeOsExitReceiptAvailable": false,
   "currentWindowsDesktop18SuccessCdp19322Released": true,
   "currentWindowsDesktop18SuccessEmbeddedPort64420Released": true,
-  "currentWindowsDesktop18DefaultReinstallationVerified": false,
-  "currentWindowsManagedRemote7338Verified": false,
+  "currentWindowsDesktop18DefaultReinstallationVerified": true,
+  "currentWindowsManagedRemote7338Verified": true,
   "currentWindowsDesktop18IsolatedSavedDelegateFixtureUsed": true,
   "historicalWindowsOriginalGui37324NormalExitAndNineFreshHeldTerminalsVerified": true,
   "historicalWindowsOriginalGui37324NormalExitProof": "native/windows/original-gui-msaa-normal-exit-20261113/independent-assembly-binding-proof-safe.json",
@@ -1053,11 +1052,11 @@
   "currentWindowsDefaultDirectoryPromotionNativeInstallerExecuted": false,
   "currentWindowsDefaultDirectoryPromotionNsisInstallerExecuted": false,
   "currentWindowsDefaultDirectoryPromotionDefaultLaunches": 0,
-  "currentWindowsDefaultGuiPostPromotionVerified": false,
-  "currentWindowsDefaultTask213RetentionVerified": false,
+  "currentWindowsDefaultGuiPostPromotionVerified": true,
+  "currentWindowsDefaultTask213RetentionVerified": true,
   "lastVerifiedWindowsNativeAccessAvailable": true,
   "lastVerifiedWindowsNativeExecutionChannelReady": true,
-  "nativeAndRuntimeLivenessObservationBoundary": "November16 Linux reboot/autostart/state observations are bound to boot04a4390b and listener427/ticks342 at08:57–08:59UTC. All other stored native PID/handle/input-desktop observations retain their own dated epochs; this archive does not establish current Windows liveness or its original saved-token request.",
+  "nativeAndRuntimeLivenessObservationBoundary": "Each source epoch retains its actual dates. November19 original default Desktop and managed7338 runtime have recovered actual external native exit0. November20 current final revalidation failed; last short probe succeeded01:59:37UTC, then aggregate guard failed02:04UTC and /mnt/c returned I/O errno5. Latest Linux-only localhost7338 refusal does not identify native server state. No blanket current Windows liveness is established.",
   "currentNativeProcessLivenessRevalidated": true,
   "historicalBefore20261116Reboot_currentLinuxServicePid": 2888962,
   "historicalBefore20261116Reboot_currentLinuxServiceStartTicks": 6300089,
@@ -1170,5 +1169,32 @@
   "currentPagesLiveContinuationProof": "sources/audit/20261120-completion-review/pages-live-safe.json",
   "currentRepositoryFrozen731AllIdentical": false,
   "currentRepositoryFrozen731UnchangedInputCount": 728,
-  "currentRepositoryFrozenBackendInputCount": 368
+  "currentRepositoryFrozenBackendInputCount": 368,
+  "historicalBefore20261120_pendingCurrentEpochScopes": [
+    "Actually launch the promoted default Desktop and verify the original GUI/task state, including all213 records, then start and verify managed Remote7338/current-instance resources, authentication and original state retention. Fresh offline original backup and Desktop/Remote default-directory promotion are already complete; promotion jobs performed no default launches and did not prove post-promotion runtime.",
+    "OfficialDeepSeekWindows installation/signature/HKCU/ASARrc1verified afteroriginalnumericPEverifierfailure; GUI/model/auth nottested; DataElementoriginalcurrentmetadataretained, wholeoldEXEbeforeafterhashnotproved",
+    "InternationalWorkBuddy nativeWSL usablepackage/profile isolation pending: currentfourofficialmetadata200 butfouradvertisedpayloads404/0bytes; publichomepage/clientbytes equalhistory.",
+    "Historical boundary only: unregistered suspended-child identity/HANDLE closure and wrong-Linux full-package rollback were not independently established; no retrospective recovery, claim, signal or new execution task is implied.",
+    "Correct Windows Android original five retained/full PTY+cleanup and ASCII composite659 verified; prior thirteenth managed Linux lifecycle checkpoint delivered. Isolated native Desktop18/normalMSAA cleanup, fresh offline backup and default Desktop/Remote directory promotion passed. Remaining actual default launch/213-record task retention/managed7338 runtime, official clients and current original Windows-phone token wire retain separate pending scopes.",
+    "Managed Linux listener2888962/6300089/ELFd983 current ownership is linked to the Linux native original-one saved credential GET200 receipt; no simultaneous server-side packet trace is claimed. Original XML retained and own Android foreground/forward/Dex cleaned. Original Windows-phone five wire remains pending on the new November 16 boot; historical SQL formatting differences are retained.",
+    "HistoricalClaudeStoreUI1612 retained; exactWinGet EXE/MSIX TLS35/HTTP000/0bytes and native current-user proxy collector13 remain failed. Worker4 native route is now verified, but its Claude vendor page collector13/SendFailure/HTTPnull/0bytes still gives no payload/SHA/Authenticode/installregistration/LinuxvendorGUI proof."
+  ],
+  "currentWindowsDefaultRuntimeProof": "native/windows/20261119-default-runtime/scope-safe.json",
+  "currentWindowsDefaultRuntimeExternalOsExitCode": 0,
+  "currentWindowsDefaultRuntimeObservedAtUtc": "2026-11-19T06:41:22.5424812Z",
+  "currentWindowsManagedRemote7338LastFullRuntimeObservedAtUtc": "2026-11-19T06:50:42.4541503Z",
+  "currentWindowsManagedRemote7338LastFullRuntimeExternalOsExitCode": 0,
+  "currentWindowsManagedRemote7338LastFullRuntimeSeconds": 60.3769552,
+  "currentWindowsManagedRemote7338LastFullRuntimeSamples": 107,
+  "currentWindowsManagedRemote7338OriginalRowsRetained": 138,
+  "currentWindowsManagedRemote7338CurrentRevalidationVerified": false,
+  "currentWindowsManagedRemote7338OriginalSavedTokenWireVerified": false,
+  "currentWindowsManagedRemote7338AutostartVerified": false,
+  "latestWindowsStateObservation": {
+    "proof": "sources/audit/20261120-completion-review/current-windows-readonly-safe.json",
+    "observedAtUtc": "2026-11-20T02:34:15.477589+00:00",
+    "mountStatErrno": 5,
+    "currentNativeProcessStatusVerified": false,
+    "loopback7338ConnectionRefusedDoesNotProveNativeServerStopped": true
+  }
 }

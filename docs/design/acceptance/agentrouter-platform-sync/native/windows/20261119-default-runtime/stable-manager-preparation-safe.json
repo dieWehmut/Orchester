@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "status": "stable-managed-successor-source-prepared-from-actual-unknown-images",
+  "managerSourceSha256": "14a2c2c3bee403def8651c88172e8b33e40f89aaab02a4dbafd1b3b01d52f702",
+  "predecessorManagerSourceSha256": "a55066cbd1b7f19b835e50b1d55962c1ff60ab6e74bd862cbd1af38e35b6b48b",
+  "actualUnknownPredecessorFinalObservationEvents": 12,
+  "observedImage": "C:\\Program Files\\WSL\\wslhost.exe",
+  "observedNativeImageSha256": "1f214fbb69efcd138260c4aa4e35182bfe5371afe4055b59a3133d8f88f9c3b7",
+  "currentNativeAuthenticodeStatus": "Valid",
+  "currentNativeSignerIsMicrosoft": true,
+  "passiveOriginalHandleObservedAndRetainedNeverSignalled": true,
+  "allOwnedHandleExitAndZeroUnknownGatesRetained": true,
+  "normalGuiRuntimeSourcesChanged": false,
+  "forcedTerminations": 0,
+  "privateValuesIncluded": false
+}

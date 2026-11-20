@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "status": "windows-drvfs-readonly-query-observation",
+  "observedAtUtc": "2026-11-20T02:19:12.754362+00:00",
+  "source": "Python pathlib.Path.stat only from Linux working directory",
+  "observations": [
+    {
+      "path": "/mnt/c",
+      "statSucceeded": false,
+      "errno": 5
+    },
+    {
+      "path": "/mnt/c/Users",
+      "statSucceeded": false,
+      "errno": 5
+    },
+    {
+      "path": "/mnt/c/Users/han",
+      "statSucceeded": false,
+      "errno": 5
+    },
+    {
+      "path": "/mnt/c/WINDOWS",
+      "statSucceeded": false,
+      "errno": 5
+    },
+    {
+      "path": "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/powershell.exe",
+      "statSucceeded": false,
+      "errno": 5
+    }
+  ],
+  "conclusionScope": "These path queries do not establish the native applications current process state.",
+  "mountOrServiceChanges": 0,
+  "runtimeRestarts": 0,
+  "processSignals": 0,
+  "privateValuesIncluded": false
+}

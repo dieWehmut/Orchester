@@ -1,0 +1,145 @@
+[CmdletBinding()]
+param([Parameter(Mandatory=$true)][ValidatePattern('\A[a-f0-9]{64}\z')][string]$ExpectedFreshBackupSafeSha256,[ValidateRange(120,1800)][int]$RuntimeTimeoutSeconds=600)
+$ErrorActionPreference='Stop';Set-StrictMode -Version 2.0
+$base=Split-Path -Parent $PSScriptRoot;$helpers=Join-Path $base 'p18m-1113-bf492b45';$run='C:\Users\han\AppData\Local\Orchester-build\monitor-final-20261110\monitors-final21-71def64-20261111'
+$gui=$null;$guiOwned=$null;$remoteProcess=$null;$remoteOwned=$null;$manager=$null;$managerOwned=$null;$http=$null;$directory=$null;$node=$null;$nodeOwned=$null;$nodeOut=$null;$nodeErr=$null;$guiOut=$null;$guiErr=$null;$trayNatural=$false;$embeddedPort=0;$code=1;$stage='source-and-backup-pins'
+$allNodes=New-Object 'Collections.Generic.List[object]';$utf8=[Text.UTF8Encoding]::new($false)
+$desktop='C:\Users\han\AppData\Local\Orchester\orchester-desktop.exe';$desktopSha='e4aa765befa85c7fb053075844be5693685c00677dd62b4cfff4592ec68c1d05'
+$remote='C:\Users\han\Downloads\OrchesterRemote\orchester.exe';$remoteSha='24c8f9806256cc54b239b03f6b4adc976c3fee50c30bc0f2ecf601971c22ce2a'
+$windowsNode='C:\Users\han\AppData\Local\dsh-shortcut\node\node-v24.21.0-win-x64\node.exe';$nodeSha='ba4e6d110e8c1592a1ecd390f6b05f3da124b13871a5be62b341a07a853c6c32'
+$webView='C:\Program Files (x86)\Microsoft\EdgeWebView\Application\157.0.4341.46\msedgewebview2.exe';$webViewSha='7d46f9e074d3630f52cca1ee8de6840d8edf18700901348540c2690b79d7fd9d'
+$managerSource=Join-Path $PSScriptRoot '06-keep-original-state-managed-7338-system-children.ps1';$managerSourceSha='3f0a3efb99ded06451159a9570b185cc91cab969aa31edf84315cf43d7a3fb10'
+$uiSource=Join-Path $PSScriptRoot '04-installed-default-native-readonly-ui.mjs';$uiSourceSha='4542dbb8d2117b3f4c5f022c1383b814afa06deb78cba5e2c73c59b57b20d25f'
+$retentionSource=Join-Path $PSScriptRoot '03-post-default-runtime-private-state-retention.mjs';$retentionSourceSha='c92610fb981b36849ea96b4e61651092d17520190f6a174b67450836978990fd'
+function Need([bool]$Condition,[string]$Label){if(-not $Condition){throw [InvalidOperationException]::new($Label)}}
+function Hash-File([string]$Path){(Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash.ToLowerInvariant()}
+function New-Json([string]$Path,$Value){$stream=[IO.File]::Open($Path,[IO.FileMode]::CreateNew,[IO.FileAccess]::Write,[IO.FileShare]::None);try{$bytes=$utf8.GetBytes((ConvertTo-Json -InputObject $Value -Depth 12)+"`n");$stream.Write($bytes,0,$bytes.Length);$stream.Flush($true)}finally{$stream.Dispose()}}
+function Native-Arg([string]$Text){Need (-not $Text.Contains('"') -and -not $Text.EndsWith('\') -and $Text -notmatch '[\r\n]') 'native-argument-invalid';'"'+$Text+'"'}
+function Ports{@([Net.NetworkInformation.IPGlobalProperties]::GetIPGlobalProperties().GetActiveTcpListeners()|ForEach-Object {$_.Port})}
+function Capture-Gui{if($guiOwned -and $guiOwned.Root -and $guiOwned.IsAlive($guiOwned.Root)){$guiOwned.CaptureAllowedDescendants()}}
+function WebView-Pids{
+ $result=@();$queue=New-Object 'Collections.Generic.Queue[Orchester.FinalRuntime.OwnedProcess]';$queue.Enqueue($guiOwned.Root)
+ while($queue.Count -gt 0){foreach($child in @($guiOwned.DirectChildren($queue.Dequeue(),$webView))){$result+=$child.Pid;$queue.Enqueue($child)}};$result
+}
+function Require-Current7338{
+ Need ($managerOwned -and $managerOwned.Root -and $managerOwned.IsAlive($managerOwned.Root)) 'original-manager-handle-no-longer-live'
+ Need ($remoteOwned -and $remoteOwned.Root -and $remoteOwned.IsAlive($remoteOwned.Root)) 'original-7338-handle-no-longer-live'
+ $listeners=@(Get-NetTCPConnection -State Listen -LocalPort 7338 -ErrorAction SilentlyContinue)
+ Need ($listeners.Count -gt 0 -and @($listeners|Where-Object {$_.OwningProcess -ne $remoteOwned.Root.Pid -or $_.LocalAddress -cne '0.0.0.0'}).Count -eq 0) 'current-7338-original-owner-or-bind-differs'
+ Need ((Hash-File $remote)-ceq $remoteSha) 'retained-7338-binary-changed'
+}
+function Run-NativeNode([string]$Source,[string[]]$Arguments,[bool]$GuiRequired){
+ $script:nodeOwned=[Orchester.FinalRuntime.OwnedProcesses]::new(@($windowsNode));$start=[Diagnostics.ProcessStartInfo]::new();$start.FileName=$windowsNode;$start.WorkingDirectory=$directory;$start.UseShellExecute=$false;$start.CreateNoWindow=$true
+ $start.RedirectStandardOutput=$true;$start.RedirectStandardError=$true;$start.StandardOutputEncoding=$utf8;$start.StandardErrorEncoding=$utf8;$start.EnvironmentVariables.Remove('NODE_OPTIONS')
+ $start.Arguments=(Native-Arg $Source)+' '+(@($Arguments|ForEach-Object {Native-Arg $_})-join ' ')
+ $script:node=[Diagnostics.Process]::new();$node.StartInfo=$start;$nativeNodeStarted=$node.Start()
+ if($nativeNodeStarted){$allNodes.Add([pscustomobject]@{process=$node;owned=$nodeOwned})}
+ Need $nativeNodeStarted 'native-node-start-failed'
+ $script:nodeOut=$node.StandardOutput.ReadToEndAsync();$script:nodeErr=$node.StandardError.ReadToEndAsync()
+ $nodeOwned.CaptureRoot($node,$windowsNode,$nodeSha)
+ $deadline=[DateTime]::UtcNow.AddSeconds($RuntimeTimeoutSeconds)
+ while($nodeOwned.IsAlive($nodeOwned.Root)){Require-Current7338;if($GuiRequired){Need ($guiOwned.IsAlive($guiOwned.Root)) 'default-gui-ended-during-readonly-node';Capture-Gui;Need ($guiOwned.UnexpectedDescendants -eq 0) 'unexpected-default-gui-descendant'};Need ([DateTime]::UtcNow -lt $deadline) 'default-node-runtime-timeout';Start-Sleep -Milliseconds 100}
+ Need ($node.WaitForExit(2000) -and $node.ExitCode -eq 0 -and $nodeOwned.AllExited()) 'native-node-did-not-exit-zero'
+ Need ($nodeOut.Wait(2000) -and $nodeErr.Wait(2000)) 'native-node-output-did-not-close'
+ [IO.File]::WriteAllText((Join-Path $directory (([IO.Path]::GetFileNameWithoutExtension($Source))+'-stdout-safe.log')),$nodeOut.Result,$utf8)
+ [IO.File]::WriteAllText((Join-Path $directory (([IO.Path]::GetFileNameWithoutExtension($Source))+'-stderr-private.log')),$nodeErr.Result,$utf8)
+}
+function Normal-GuiQuit{
+ Capture-Gui
+ & (Join-Path $helpers 'invoke-owned-tray-quit.ps1') -Process $gui -ExpectedProcessId ([uint32]$guiOwned.Root.Pid) -ExpectedCreated $guiOwned.Root.Created -ExpectedImage $guiOwned.Root.Image -ExpectedSha256 $guiOwned.Root.Sha256 -ResultDirectory $directory
+ $menu=Get-Content -LiteralPath (Join-Path $directory 'tray-menu-observation.json') -Raw|ConvertFrom-Json
+ $birth=if($menu.activation -ceq 'MSAA.IAccessible.accDoDefaultAction'){$menu.guiCreatedFileTimeExact}else{$menu.guiCreated}
+ Need ($menu.event -ceq 'owned_native_tray_menu_observed' -and $menu.guiPid -eq $guiOwned.Root.Pid -and [string]$birth -ceq $guiOwned.Root.Created.ToString() -and $menu.binarySha256 -ceq $desktopSha -and (@($menu.labels)-join '|') -ceq 'Open Orchester|Settings...|Quit Orchester' -and $menu.activation -cin @('MSAA.IAccessible.accDoDefaultAction','UIAutomation.InvokePattern') -and $menu.originalProcessHandleRetained -eq $true -and $menu.noForcedProcessTermination -eq $true) 'normal-tray-receipt-differs'
+ $deadline=[DateTime]::UtcNow.AddSeconds(15);while($guiOwned.IsAlive($guiOwned.Root) -and [DateTime]::UtcNow -lt $deadline){Capture-Gui;Start-Sleep -Milliseconds 50}
+ Need ($gui.WaitForExit(1000) -and $gui.ExitCode -eq 0) 'normal-default-gui-exit-not-zero'
+ $deadline=[DateTime]::UtcNow.AddSeconds(10);while(-not $guiOwned.AllExited() -and [DateTime]::UtcNow -lt $deadline){Start-Sleep -Milliseconds 100}
+ Need ($guiOwned.AllExited() -and $guiOwned.UnexpectedDescendants -eq 0) 'normal-default-gui-owned-descendants-remain'
+ $deadline=[DateTime]::UtcNow.AddSeconds(10);do{$released=19323 -notin @(Ports) -and ($embeddedPort -eq 0 -or $embeddedPort -notin @(Ports));if(-not $released){Start-Sleep -Milliseconds 100}}while(-not $released -and [DateTime]::UtcNow -lt $deadline)
+ Need $released 'default-gui-debug-or-embedded-port-remains';$script:trayNatural=$true
+}
+try{
+ Need ((Hash-File (Join-Path $base 'monitor-final-common.ps1'))-ceq '2d4e07f3d703043ea9af8fbf6377814f08135253837b4e36b8f075ea3aeb2f4f') 'common-source-pin-differs'
+ . (Join-Path $base 'monitor-final-common.ps1')
+ $plan=Read-Plan (Join-Path $run 'plan.json') '8645dca6d20f2d5ff0d845d7c74522f52ca72c6aec49ec9529dcb86a997911cd'
+ Need ((Hash-File (Join-Path $run 'final-result.json'))-ceq '7ddcd67633e127a4b664dc69d91cf20bd8751a9ab6a009d8ca73d9b0951fe023') 'final-build-pin-differs';$build=Get-Content -LiteralPath (Join-Path $run 'final-result.json') -Raw|ConvertFrom-Json
+ Need ($build.status -ceq 'build-and-file-gates-passed' -and $build.sourceRevision -ceq $plan.sourceRevision -and @($build.gates).Count -eq 16 -and @($build.gates|Where-Object {$_.exitCode -ne 0 -or $_.timedOut -or -not $_.processExited}).Count -eq 0) 'native-build-gates-incomplete'
+ $backupFile=Join-Path $PSScriptRoot 'fresh-offline-backup-safe.json';Need ((Hash-File $backupFile)-ceq $ExpectedFreshBackupSafeSha256) 'backup-safe-pin-differs';$backup=Get-Content -LiteralPath $backupFile -Raw|ConvertFrom-Json
+ Need ($backup.status -ceq 'fresh-offline-original-backup-verified' -and $backup.actualNativeExitCode -eq 0 -and $backup.allExistingRootsVerified -eq $true -and $backup.allOwnedReadLocksReleased -eq $true -and $backup.privateAclInheritanceDisabled -eq $true) 'original-offline-backup-not-verified'
+ $manifestFile=Join-Path $PSScriptRoot 'fresh-offline-backup-private.json';Need ((Hash-File $manifestFile)-ceq $backup.privateManifestSha256) 'backup-private-manifest-pin-differs';$manifest=Get-Content -LiteralPath $manifestFile -Raw|ConvertFrom-Json
+ Need (@($manifest.roots).Count -eq 6) 'six-original-backup-roots-required'
+ foreach($root in @($manifest.roots)){if($root.exists){Same-Inventory $root.inventory (Directory-Inventory $root.backup) 'original-offline-backup-before-default-launch'}}
+ foreach($root in @($manifest.roots|Where-Object {$_.name -notin @('desktop-installation','remote-installation')})){if($root.exists){Same-Inventory $root.inventory (Directory-Inventory $root.source) 'original-external-user-state-before-launch'}else{Need (-not (Test-Path -LiteralPath $root.source)) 'original-absent-profile-appeared-before-launch'}}
+ foreach($binding in @(@{file='promotion-desktop-6e645a43f8dc4ce18a41e170032ba126-safe.json';sha='04515405b849e912dbea44c4561e04c5233a08271e364a42242b242ef6086409';binary=$desktopSha},@{file='promotion-remote-e4a25a1a80f747c499e02dade8490ecd-safe.json';sha='4e4821ec399b3884ca0a407d186c91be6d180af4327463a1939271a360f44960';binary=$remoteSha})){
+  $file=Join-Path $PSScriptRoot $binding.file;Need ((Hash-File $file)-ceq $binding.sha) 'current-promotion-pin-differs';$promotion=Get-Content -LiteralPath $file -Raw|ConvertFrom-Json
+  Need ($promotion.status -ceq 'authorized-directory-promotion-and-offline-retention-verified' -and $promotion.actualNativeExitCode -eq 0 -and $promotion.promoted -eq $true -and $promotion.originalInstallationPreserved -eq $true -and $promotion.originalExternalStateByteExact -eq $true -and $promotion.noAutoLaunch -eq $true -and $promotion.freshBackupSafeSha256 -ceq $ExpectedFreshBackupSafeSha256 -and $promotion.promotedExeSha256 -ceq $binding.binary) 'verified-current-promotion-required'
+ }
+ Need ((Hash-File $desktop)-ceq $desktopSha -and (Hash-File $remote)-ceq $remoteSha -and (Hash-File $windowsNode)-ceq $nodeSha -and (Hash-File $webView)-ceq $webViewSha) 'current-native-binary-pin-differs'
+ Same-Inventory (Directory-Inventory (Join-Path $plan.desktopCandidate 'web')) (Directory-Inventory (Join-Path (Split-Path -Parent $desktop) 'web')) 'installed-default-desktop-Web'
+ Need ((Hash-File (Join-Path $run 'fresh-runtime-inputs.json'))-ceq 'b364598c896cbcd8f4c7a70129a3ecbb6088f8930a0ea591a3860aaba6c7f86f') 'fresh-package-input-pin-differs';$fresh=Get-Content -LiteralPath (Join-Path $run 'fresh-runtime-inputs.json') -Raw|ConvertFrom-Json
+ Same-Inventory $fresh.remotePackageInventory (Directory-Inventory (Split-Path -Parent $remote)) 'installed-default-remote-package'
+ $sourcePins=@(@{file=$managerSource;sha=$managerSourceSha},@{file=$uiSource;sha=$uiSourceSha},@{file=$retentionSource;sha=$retentionSourceSha},@{file=(Join-Path $helpers 'OwnedRuntimeProcesses.cs');sha='d335743a632acae0c90968e482b87eda44aaf1dae241e938e62b5c7833598d45'},@{file=(Join-Path $helpers 'NativeTrayQuit.cs');sha='5e33b5f26a7250aaa8c5c86f0b5540e1a7dd07106cfce00570d9e31a4becd32c'},@{file=(Join-Path $helpers 'NativeDesktopWindows.cs');sha='858fdf6e41f257b8923bed98c4ba15177c8538ef2240d51f8122519df9b5af58'},@{file=(Join-Path $helpers 'invoke-owned-tray-quit.ps1');sha='215c7279b991264a5bba35518aabdd0c71ebaa8f9dd04be90a7e993e7b05b30e'},@{file=(Join-Path $helpers 'retain-owned-observation.ps1');sha='6f758142622e49e7b6e7892c7b254a5dda53b990425d0ff7b9e54d84a7523344'})
+ foreach($pin in $sourcePins){Need ((Hash-File $pin.file)-ceq $pin.sha) 'default-runtime-helper-pin-differs'}
+ Need (7338 -notin @(Ports) -and 19323 -notin @(Ports)) 'existing-runtime-port-present-untouched'
+ Need (@(Get-CimInstance Win32_Process -Filter "Name='orchester-desktop.exe' OR Name='orchester.exe'" -OperationTimeoutSec 60 -ErrorAction Stop).Count -eq 0) 'existing-orchester-process-present-untouched'
+ $directory=Join-Path $manifest.backupDirectory ('runtime-'+[Guid]::NewGuid().ToString('N'));[IO.Directory]::CreateDirectory($directory)|Out-Null
+ if(-not ('Orchester.FinalRuntime.OwnedProcesses' -as [type])){Add-Type -Path (Join-Path $helpers 'OwnedRuntimeProcesses.cs')}
+ . (Join-Path $helpers 'retain-owned-observation.ps1')
+ $system32=Join-Path $env:SystemRoot 'System32';$powershellExe=Join-Path $system32 'WindowsPowerShell\v1.0\powershell.exe';$powershellSha='60c9b29843624dd8af6b6a7b26147753be6aeef65098b9a503cc50850afe410f'
+ $systemPins=@(@{path=$powershellExe;sha=$powershellSha},@{path=(Join-Path $system32 'icacls.exe');sha='cb9e55d4c02f4e55100724d2da9a1267f49e196bd39fcdf36cec6ea6314fad2a'},@{path=(Join-Path $system32 'cmd.exe');sha='15cd209c995b7d3009c91ca40892d5b8f1fb162f3e5f10716642ea278e8e0d7b'},@{path=(Join-Path $system32 'conhost.exe');sha='c86146188b78e484f32cc29e2331689659943b47689a85570342044f499938ac'},@{path=(Join-Path $system32 'wsl.exe');sha='fcd08205b608b5c4831e0dcb1801dd274436cd2c8420815f18ae58a085891a18'},@{path='C:\Program Files\WSL\wsl.exe';sha='051b7a9b7bda66817c052aced998e026610e5d4d18d63f45629d35d5cb5471c8'},@{path='C:\Program Files\WSL\wslhost.exe';sha='1f214fbb69efcd138260c4aa4e35182bfe5371afe4055b59a3133d8f88f9c3b7'})
+ foreach($pin in $systemPins){Need ((Hash-File $pin.path)-ceq $pin.sha) 'pinned-system-runtime-image-differs'}
+ $wslHostSig=Get-AuthenticodeSignature -LiteralPath 'C:\Program Files\WSL\wslhost.exe';Need ($wslHostSig.Status.ToString() -ceq 'Valid' -and $wslHostSig.SignerCertificate.Subject -ceq 'CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US') 'pinned-passive-wslhost-signature-differs'
+ $stage='independent-original-state-7338-manager-launch'
+ $managerInput=Join-Path $directory 'managed-7338-input-private.json';New-Json $managerInput ([ordered]@{schemaVersion=1;sourceRevision=$plan.sourceRevision;resultDirectory=$directory;managerSourceSha256=$managerSourceSha;remoteExe=$remote;remoteExeSha256=$remoteSha;stateRoot='C:\Users\han\AppData\Local\OrchesterRemote\state-home';workspace='\\wsl.localhost\Ubuntu-22.04\home\han\project\Orchester';allowRoot='\\wsl.localhost\Ubuntu-22.04\home\han\project';freshBackupSafeSha256=$ExpectedFreshBackupSafeSha256})
+ $managerStart=[Diagnostics.ProcessStartInfo]::new();$managerStart.FileName=$powershellExe;$managerStart.WorkingDirectory=$PSScriptRoot;$managerStart.UseShellExecute=$true
+ $managerStart.Arguments='-NoProfile -ExecutionPolicy Bypass -File '+(Native-Arg $managerSource)+' -InputFile '+(Native-Arg $managerInput)+' -ExpectedInputSha256 '+(Hash-File $managerInput)
+ $manager=[Diagnostics.Process]::new();$manager.StartInfo=$managerStart;Need ($manager.Start()) 'native-7338-manager-start-failed';$managerOwned=[Orchester.FinalRuntime.OwnedProcesses]::new(@($powershellExe));$managerOwned.CaptureRoot($manager,$powershellExe,$powershellSha)
+ $readyFile=Join-Path $directory 'managed-7338-ready-safe.json';$deadline=[DateTime]::UtcNow.AddSeconds(100)
+ while(-not (Test-Path -LiteralPath $readyFile -PathType Leaf)){Need ($managerOwned.IsAlive($managerOwned.Root)) 'new-7338-manager-ended-before-ready';Need ([DateTime]::UtcNow -lt $deadline) 'new-7338-manager-ready-timeout';Start-Sleep -Milliseconds 200}
+ $ready=Get-Content -LiteralPath $readyFile -Raw|ConvertFrom-Json
+ Need ($ready.status -ceq 'managed-original-state-7338-listener-verified-awaiting-normal-command' -and $ready.managerPid -eq $managerOwned.Root.Pid -and [string]$ready.managerCreatedFileTimeExact -ceq $managerOwned.Root.Created.ToString() -and $ready.managerSourceSha256 -ceq $managerSourceSha -and $ready.remoteExeSha256 -ceq $remoteSha -and $ready.currentListenerOwnedByOriginalStartedProcess -eq $true -and $ready.originalStateHomeUsed -eq $true -and $ready.startupPairingDisabled -eq $true) 'new-managed-7338-ready-identity-differs'
+ Need (([DateTime]::UtcNow-[DateTime]::Parse($ready.observedAtUtc).ToUniversalTime()).TotalSeconds -ge 0 -and ([DateTime]::UtcNow-[DateTime]::Parse($ready.observedAtUtc).ToUniversalTime()).TotalSeconds -lt 120) 'new-managed-7338-ready-receipt-stale'
+ $remoteProcess=[Diagnostics.Process]::GetProcessById([int]$ready.remotePid);$remoteOwned=[Orchester.FinalRuntime.OwnedProcesses]::new(@($remote));$remoteOwned.CaptureRoot($remoteProcess,$remote,$remoteSha)
+ Need ([string]$ready.remoteCreatedFileTimeExact -ceq $remoteOwned.Root.Created.ToString()) 'current-managed-7338-birth-differs';Require-Current7338
+ Add-Type -AssemblyName System.Net.Http;$handler=[Net.Http.HttpClientHandler]::new();$handler.UseProxy=$false;$http=[Net.Http.HttpClient]::new($handler);$http.Timeout=[TimeSpan]::FromSeconds(5)
+ $response=$http.GetAsync('http://127.0.0.1:7338/remote/v1/info').GetAwaiter().GetResult();try{Need ([int]$response.StatusCode -eq 401) 'retained-7338-anonymous-auth-gate-not-401'}finally{$response.Dispose()}
+ $stage='default-original-profile-desktop-launch';$guiOwned=[Orchester.FinalRuntime.OwnedProcesses]::new(@($desktop,$webView)+@($systemPins.path));$guiOwned.RegisterPassiveWslHostObservation()
+ $start=[Diagnostics.ProcessStartInfo]::new();$start.FileName=$desktop;$start.WorkingDirectory=Split-Path -Parent $desktop;$start.UseShellExecute=$false;$start.CreateNoWindow=$true;$start.RedirectStandardOutput=$true;$start.RedirectStandardError=$true;$start.StandardOutputEncoding=$utf8;$start.StandardErrorEncoding=$utf8
+ $start.EnvironmentVariables['ORCHESTER_HOME']='C:\Users\han\.orchester';$start.EnvironmentVariables.Remove('WEBVIEW2_USER_DATA_FOLDER');$start.EnvironmentVariables['WEBVIEW2_BROWSER_EXECUTABLE_FOLDER']=Split-Path -Parent $webView;$start.EnvironmentVariables['WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS']='--remote-debugging-port=19323 --remote-debugging-address=127.0.0.1'
+ # PATH and provider/auth environment stay inherited. No fixture, provider,
+ # token, login or model override is created for the original profile.
+ $gui=[Diagnostics.Process]::new();$gui.StartInfo=$start;Need ($gui.Start()) 'default-desktop-start-failed';$guiOwned.CaptureRoot($gui,$desktop,$desktopSha);$guiOut=$gui.StandardOutput.ReadToEndAsync();$guiErr=$gui.StandardError.ReadToEndAsync()
+ New-Json (Join-Path $directory 'launch-result.json') ([ordered]@{ProcessId=$guiOwned.Root.Pid;Created=$guiOwned.Root.Created.ToString();binarySha256=$desktopSha;packageDirectory=(Split-Path -Parent $desktop);defaultUserProfileUsed=$true;defaultProfileSource='original Windows user home and default Tauri WebView profile';cdpPort=19323;sourceRevision=$plan.sourceRevision;modelCalls=0})
+ $stage='current-default-gui-debug-listener';$deadline=[DateTime]::UtcNow.AddSeconds(60);$cdpReady=$false
+ do{Need ($guiOwned.IsAlive($guiOwned.Root)) 'default-gui-ended-before-debug-ready';Capture-Gui;Require-Current7338;$listeners=@(Get-NetTCPConnection -State Listen -LocalPort 19323 -ErrorAction SilentlyContinue)
+  if($listeners.Count -gt 0){$webPids=@(WebView-Pids);Need (@($listeners|Where-Object {$_.LocalAddress -cne '127.0.0.1'}).Count -eq 0) 'default-debug-not-loopback';if(@($listeners|Where-Object {$_.OwningProcess -notin $webPids}).Count -eq 0){try{$response=$http.GetAsync('http://127.0.0.1:19323/json/list').GetAwaiter().GetResult();try{$targets=$response.Content.ReadAsStringAsync().GetAwaiter().GetResult()|ConvertFrom-Json;$cdpReady=$response.IsSuccessStatusCode -and @($targets).Count -gt 0}finally{$response.Dispose()}}catch{$cdpReady=$false}}};if(-not $cdpReady){Start-Sleep -Milliseconds 200}
+ }while(-not $cdpReady -and [DateTime]::UtcNow -lt $deadline)
+ Need ($cdpReady -and $guiOwned.UnexpectedDescendants -eq 0) 'default-debug-owner-or-descendants-not-ready'
+ $gateFile=Join-Path $directory 'default-current-native-gate-safe.json';New-Json $gateFile ([ordered]@{schemaVersion=1;observedAtUtc=[DateTime]::UtcNow.ToString('o');currentNativeGuiAndCdpOwnerVerified=$true;originalHandleHeldThroughoutNode=$true;guiPid=$guiOwned.Root.Pid;guiCreatedFileTimeExact=$guiOwned.Root.Created.ToString();guiExeSha256=$desktopSha;cdpPort=19323;retained7338Pid=$remoteOwned.Root.Pid;retained7338CreatedFileTimeExact=$remoteOwned.Root.Created.ToString();retained7338SourceSha256=$remoteSha;privateValuesIncluded=$false})
+ $stage='actual-default-readonly-ui-and-original-saved-content';Run-NativeNode $uiSource @($directory,$PSScriptRoot,$gateFile,(Hash-File $gateFile)) $true
+ $uiFile=Join-Path $directory 'default-native-readonly-ui-safe.json';$ui=Get-Content -LiteralPath $uiFile -Raw|ConvertFrom-Json
+ Need ($ui.status -ceq 'installed-default-native-ui-readonly-apis-and-original-session-projection-verified' -and $ui.actualNativeNodeExitCode -eq 0 -and $ui.renderedCanonicalProviderCount -eq 21 -and $ui.exactInstalledImagePayloadMappingCount -eq 42 -and $ui.allOriginalSavedRecordApiProjectionFieldsRetained -eq $true -and $ui.dataPutCount -eq 0 -and $ui.observedApiPutCount -eq 0 -and $ui.observedNonReadApiRequestCount -eq 0 -and $ui.requestObservationIncludesDisclosureRestoreAndDisconnect -eq $true -and $ui.loginOrPairingActions -eq 0 -and $ui.modelCalls -eq 0) 'actual-default-readonly-ui-receipt-incomplete';$embeddedPort=[int]$ui.embeddedPort;Need ($embeddedPort -gt 0 -and $embeddedPort -lt 65536 -and $embeddedPort -ne 19323 -and $embeddedPort -ne 7338) 'default-embedded-port-differs'
+ $stage='default-normal-msaa-tray-quit';Normal-GuiQuit;Require-Current7338
+ $runtimeFile=Join-Path $directory 'default-runtime-before-retention-safe.json';New-Json $runtimeFile ([ordered]@{schemaVersion=1;status='installed-default-desktop-readonly-runtime-and-normal-tray-exit-verified';observedAtUtc=[DateTime]::UtcNow.ToString('o');actualNativeGuiExitCode=0;actualNativeUiNodeExitCode=0;defaultUserProfileUsed=$true;binarySha256=$desktopSha;current7338IdentityRetained=$true;current7338RuntimeLeaseOwnerVerified=$true;runtimeLeaseOwnershipMethod='source-bound held server handle and active owned listener';independentLeaseFileHandleQueryPerformed=$false;current7338Pid=$remoteOwned.Root.Pid;current7338CreatedFileTimeExact=$remoteOwned.Root.Created.ToString();current7338ExeSha256=$remoteSha;remoteAnonymousInfoStatus=401;remoteSavedCredentialWireVerified=$false;normalNativeTrayQuit=$true;forcedTerminations=0;allOriginalGuiHandlesExited=$true;allOriginalUiNodeHandlesExited=$true;debugAndEmbeddedPortsReleased=$true;readonlyUiResultSha256=(Hash-File $uiFile);dataPutCount=0;modelCalls=0;loginOrPairingActions=0;privateValuesIncluded=$false})
+ $stage='original-user-retention-native-scratch-sqlite';Run-NativeNode $retentionSource @($PSScriptRoot,$ExpectedFreshBackupSafeSha256,$runtimeFile,(Hash-File $runtimeFile)) $false;Require-Current7338
+ $retention=ConvertFrom-Json -InputObject $nodeOut.Result.Trim();Need ($retention.status -ceq 'original-user-state-after-native-default-runtime-retained' -and $retention.actualNativeNodeExitCode -eq 0 -and $retention.originalSettingsAndLogsRetained -eq $true -and $retention.originalDatabaseRowsRetained -eq $true -and $retention.allSixOfflineBackupInventoriesStillExact -eq $true -and $retention.sqliteComparedUsingPrivateScratchCopies -eq $true -and $retention.originalBackupDatabasesOpened -eq $false -and $retention.liveSharedMemoryFilesRead -eq $false -and $retention.sqliteSharedMemoryUsesPrivateScratchOnly -eq $true) 'original-user-retention-result-incomplete'
+ foreach($root in @($manifest.roots)){if($root.exists){Same-Inventory $root.inventory (Directory-Inventory $root.backup) 'all-six-original-offline-backups-after-default-runtime'}}
+ $final=[ordered]@{schemaVersion=1;status='installed-default-desktop-native-readonly-runtime-retention-and-managed-7338-verified';observedAtUtc=[DateTime]::UtcNow.ToString('o');actualNativeExitCode=0;actualNativeGuiExitCode=0;actualNativeUiNodeExitCode=0;actualNativeRetentionNodeExitCode=0;sourceRevision=$plan.sourceRevision;defaultDesktopExeSha256=$desktopSha;defaultRemoteExeSha256=$remoteSha;defaultUserProfileUsed=$true;renderedCanonicalProviderCount=21;nativeLoadedThemeMappingCount=42;originalSavedRecordApiRetainedCount=$ui.originalSavedRecordApiRetainedCount;allOriginalSavedRecordApiProjectionFieldsRetained=$true;originalSettingsAndLogsRetained=$true;allOriginalSavedJsonlBytesRetained=$true;originalDatabaseRowsRetained=$true;allSixOfflineBackupInventoriesStillExact=$true;sqliteComparedUsingPrivateScratchCopies=$true;normalNativeTrayQuit=$true;allExactGuiAndNodeHandlesExited=$true;debugAndEmbeddedPortsReleased=$true;current7338IdentityRetained=$true;current7338Pid=$remoteOwned.Root.Pid;current7338CreatedFileTimeExact=$remoteOwned.Root.Created.ToString();managerPid=$managerOwned.Root.Pid;managerCreatedFileTimeExact=$managerOwned.Root.Created.ToString();independentManagerHoldsOriginalServerHandle=$true;startupPairingDisabled=$true;remoteAnonymousInfoStatus=401;remoteSavedCredentialWireVerified=$false;readonlyUiResultSha256=(Hash-File $uiFile);runtimeBeforeRetentionSha256=(Hash-File $runtimeFile);freshBackupSafeSha256=$ExpectedFreshBackupSafeSha256;privateRuntimeDirectory=$directory;dataPutCount=0;modelCalls=0;loginOrPairingActions=0;forcedTerminations=0;privateValuesIncluded=$false}
+ New-Json (Join-Path $directory 'default-runtime-and-retained-7338-final-safe.json') $final;Write-Output (ConvertTo-Json -InputObject $final -Depth 10 -Compress);$code=0
+}catch{
+ $errorType=$_.Exception.GetBaseException().GetType().FullName
+ if($directory){try{New-Json (Join-Path $directory ('default-runtime-failure-'+[Guid]::NewGuid().ToString('N')+'-safe.json')) ([ordered]@{schemaVersion=1;status='failed';stage=$stage;exceptionType=$errorType;actualNativeExitCode=1;observedAtUtc=[DateTime]::UtcNow.ToString('o');privateRuntimeDirectory=$directory;'7338Stopped'=$false;forcedTerminations=0;privateValuesIncluded=$false})}catch{}}
+ [Console]::Error.WriteLine('Default runtime failed at '+$stage+' ('+$errorType+').')
+}finally{
+ if($guiOwned -and $guiOwned.Root -and $guiOwned.IsAlive($guiOwned.Root) -and -not $trayNatural){try{Normal-GuiQuit}catch{}}
+ if($directory -and (Get-Command Retain-OriginalOwnedObservation -ErrorAction SilentlyContinue)){
+  Retain-OriginalOwnedObservation $guiOwned $gui $directory
+  foreach($entry in $allNodes){Retain-OriginalOwnedObservation $entry.owned $entry.process $directory}
+ }
+ if($guiOut -and $guiOut.Wait(2000)){[IO.File]::WriteAllText((Join-Path $directory 'default-gui-stdout-private.log'),$guiOut.Result,$utf8)}
+ if($guiErr -and $guiErr.Wait(2000)){[IO.File]::WriteAllText((Join-Path $directory 'default-gui-stderr-private.log'),$guiErr.Result,$utf8)}
+ if($http){$http.Dispose()};if($guiOwned){$guiOwned.Dispose()};if($gui){$gui.Dispose()};foreach($entry in $allNodes){$entry.owned.Dispose();$entry.process.Dispose()}
+ # The independent manager retains its creator Process and kernel handle. Only
+ # this observer's duplicate handles are released; 7338 stays running.
+ if($remoteOwned){$remoteOwned.Dispose()};if($remoteProcess){$remoteProcess.Dispose()};if($managerOwned){$managerOwned.Dispose()};if($manager){$manager.Dispose()}
+}
+exit $code

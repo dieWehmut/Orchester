@@ -1,0 +1,12 @@
+{
+    "schemaVersion":  1,
+    "status":  "failed",
+    "stage":  "real-background-wsl-refresh-cycles",
+    "exceptionType":  "System.IO.IOException",
+    "sourceLine":  11,
+    "actualNativeLauncherExitCode":  1,
+    "observedAtUtc":  "2026-11-20T01:55:40.5230849Z",
+    "serverSourceCreatorHandleRemainsRetained":  true,
+    "forcedTerminations":  0,
+    "privateValuesIncluded":  false
+}

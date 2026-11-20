@@ -1,0 +1,14 @@
+{
+    "schemaVersion":  1,
+    "observedAtUtc":  "2026-11-19T06:41:11.0266845Z",
+    "currentNativeGuiAndCdpOwnerVerified":  true,
+    "originalHandleHeldThroughoutNode":  true,
+    "guiPid":  35360,
+    "guiCreatedFileTimeExact":  "134395440702275344",
+    "guiExeSha256":  "e4aa765befa85c7fb053075844be5693685c00677dd62b4cfff4592ec68c1d05",
+    "cdpPort":  19323,
+    "retained7338Pid":  9844,
+    "retained7338CreatedFileTimeExact":  "134395440680673328",
+    "retained7338SourceSha256":  "24c8f9806256cc54b239b03f6b4adc976c3fee50c30bc0f2ecf601971c22ce2a",
+    "privateValuesIncluded":  false
+}

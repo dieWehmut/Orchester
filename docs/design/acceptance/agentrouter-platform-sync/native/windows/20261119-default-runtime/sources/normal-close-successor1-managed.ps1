@@ -1,0 +1,19 @@
+$ErrorActionPreference='Stop';Set-StrictMode -Version 2.0
+$out='C:\Users\han\AppData\Local\Orchester-build\default-finish-0e6df6887414';$dir='C:\Users\han\AppData\Local\Orchester-build\default-finish-0e6df6887414\runtime-0dcbfa50f10f412589abffe796605fc4';$managerSource='C:\Users\han\AppData\Local\Orchester-build\default-finish-0e6df6887414\06-successor-managed-7338.ps1'
+function Need([bool]$c,[string]$l){if(-not $c){throw [InvalidOperationException]::new($l)}}
+$manager=$null;$server=$null
+try{
+ $manager=Get-Process -Id 28744 -ErrorAction Stop;$server=Get-Process -Id 9844 -ErrorAction Stop
+ $mh=$manager.Handle;$sh=$server.Handle
+ Need ($manager.StartTime.ToUniversalTime().ToFileTimeUtc().ToString() -ceq '134395440669079575' -and $server.StartTime.ToUniversalTime().ToFileTimeUtc().ToString() -ceq '134395440680673328' -and $manager.SessionId -eq 1 -and $server.SessionId -eq 1) 'original-held-process-birth-or-session-differs'
+ Need ((Get-FileHash -LiteralPath $server.Path -Algorithm SHA256).Hash.ToLowerInvariant() -ceq '24c8f9806256cc54b239b03f6b4adc976c3fee50c30bc0f2ecf601971c22ce2a' -and (Get-FileHash -LiteralPath $managerSource -Algorithm SHA256).Hash.ToLowerInvariant() -ceq 'a55066cbd1b7f19b835e50b1d55962c1ff60ab6e74bd862cbd1af38e35b6b48b') 'original-source-or-image-changed'
+ $c=Get-CimInstance Win32_Process -Filter 'ProcessId=9844' -OperationTimeoutSec 30;Need ($c.ParentProcessId -eq 28744) 'original-manager-parent-differs'
+ $listeners=@(Get-NetTCPConnection -State Listen -LocalPort 7338 -ErrorAction Stop);Need ($listeners.Count -gt 0 -and @($listeners|Where-Object {$_.OwningProcess -ne 9844 -or $_.LocalAddress -cne '0.0.0.0'}).Count -eq 0) 'owned-listener-differs'
+ $request=[ordered]@{schemaVersion=1;action='normal-quit';remotePid=9844;remoteCreatedFileTimeExact='134395440680673328';remoteExeSha256='24c8f9806256cc54b239b03f6b4adc976c3fee50c30bc0f2ecf601971c22ce2a';managerSourceSha256='a55066cbd1b7f19b835e50b1d55962c1ff60ab6e74bd862cbd1af38e35b6b48b'}
+ $f=[IO.File]::Open((Join-Path $dir 'request-managed-7338-normal-quit.json'),[IO.FileMode]::CreateNew,[IO.FileAccess]::Write,[IO.FileShare]::None);try{$b=([Text.UTF8Encoding]::new($false)).GetBytes(($request|ConvertTo-Json -Compress));$f.Write($b,0,$b.Length);$f.Flush($true)}finally{$f.Dispose()}
+ Need ($server.WaitForExit(45000)) 'original-server-normal-exit-not-observed';[IO.File]::WriteAllText((Join-Path $out 'successor1-server-exit-immediate-safe.json'),([ordered]@{schemaVersion=1;status='owned-server-original-observer-native-exit-observed';observedAtUtc=[DateTime]::UtcNow.ToString('o');serverPid=9844;serverCreatedFileTimeExact='134395440680673328';actualNativeServerExitCode=$server.ExitCode;heldOriginalObserverProcessHandleUntilNativeExit=$true;sourceBoundNormalStdinQuitOnly=$true;forcedTerminations=0;privateValuesIncluded=$false}|ConvertTo-Json -Depth 5),[Text.UTF8Encoding]::new($false));Need ($manager.WaitForExit(50000)) 'original-manager-exit-not-observed'
+ Need ($server.ExitCode -eq 0) 'original-server-exit-not-zero'
+ Need (@(Get-NetTCPConnection -State Listen -LocalPort 7338 -ErrorAction SilentlyContinue).Count -eq 0) '7338-listener-still-present'
+ [IO.File]::WriteAllText((Join-Path $out 'successor1-owned-7338-normal-close-safe.json'),([ordered]@{schemaVersion=1;status='exact-owned-failed-attempt-normal-stdin-close-verified';observedAtUtc=[DateTime]::UtcNow.ToString('o');originalServerPid=9844;originalManagerPid=28744;originalServerExitCode=$server.ExitCode;originalManagerExitCode=$manager.ExitCode;heldProcessHandlesUntilExit=$true;normalStdinQuitThroughOriginalController=$true;originalManagerAcceptanceFailed=$true;'7338Released'=$true;forcedTerminations=0;pairingOrCredentialActions=0;modelCalls=0;privateValuesIncluded=$false}|ConvertTo-Json -Depth 5),[Text.UTF8Encoding]::new($false))
+}finally{if($manager){$manager.Dispose()};if($server){$server.Dispose()}}
+exit 0

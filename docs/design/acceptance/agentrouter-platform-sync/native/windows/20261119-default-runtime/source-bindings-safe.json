@@ -1,0 +1,878 @@
+{
+  "schemaVersion": 1,
+  "status": "exact-native-source-receipts-and-derived-prerequisite-bindings",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "files": [
+    {
+      "path": "gui-historical/default-current-native-gate-safe.json",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/safe-artifacts/default-current-native-gate-safe.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 611,
+      "sha256": "7560d4ed830ba36b4f1f04716fbb7854b7555b97fc1056a467ed2fe887eefd5d",
+      "byteExact": true
+    },
+    {
+      "path": "gui-historical/default-native-readonly-ui-safe.json",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/safe-artifacts/default-native-readonly-ui-safe.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 1171,
+      "sha256": "56db8bfc2fbad235c69239c07d1b29cf3cd03f770f0c736227420eeaba0a9f22",
+      "byteExact": true
+    },
+    {
+      "path": "gui-historical/default-runtime-and-retained-7338-final-safe.json",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/safe-artifacts/default-runtime-and-retained-7338-final-safe.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 2451,
+      "sha256": "aeaded7320bde6719365ee1a034868bd3151d9bf1bce45ea035bd0e5eb0dfa26",
+      "byteExact": true
+    },
+    {
+      "path": "gui-historical/default-runtime-before-retention-safe.json",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/safe-artifacts/default-runtime-before-retention-safe.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 1332,
+      "sha256": "161c9111ebcd58685a2be150356d07568315e573d4ad9701d781c179753122de",
+      "byteExact": true
+    },
+    {
+      "path": "gui-historical/launch-result.json",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/safe-artifacts/launch-result.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 477,
+      "sha256": "e66f308fbed486647b78a25150253d240b23d9a4e649c49928196c64ecc39d58",
+      "byteExact": true
+    },
+    {
+      "path": "gui-historical/managed-7338-ready-safe.json",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/safe-artifacts/managed-7338-ready-safe.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 954,
+      "sha256": "53844eefd557186b598153554b35e6564e9f1b9e011181417608228a78bd3cd8",
+      "byteExact": true
+    },
+    {
+      "path": "failures/original/original-attempt-default-runtime-failure-0d16fd01e3a2403685f0a5e77ee6efc7-safe.json",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/safe-artifacts/original-attempt-default-runtime-failure-0d16fd01e3a2403685f0a5e77ee6efc7-safe.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 560,
+      "sha256": "dad145e902ed338ad7b04e9480e6c69c43506db56794eeb00e5b919c1d380ae7",
+      "byteExact": true
+    },
+    {
+      "path": "failures/original/original-attempt-managed-7338-failure-d31b6f1964044d08a123ce86b48ebef4-safe.json",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/safe-artifacts/original-attempt-managed-7338-failure-d31b6f1964044d08a123ce86b48ebef4-safe.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 222,
+      "sha256": "c462113bceca481b52262bae07fc88db625756b8f578325d2defafb219524853",
+      "byteExact": true
+    },
+    {
+      "path": "failures/original/original-attempt-managed-7338-failure-static-safe.json",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/safe-artifacts/original-attempt-managed-7338-failure-static-safe.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 892,
+      "sha256": "ed94ccba7aabdbc8559e0bfed868f1f678855c7cc9b2808409bb4318c6139bf7",
+      "byteExact": true
+    },
+    {
+      "path": "failures/original/original-normal-quit-partial-observation-safe.json",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/safe-artifacts/original-normal-quit-partial-observation-safe.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 1098,
+      "sha256": "7800550330b24aace716c94fc5fe1efc25904547f34bfba1d735bdb952e9e4f7",
+      "byteExact": true
+    },
+    {
+      "path": "gui-historical/post-default-runtime-state-retention-a0064efebd258df0-safe.json",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/safe-artifacts/post-default-runtime-state-retention-a0064efebd258df0-safe.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 1123,
+      "sha256": "5d5ba9ff68e94ac874474022ab082bc86facc157a6c4fd03b2db349c9e055271",
+      "byteExact": true
+    },
+    {
+      "path": "gui-historical/preflight-default-runtime-state-retention-57e77cd9786d37b5-safe.json",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/safe-artifacts/preflight-default-runtime-state-retention-57e77cd9786d37b5-safe.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 1129,
+      "sha256": "52c059171fdb3f425b95b58afad126a076907aa2871161a070febfb1d56bf0ec",
+      "byteExact": true
+    },
+    {
+      "path": "gui-historical/preflight-held-managed-7338-safe.json",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/safe-artifacts/preflight-held-managed-7338-safe.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 638,
+      "sha256": "28d47bc6cd8d1844ff4507aea5bb55d1ec42b2fbea1df7d00adbd15e17abf93b",
+      "byteExact": true
+    },
+    {
+      "path": "gui-historical/tray-host-observation.json",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/safe-artifacts/tray-host-observation.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 305,
+      "sha256": "dc3df64cf67113195a6f080ffbfba648c593f527ece7c04fe2432bb14a382b45",
+      "byteExact": true
+    },
+    {
+      "path": "gui-historical/tray-menu-observation.json",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/safe-artifacts/tray-menu-observation.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 1860,
+      "sha256": "2dd204644cd43cf9ee9f5644a8939c0d4663f7cde6bf95b8d13c98a7884bcdb7",
+      "byteExact": true
+    },
+    {
+      "path": "gui-historical/tray-msaa-first-read-safe.json",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/safe-artifacts/tray-msaa-first-read-safe.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 1465,
+      "sha256": "24df66d20aad2f2784ae9ef7b7010a01e034ec7bd6a11ab4a506c339a7b28dd0",
+      "byteExact": true
+    },
+    {
+      "path": "gui-historical/tray-uia-before-msaa-safe.json",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/safe-artifacts/tray-uia-before-msaa-safe.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 316,
+      "sha256": "19866b9bc5bc0b810dc2ef04f43a9355e10d83a6a1cbf034ebe0a3184c8a37ce",
+      "byteExact": true
+    },
+    {
+      "path": "historical-manifest-before-stable-success.json",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/safe-artifact-manifest.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 5246,
+      "sha256": "447c2842661d08f5a6ecda57cccac1f19e37fd7643e025869325910079d0cda8",
+      "byteExact": true
+    },
+    {
+      "path": "sources/05-successor-default-runtime.ps1",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/05-successor-default-runtime.ps1",
+      "kind": "exact-native-powershell-source",
+      "sizeBytes": 29816,
+      "sha256": "dc2a2bfeb0b6e19d86d6cf34d2aebd47281eb71040f40e03b0841879eea11f02",
+      "byteExact": true
+    },
+    {
+      "path": "sources/06-stable-managed-7338.ps1",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/06-stable-managed-7338.ps1",
+      "kind": "exact-native-powershell-source",
+      "sizeBytes": 15018,
+      "sha256": "14a2c2c3bee403def8651c88172e8b33e40f89aaab02a4dbafd1b3b01d52f702",
+      "byteExact": true
+    },
+    {
+      "path": "sources/06-successor-managed-7338.ps1",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/06-successor-managed-7338.ps1",
+      "kind": "exact-native-powershell-source",
+      "sizeBytes": 13632,
+      "sha256": "a55066cbd1b7f19b835e50b1d55962c1ff60ab6e74bd862cbd1af38e35b6b48b",
+      "byteExact": true
+    },
+    {
+      "path": "sources/07-launch-stable-managed.ps1",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/07-launch-stable-managed.ps1",
+      "kind": "exact-native-powershell-source",
+      "sizeBytes": 16367,
+      "sha256": "0809191a63cb01234f803d9cdfb4305e85d64dad5826f5c13234766d23e558e1",
+      "byteExact": true
+    },
+    {
+      "path": "sources/08-verify-current-stable-managed.ps1",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/08-verify-current-stable-managed.ps1",
+      "kind": "exact-native-powershell-source",
+      "sizeBytes": 15722,
+      "sha256": "12256f8e55bd690a85f74a2bf157c2f73f6c07d35f22275671f3d09a56301ae5",
+      "byteExact": true
+    },
+    {
+      "path": "sources/09-current-stable-readonly-probe.ps1",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/09-current-stable-readonly-probe.ps1",
+      "kind": "exact-native-powershell-source",
+      "sizeBytes": 5127,
+      "sha256": "6ca0fe455feab495d7fb90707389feafa1ccdceb54a227f8663a429e6ce747f8",
+      "byteExact": true
+    },
+    {
+      "path": "sources/11-refresh-current-stable-managed.ps1",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/11-refresh-current-stable-managed.ps1",
+      "kind": "exact-native-powershell-source",
+      "sizeBytes": 15760,
+      "sha256": "ab1b77988a2a180c0041bf571e27d75e7e1598962480fd6bae6aafe391e6dded",
+      "byteExact": true
+    },
+    {
+      "path": "sources/13-native-observer-wrapper.ps1",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/13-native-observer-wrapper.ps1",
+      "kind": "exact-native-powershell-source",
+      "sizeBytes": 2765,
+      "sha256": "9534d8033e029c72a11acde9beb2c86548fb363a75eec32193ab32fc76ee4ad0",
+      "byteExact": true
+    },
+    {
+      "path": "sources/15-current-managed-final-readonly.ps1",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/15-current-managed-final-readonly.ps1",
+      "kind": "exact-native-powershell-source",
+      "sizeBytes": 13161,
+      "sha256": "ea63bf483e15c7e0de63ad01bc46206cfd0aab17fcbd7c21e6073fb198087fb8",
+      "byteExact": true
+    },
+    {
+      "path": "sources/current-handoff-readonly.ps1",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/current-handoff-readonly.ps1",
+      "kind": "exact-native-powershell-source",
+      "sizeBytes": 3522,
+      "sha256": "fab00bfefd83989b01ac33d881c11ce17e3f9a70e3350f64e6a7630b16499be6",
+      "byteExact": true
+    },
+    {
+      "path": "sources/invoke-preflight.ps1",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/invoke-preflight.ps1",
+      "kind": "exact-native-powershell-source",
+      "sizeBytes": 1576,
+      "sha256": "c6b48caee91da86391e63fe2cd6f12e6d8b863a6bdc24e029c3ba15fe0b70175",
+      "byteExact": true
+    },
+    {
+      "path": "sources/invoke-successor-runtime.ps1",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/invoke-successor-runtime.ps1",
+      "kind": "exact-native-powershell-source",
+      "sizeBytes": 1244,
+      "sha256": "0aed89934a9799608c37d4b657da5011b5a4629fe50171ad56d58dc2c2a7c035",
+      "byteExact": true
+    },
+    {
+      "path": "sources/normal-close-original-managed.ps1",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/normal-close-original-managed.ps1",
+      "kind": "exact-native-powershell-source",
+      "sizeBytes": 3452,
+      "sha256": "3ae299d984fa9496576c73bd48fa5bba2ddff4c64066e644bb2a98571cdb0b09",
+      "byteExact": true
+    },
+    {
+      "path": "sources/normal-close-successor1-managed.ps1",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/normal-close-successor1-managed.ps1",
+      "kind": "exact-native-powershell-source",
+      "sizeBytes": 3894,
+      "sha256": "f4755ec2ecfec2b04b7e6fdb0e86c36ab095b4a5972725f6c54db861c16391a4",
+      "byteExact": true
+    },
+    {
+      "path": "sources/original-tree-readonly.ps1",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/original-tree-readonly.ps1",
+      "kind": "exact-native-powershell-source",
+      "sizeBytes": 2749,
+      "sha256": "3973e88c8c226e798ab41323c3e9e0821c81bb1b93c9e5a2be4dcde25ba0076a",
+      "byteExact": true
+    },
+    {
+      "path": "sources/successor-tree-readonly.ps1",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/successor-tree-readonly.ps1",
+      "kind": "exact-native-powershell-source",
+      "sizeBytes": 2750,
+      "sha256": "0a1eea0e5cc1ecf8e4bd18d86527cb09f6daf94c0ac6e1792a11668890e78733",
+      "byteExact": true
+    },
+    {
+      "path": "sources/03-successor-original-retention.mjs",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/03-successor-original-retention.mjs",
+      "kind": "exact-native-node-source",
+      "sizeBytes": 7860,
+      "sha256": "964d1b5482b103d1694de60bfc0a230b056c48483631003c7600de6f9deb6487",
+      "byteExact": true
+    },
+    {
+      "path": "sources/04-successor-native-ui.mjs",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/04-successor-native-ui.mjs",
+      "kind": "exact-native-node-source",
+      "sizeBytes": 11753,
+      "sha256": "bc7c6a3c08c3f8b67f0baf4c33041e6880c48d0a9f0593f124951569a9b598e6",
+      "byteExact": true
+    },
+    {
+      "path": "sources/10-refresh-current-executor.py",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/10-refresh-current-executor.py",
+      "kind": "exact-wsl-executor-source",
+      "sizeBytes": 2954,
+      "sha256": "a6e6304ce99f81a2fac442af8bd80ead7a197c448e118cc8720c23656d339ed5",
+      "byteExact": true
+    },
+    {
+      "path": "sources/12-refresh-current-executor.py",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/12-refresh-current-executor.py",
+      "kind": "exact-wsl-executor-source",
+      "sizeBytes": 2956,
+      "sha256": "63cd328b317aefd3efec9256213bfbad34f4d5d28010d121e6a4590658423de2",
+      "byteExact": true
+    },
+    {
+      "path": "sources/14-native-observer-wrapper-executor.py",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/14-native-observer-wrapper-executor.py",
+      "kind": "exact-wsl-executor-source",
+      "sizeBytes": 2913,
+      "sha256": "eced614beb57e21527d71c2400ada5a37287e91414f9c4d39b87f7393c555bc9",
+      "byteExact": true
+    },
+    {
+      "path": "sources/16-current-managed-final-executor.py",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/16-current-managed-final-executor.py",
+      "kind": "exact-wsl-executor-source",
+      "sizeBytes": 2955,
+      "sha256": "bbc0c1d96d7cb5b37b628ca994c54a1fd0ccdeac7ee4df159bdc3466cf4bd213",
+      "byteExact": true
+    },
+    {
+      "path": "successor-preparation-safe.json",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/successor-preparation-safe.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 962,
+      "sha256": "f97b5fb7d576d64ece462f5360ac45d72d3fe28fec84cd2ad7bf2928728612ea",
+      "byteExact": true
+    },
+    {
+      "path": "stable-manager-preparation-safe.json",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/stable-manager-preparation-safe.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 833,
+      "sha256": "b743c8233510e50a2353c3b3266990fab1b33f8b9b8cb011a4daef4c1be8c83e",
+      "byteExact": true
+    },
+    {
+      "path": "failures/predecessors/successor1-owned-7338-normal-close-safe.json",
+      "originPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/default-finish-0e6df6887414/successor1-owned-7338-normal-close-safe.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 602,
+      "sha256": "09499acdc6b8df1b933f287c3c4861dce64b478c92f4ffa9a71409b831e74d94",
+      "byteExact": true
+    },
+    {
+      "path": "failures/predecessors/successor1-server-exit-immediate-safe.json",
+      "originPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/default-finish-0e6df6887414/successor1-server-exit-immediate-safe.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 456,
+      "sha256": "7f9c450627c9a205f62421e9512418d53a6fd67b9eb788fab9b75dbf3cde60e2",
+      "byteExact": true
+    },
+    {
+      "path": "failures/predecessors/native-successor-preflight-safe.json",
+      "originPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/default-finish-0e6df6887414/native-successor-preflight-safe.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 328,
+      "sha256": "690edff4f795d60f8fa4e43b684da477d93c0db83e74948cadd55b9322b4ca0c",
+      "byteExact": true
+    },
+    {
+      "path": "failures/predecessors/original-current-tree-signature-safe.json",
+      "originPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/default-finish-0e6df6887414/original-current-tree-signature-safe.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 3710,
+      "sha256": "cf41f7c9d09d7f91bfbf52b6cf495ea539e3a2a91594635b2b35aec1aa92f0ab",
+      "byteExact": true
+    },
+    {
+      "path": "failures/predecessors/successor-current-tree-signature-safe.json",
+      "originPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/default-finish-0e6df6887414/successor-current-tree-signature-safe.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 3709,
+      "sha256": "0642f3abc510fe94cfbd2a057a6bbef453ccf4e30be0893d71d04787d8f6e9f4",
+      "byteExact": true
+    },
+    {
+      "path": "failures/successor1/managed-7338-failure-039129021b4247e58a6367aeb022a012-safe.json",
+      "originPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/default-finish-0e6df6887414/runtime-0dcbfa50f10f412589abffe796605fc4/managed-7338-failure-039129021b4247e58a6367aeb022a012-safe.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 222,
+      "sha256": "79f5cc9827c865bd110eb0db14b0db5558908f27244a769fab87974403345f6e",
+      "byteExact": true
+    },
+    {
+      "path": "failures/successor1/managed-7338-failure-static-safe.json",
+      "originPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/default-finish-0e6df6887414/runtime-0dcbfa50f10f412589abffe796605fc4/managed-7338-failure-static-safe.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 892,
+      "sha256": "07ec4a85e13ce3b4250c45ca28f443f1e44384d771351abf40371ddc90074d10",
+      "byteExact": true
+    },
+    {
+      "path": "failures/successor1/managed-7338-original-server-exit-safe.json",
+      "originPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/default-finish-0e6df6887414/runtime-0dcbfa50f10f412589abffe796605fc4/managed-7338-original-server-exit-safe.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 437,
+      "sha256": "ebd33e231c7c7e734650238b9fa91f00c2913126e65d3a3c3e27f01f1c1aa9d7",
+      "byteExact": true
+    },
+    {
+      "path": "managed-stable/managed-7338-ready-safe.json",
+      "originPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/default-finish-0e6df6887414/stable-manager-761a858ddbc8456198344f3bf09ab0af/managed-7338-ready-safe.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 955,
+      "sha256": "3b9681d965f5fab6c18c644afbb4badf242beae8e910fa8a502a3fce83d40f1a",
+      "byteExact": true
+    },
+    {
+      "path": "failures/stable-launcher/stable-launcher-failure-815a4ae949dc4fc88d7f2fd46df0cb66-safe.json",
+      "originPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/default-finish-0e6df6887414/stable-manager-761a858ddbc8456198344f3bf09ab0af/stable-launcher-failure-815a4ae949dc4fc88d7f2fd46df0cb66-safe.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 402,
+      "sha256": "416796e90a2f48f781c18640a1df4a6d8fe045fc9a52d4e6fc7d95be190eac2b",
+      "byteExact": true
+    },
+    {
+      "path": "managed-stable/observer-01b6c742e06b4dcf90a1140484dc8ded/preflight-default-runtime-state-retention-c25202a244fa963d-safe.json",
+      "originPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/default-finish-0e6df6887414/stable-manager-761a858ddbc8456198344f3bf09ab0af/observer-01b6c742e06b4dcf90a1140484dc8ded/preflight-default-runtime-state-retention-c25202a244fa963d-safe.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 1129,
+      "sha256": "13bc6575d2624c8df99b703f9af7f3b6742ef0df468554f834384c35a66a2b29",
+      "byteExact": true
+    },
+    {
+      "path": "managed-stable/observer-01b6c742e06b4dcf90a1140484dc8ded/preflight-held-managed-7338-safe.json",
+      "originPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/default-finish-0e6df6887414/stable-manager-761a858ddbc8456198344f3bf09ab0af/observer-01b6c742e06b4dcf90a1140484dc8ded/preflight-held-managed-7338-safe.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 639,
+      "sha256": "d972d77651a2887806eb90c97120b0b6eceeb031e0939bfee64c907a7a917492",
+      "byteExact": true
+    },
+    {
+      "path": "managed-stable/observer-818a4c3de7d34618810dd245c9fa68ff/preflight-default-runtime-state-retention-8232dd6be9bb0462-safe.json",
+      "originPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/default-finish-0e6df6887414/stable-manager-761a858ddbc8456198344f3bf09ab0af/observer-818a4c3de7d34618810dd245c9fa68ff/preflight-default-runtime-state-retention-8232dd6be9bb0462-safe.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 1129,
+      "sha256": "dc15097bb88499a2ecc871621e08ee6944b63055902c206c2be58a1f2a9a5d1c",
+      "byteExact": true
+    },
+    {
+      "path": "managed-stable/observer-818a4c3de7d34618810dd245c9fa68ff/preflight-held-managed-7338-safe.json",
+      "originPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/default-finish-0e6df6887414/stable-manager-761a858ddbc8456198344f3bf09ab0af/observer-818a4c3de7d34618810dd245c9fa68ff/preflight-held-managed-7338-safe.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 639,
+      "sha256": "716f731d34ef7b82a2f856343b9be74c5263933c8918fa950dd0bfebb52cefb2",
+      "byteExact": true
+    },
+    {
+      "path": "managed-stable/observer-818a4c3de7d34618810dd245c9fa68ff/stable-managed-7338-final-safe.json",
+      "originPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/default-finish-0e6df6887414/stable-manager-761a858ddbc8456198344f3bf09ab0af/observer-818a4c3de7d34618810dd245c9fa68ff/stable-managed-7338-final-safe.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 3613,
+      "sha256": "4a3797cbdf22f6bfa78f99dba8e9323364ed37c73af98ddfd2d8804ec567b350",
+      "byteExact": true
+    },
+    {
+      "path": "managed-stable/observer-818a4c3de7d34618810dd245c9fa68ff/stable-observer-failure-dfe35ad274b44c509e11cabb2c9ede9a-safe.json",
+      "originPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/default-finish-0e6df6887414/stable-manager-761a858ddbc8456198344f3bf09ab0af/observer-818a4c3de7d34618810dd245c9fa68ff/stable-observer-failure-dfe35ad274b44c509e11cabb2c9ede9a-safe.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 402,
+      "sha256": "aae6ef23781b1aef091836e599f283ec4e4fbe6ee44912742322d45b1beccf0a",
+      "byteExact": true
+    },
+    {
+      "path": "managed-stable/observer-818a4c3de7d34618810dd245c9fa68ff/static-http-resources-safe.json",
+      "originPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/default-finish-0e6df6887414/stable-manager-761a858ddbc8456198344f3bf09ab0af/observer-818a4c3de7d34618810dd245c9fa68ff/static-http-resources-safe.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 5420,
+      "sha256": "b30e9c37e094a98e72a4671faa14d222680ba9b0e1c61acdc5524e0d5a6b2878",
+      "byteExact": true
+    },
+    {
+      "path": "managed-stable/observer-historical-20261119/preflight-default-runtime-state-retention-68f9adece7c2c473-safe.json",
+      "originPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/default-finish-0e6df6887414/stable-manager-761a858ddbc8456198344f3bf09ab0af/observer-fd240c33f8394769a1cdb98f21520b00/preflight-default-runtime-state-retention-68f9adece7c2c473-safe.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 1129,
+      "sha256": "752a44f7c2ca521c147b40198c127ecfd6b7c7c1c9986728de19d23f3d90c0b3",
+      "byteExact": true
+    },
+    {
+      "path": "managed-stable/observer-historical-20261119/preflight-held-managed-7338-safe.json",
+      "originPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/default-finish-0e6df6887414/stable-manager-761a858ddbc8456198344f3bf09ab0af/observer-fd240c33f8394769a1cdb98f21520b00/preflight-held-managed-7338-safe.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 639,
+      "sha256": "708527c46894ba47d35e469f9a6dc07a88750be52640f19e020092a41895f803",
+      "byteExact": true
+    },
+    {
+      "path": "managed-stable/observer-historical-20261119/stable-managed-7338-final-safe.json",
+      "originPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/default-finish-0e6df6887414/stable-manager-761a858ddbc8456198344f3bf09ab0af/observer-fd240c33f8394769a1cdb98f21520b00/stable-managed-7338-final-safe.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 3598,
+      "sha256": "609863943b06b32e53a32282752fa6becd7acbe85e00c1afceae8ea7969b4aa0",
+      "byteExact": true
+    },
+    {
+      "path": "managed-stable/observer-historical-20261119/static-http-resources-safe.json",
+      "originPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/default-finish-0e6df6887414/stable-manager-761a858ddbc8456198344f3bf09ab0af/observer-fd240c33f8394769a1cdb98f21520b00/static-http-resources-safe.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 5420,
+      "sha256": "a86bf6304c3a879d63dea6c85f9e95360b5c530eba311a99daa588397e446329",
+      "byteExact": true
+    },
+    {
+      "path": "managed-stable/current-probes/current-stable-probe-16c8a3e3038644d0bb0fe83c9d75ed18-safe.json",
+      "originPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/default-finish-0e6df6887414/current-stable-probe-16c8a3e3038644d0bb0fe83c9d75ed18-safe.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 1237,
+      "sha256": "aa26823836e2a5dd8f13bc660ff7fa95d7a7b6366338d28539ea542a83140476",
+      "byteExact": true
+    },
+    {
+      "path": "managed-stable/current-probes/current-stable-probe-2758e274b46f4fd8a61816d4b952e579-safe.json",
+      "originPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/default-finish-0e6df6887414/current-stable-probe-2758e274b46f4fd8a61816d4b952e579-safe.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 1235,
+      "sha256": "9832a4883d3e4ac882eb8db44ff5c038eb3b32022bd84fe9693bf50ec1e7b936",
+      "byteExact": true
+    },
+    {
+      "path": "managed-stable/current-probes/current-stable-probe-c28bfbd2198a407091e801dd8e3e128f-safe.json",
+      "originPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/default-finish-0e6df6887414/current-stable-probe-c28bfbd2198a407091e801dd8e3e128f-safe.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 1246,
+      "sha256": "746baece75901caa49c35f14378b2c7293f8fdc1a6a44eb42d086418d33e94f6",
+      "byteExact": true
+    },
+    {
+      "path": "failures/observer-wrapper-7ea3daeb196948bda496d8afdc8b379e/native-observer-execution-safe.json",
+      "originPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/default-finish-0e6df6887414/observer-wrapper-7ea3daeb196948bda496d8afdc8b379e/native-observer-execution-safe.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 1244,
+      "sha256": "8e075632da013576ee3eefbc5232c20336937ceab6b206f4576ab9fbdbe55051",
+      "byteExact": true
+    },
+    {
+      "path": "failures/observer-wrapper-7ea3daeb196948bda496d8afdc8b379e/native-observer-stderr-safe.log",
+      "originPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/default-finish-0e6df6887414/observer-wrapper-7ea3daeb196948bda496d8afdc8b379e/native-observer-stderr-safe.log",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 126,
+      "sha256": "5ca3bc1e1d0d48b5d3dc23c85bafd8439bf07643eff96d2db1ce9128cf96753b",
+      "byteExact": true
+    },
+    {
+      "path": "failures/observer-wrapper-7ea3daeb196948bda496d8afdc8b379e/native-observer-stdout-safe.log",
+      "originPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/default-finish-0e6df6887414/observer-wrapper-7ea3daeb196948bda496d8afdc8b379e/native-observer-stdout-safe.log",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "byteExact": true
+    },
+    {
+      "path": "executions/refresh-20261120T015443330248Z/native-observer-execution-safe.json",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/refresh-20261120T015443330248Z/native-observer-execution-safe.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 1021,
+      "sha256": "b06e72e935536aac3f375c5f83e90db43d89442b0eb52fa43a856b3759485fd2",
+      "byteExact": true
+    },
+    {
+      "path": "executions/refresh-20261120T015443330248Z/native-observer-stderr-safe.log",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/refresh-20261120T015443330248Z/native-observer-stderr-safe.log",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 104,
+      "sha256": "30439533afe9593588a7f638799e2460d5fc44f95e0a40986bd9bedc7a0018e0",
+      "byteExact": true
+    },
+    {
+      "path": "executions/refresh-20261120T015443330248Z/native-observer-stdout-safe.log",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/refresh-20261120T015443330248Z/native-observer-stdout-safe.log",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "byteExact": true
+    },
+    {
+      "path": "executions/refresh-20261120T015714459497Z/native-observer-execution-safe.json",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/refresh-20261120T015714459497Z/native-observer-execution-safe.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 1021,
+      "sha256": "a7790a51655fb7ca23762d362997cf57a05470d9e4c6ff00b8be1e420018e004",
+      "byteExact": true
+    },
+    {
+      "path": "executions/refresh-20261120T015714459497Z/native-observer-stderr-safe.log",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/refresh-20261120T015714459497Z/native-observer-stderr-safe.log",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "byteExact": true
+    },
+    {
+      "path": "executions/refresh-20261120T015714459497Z/native-observer-stdout-safe.log",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/refresh-20261120T015714459497Z/native-observer-stdout-safe.log",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "byteExact": true
+    },
+    {
+      "path": "executions/refresh-20261120T020119621268Z/native-observer-execution-safe.json",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/refresh-20261120T020119621268Z/native-observer-execution-safe.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 1021,
+      "sha256": "826f7d476ef66b7814954dccc51edf0529af7552865359326c72cb84660d488d",
+      "byteExact": true
+    },
+    {
+      "path": "executions/refresh-20261120T020119621268Z/native-observer-stderr-safe.log",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/refresh-20261120T020119621268Z/native-observer-stderr-safe.log",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "byteExact": true
+    },
+    {
+      "path": "executions/refresh-20261120T020119621268Z/native-observer-stdout-safe.log",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/refresh-20261120T020119621268Z/native-observer-stdout-safe.log",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 1246,
+      "sha256": "3f280cfec32f6d54c16f2669b7fb0d69219d4cb41e341b26cc80e8db68e5c372",
+      "byteExact": true
+    },
+    {
+      "path": "executions/refresh-20261120T020407847446Z/native-observer-execution-safe.json",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/refresh-20261120T020407847446Z/native-observer-execution-safe.json",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 1021,
+      "sha256": "7f9d835e578901815051b21688669ede2f6d284e6f355f430b0f25acd4778bfd",
+      "byteExact": true
+    },
+    {
+      "path": "executions/refresh-20261120T020407847446Z/native-observer-stderr-safe.log",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/refresh-20261120T020407847446Z/native-observer-stderr-safe.log",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "byteExact": true
+    },
+    {
+      "path": "executions/refresh-20261120T020407847446Z/native-observer-stdout-safe.log",
+      "originPath": "/home/han/.local/state/orchester-delivery/20261119/default-finish-0e6df6887414/refresh-20261120T020407847446Z/native-observer-stdout-safe.log",
+      "kind": "exact-safe-receipt",
+      "sizeBytes": 331,
+      "sha256": "b4f43f833a1513d5c1458d41346f9bac69e99e2b14bb9859b8e124b3682d3a9c",
+      "byteExact": true
+    },
+    {
+      "path": "dependencies/OwnedRuntimeProcesses.cs",
+      "originPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/p18m-1113-bf492b45/OwnedRuntimeProcesses.cs",
+      "kind": "exact-pinned-native-helper-source",
+      "sizeBytes": 15478,
+      "sha256": "d335743a632acae0c90968e482b87eda44aaf1dae241e938e62b5c7833598d45",
+      "byteExact": true
+    },
+    {
+      "path": "dependencies/NativeTrayQuit.cs",
+      "originPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/p18m-1113-bf492b45/NativeTrayQuit.cs",
+      "kind": "exact-pinned-native-helper-source",
+      "sizeBytes": 17145,
+      "sha256": "5e33b5f26a7250aaa8c5c86f0b5540e1a7dd07106cfce00570d9e31a4becd32c",
+      "byteExact": true
+    },
+    {
+      "path": "dependencies/NativeDesktopWindows.cs",
+      "originPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/p18m-1113-bf492b45/NativeDesktopWindows.cs",
+      "kind": "exact-pinned-native-helper-source",
+      "sizeBytes": 8305,
+      "sha256": "858fdf6e41f257b8923bed98c4ba15177c8538ef2240d51f8122519df9b5af58",
+      "byteExact": true
+    },
+    {
+      "path": "dependencies/invoke-owned-tray-quit.ps1",
+      "originPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/p18m-1113-bf492b45/invoke-owned-tray-quit.ps1",
+      "kind": "exact-pinned-native-helper-source",
+      "sizeBytes": 10951,
+      "sha256": "215c7279b991264a5bba35518aabdd0c71ebaa8f9dd04be90a7e993e7b05b30e",
+      "byteExact": true
+    },
+    {
+      "path": "dependencies/retain-owned-observation.ps1",
+      "originPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/p18m-1113-bf492b45/retain-owned-observation.ps1",
+      "kind": "exact-pinned-native-helper-source",
+      "sizeBytes": 2859,
+      "sha256": "6f758142622e49e7b6e7892c7b254a5dda53b990425d0ff7b9e54d84a7523344",
+      "byteExact": true
+    },
+    {
+      "path": "dependencies/monitor-final-common.ps1",
+      "originPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/monitor-final-common.ps1",
+      "kind": "exact-pinned-native-helper-source",
+      "sizeBytes": 7856,
+      "sha256": "2d4e07f3d703043ea9af8fbf6377814f08135253837b4e36b8f075ea3aeb2f4f",
+      "byteExact": true
+    },
+    {
+      "path": "sources/historical/06-keep-original-state-managed-7338-system-children.ps1",
+      "originPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/prm-1113-8798425b/06-keep-original-state-managed-7338-system-children.ps1",
+      "kind": "exact-historical-native-source",
+      "sizeBytes": 12964,
+      "sha256": "3f0a3efb99ded06451159a9570b185cc91cab969aa31edf84315cf43d7a3fb10",
+      "byteExact": true
+    },
+    {
+      "path": "sources/historical/05-default-desktop-and-retained-managed-7338-webview46-system-children.ps1",
+      "originPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/prm-1113-8798425b/05-default-desktop-and-retained-managed-7338-webview46-system-children.ps1",
+      "kind": "exact-historical-native-source",
+      "sizeBytes": 27957,
+      "sha256": "4a135f07df85e27f678db2f755b19f83eae1ffd255d3300bc7ffaa3e2782f7c3",
+      "byteExact": true
+    },
+    {
+      "path": "dependencies/promotion-desktop-6e645a43f8dc4ce18a41e170032ba126-safe.json",
+      "originPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/prm-1113-8798425b/promotion-desktop-6e645a43f8dc4ce18a41e170032ba126-safe.json",
+      "kind": "exact-safe-prerequisite-receipt",
+      "sizeBytes": 1404,
+      "sha256": "04515405b849e912dbea44c4561e04c5233a08271e364a42242b242ef6086409",
+      "byteExact": true
+    },
+    {
+      "path": "dependencies/promotion-remote-e4a25a1a80f747c499e02dade8490ecd-safe.json",
+      "originPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/prm-1113-8798425b/promotion-remote-e4a25a1a80f747c499e02dade8490ecd-safe.json",
+      "kind": "exact-safe-prerequisite-receipt",
+      "sizeBytes": 1403,
+      "sha256": "4e4821ec399b3884ca0a407d186c91be6d180af4327463a1939271a360f44960",
+      "byteExact": true
+    },
+    {
+      "path": "dependencies/fresh-runtime-inputs.json",
+      "originPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/monitors-final21-71def64-20261111/fresh-runtime-inputs.json",
+      "kind": "exact-public-build-and-package-input",
+      "sizeBytes": 13666,
+      "sha256": "b364598c896cbcd8f4c7a70129a3ecbb6088f8930a0ea591a3860aaba6c7f86f",
+      "byteExact": true
+    },
+    {
+      "path": "dependencies/final-result.json",
+      "originPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/monitors-final21-71def64-20261111/final-result.json",
+      "kind": "exact-public-build-and-package-input",
+      "sizeBytes": 26903,
+      "sha256": "7ddcd67633e127a4b664dc69d91cf20bd8751a9ab6a009d8ca73d9b0951fe023",
+      "byteExact": true
+    },
+    {
+      "path": "dependencies/fresh-offline-backup-public-derived-safe.json",
+      "originPath": "private prerequisite safe receipt retained outside repository",
+      "kind": "derived-safe-prerequisite-receipt",
+      "sourceSha256": "c2277a82ccf1df70c61ac18190fdc803801053f54d36dcbdcff06febd89a090d",
+      "sourceSizeBytes": 2402,
+      "omittedJsonPointers": [
+        "/backupDirectory"
+      ],
+      "transform": "remove-only-top-level-backupDirectory-property-and-reserialize-json",
+      "sizeBytes": 1562,
+      "sha256": "158ffa766cfacf0cd0e9d65b1fe0bff5feca15f686471a64eb748337d6f9afa2",
+      "allRetainedDecodedLeafValuesExact": true,
+      "byteExact": false
+    },
+    {
+      "path": "dependencies/plan.json",
+      "originPath": "/home/han/project/Orchester/docs/design/acceptance/agentrouter-platform-sync/native/windows/final71-build/plan.json",
+      "kind": "exact-public-build-plan",
+      "sizeBytes": 220404,
+      "sha256": "8645dca6d20f2d5ff0d845d7c74522f52ca72c6aec49ec9529dcb86a997911cd",
+      "byteExact": true
+    }
+  ],
+  "privateStateOrCredentialBytesCopied": false,
+  "notes": [
+    "Raw paths, source paths, PIDs, source hashes and safe static labels remain for reproducibility.",
+    "The private backupDirectory leaf is omitted only from the public backup prerequisite; the unchanged original receipt remains outside the repository.",
+    "External execution receipts take precedence over success fields written before a script exits."
+  ],
+  "historicalNativeToolEvents": [
+    {
+      "path": "historical-native-tool/desktop-launch-call.json",
+      "originSessionFile": "/home/han/.codex/sessions/2026/11/19/rollout-2026-11-19T14-35-06-01a1f284-1ca3-7642-87f5-8f7cf43dc4e2.jsonl",
+      "originSessionFileSha256": "8753c4c793bd553584de6f3c1d302f73fdf89d115c9079a815faf9a500bcebb5",
+      "originSessionFileBytes": 1234764,
+      "oneBasedLineNumber": 172,
+      "byteOffset": 678252,
+      "sizeBytes": 2326,
+      "sha256": "a4c88a71f95f735f189646d0de8dc3c46e2cf444a9d7d1f1eb9c288e22bc1213",
+      "byteExact": true,
+      "excludedContent": "All user/assistant messages and unrelated tool events omitted."
+    },
+    {
+      "path": "historical-native-tool/desktop-launch-result.json",
+      "originSessionFile": "/home/han/.codex/sessions/2026/11/19/rollout-2026-11-19T14-35-06-01a1f284-1ca3-7642-87f5-8f7cf43dc4e2.jsonl",
+      "originSessionFileSha256": "8753c4c793bd553584de6f3c1d302f73fdf89d115c9079a815faf9a500bcebb5",
+      "originSessionFileBytes": 1234764,
+      "oneBasedLineNumber": 175,
+      "byteOffset": 685091,
+      "sizeBytes": 870,
+      "sha256": "2a29de2a26c55ebf39297ca698f9ab8aeee42f8530305fc0b0645a30facc38ff",
+      "byteExact": true,
+      "excludedContent": "All user/assistant messages and unrelated tool events omitted."
+    },
+    {
+      "path": "historical-native-tool/desktop-completion-call.json",
+      "originSessionFile": "/home/han/.codex/sessions/2026/11/19/rollout-2026-11-19T14-35-06-01a1f284-1ca3-7642-87f5-8f7cf43dc4e2.jsonl",
+      "originSessionFileSha256": "8753c4c793bd553584de6f3c1d302f73fdf89d115c9079a815faf9a500bcebb5",
+      "originSessionFileBytes": 1234764,
+      "oneBasedLineNumber": 184,
+      "byteOffset": 693349,
+      "sizeBytes": 739,
+      "sha256": "8fa4815b6454e13d90493b957b29bca47db29ad6ffacf40ee8139c0642b14d68",
+      "byteExact": true,
+      "excludedContent": "All user/assistant messages and unrelated tool events omitted."
+    },
+    {
+      "path": "historical-native-tool/desktop-completion-result.json",
+      "originSessionFile": "/home/han/.codex/sessions/2026/11/19/rollout-2026-11-19T14-35-06-01a1f284-1ca3-7642-87f5-8f7cf43dc4e2.jsonl",
+      "originSessionFileSha256": "8753c4c793bd553584de6f3c1d302f73fdf89d115c9079a815faf9a500bcebb5",
+      "originSessionFileBytes": 1234764,
+      "oneBasedLineNumber": 188,
+      "byteOffset": 701196,
+      "sizeBytes": 5453,
+      "sha256": "4fc4ac2fd4e06f42aab977b6d4b9ec03c255c38882248d6d1ba0ab8e93d6ec86",
+      "byteExact": true,
+      "excludedContent": "All user/assistant messages and unrelated tool events omitted."
+    },
+    {
+      "path": "historical-native-tool/managed60-launch-call.json",
+      "originSessionFile": "/home/han/.codex/sessions/2026/11/19/rollout-2026-11-19T14-35-06-01a1f284-1ca3-7642-87f5-8f7cf43dc4e2.jsonl",
+      "originSessionFileSha256": "8753c4c793bd553584de6f3c1d302f73fdf89d115c9079a815faf9a500bcebb5",
+      "originSessionFileBytes": 1234764,
+      "oneBasedLineNumber": 362,
+      "byteOffset": 1118656,
+      "sizeBytes": 5187,
+      "sha256": "16b16a71507013f2674a9a5801cf55b73bef8a4dac049d37328d98577e49a7ba",
+      "byteExact": true,
+      "excludedContent": "All user/assistant messages and unrelated tool events omitted."
+    },
+    {
+      "path": "historical-native-tool/managed60-launch-result.json",
+      "originSessionFile": "/home/han/.codex/sessions/2026/11/19/rollout-2026-11-19T14-35-06-01a1f284-1ca3-7642-87f5-8f7cf43dc4e2.jsonl",
+      "originSessionFileSha256": "8753c4c793bd553584de6f3c1d302f73fdf89d115c9079a815faf9a500bcebb5",
+      "originSessionFileBytes": 1234764,
+      "oneBasedLineNumber": 365,
+      "byteOffset": 1134008,
+      "sizeBytes": 1079,
+      "sha256": "4e415b24d06a33b132632b733d7939d3afdb0bdaf4d0418a04d8bee74e3ce916",
+      "byteExact": true,
+      "excludedContent": "All user/assistant messages and unrelated tool events omitted."
+    },
+    {
+      "path": "historical-native-tool/managed60-completion-call.json",
+      "originSessionFile": "/home/han/.codex/sessions/2026/11/19/rollout-2026-11-19T14-35-06-01a1f284-1ca3-7642-87f5-8f7cf43dc4e2.jsonl",
+      "originSessionFileSha256": "8753c4c793bd553584de6f3c1d302f73fdf89d115c9079a815faf9a500bcebb5",
+      "originSessionFileBytes": 1234764,
+      "oneBasedLineNumber": 384,
+      "byteOffset": 1170875,
+      "sizeBytes": 559,
+      "sha256": "a61986f3b9e8f319b1300d28f57eb33081874775fc587f0f2b17e77b08e7ec1f",
+      "byteExact": true,
+      "excludedContent": "All user/assistant messages and unrelated tool events omitted."
+    },
+    {
+      "path": "historical-native-tool/managed60-completion-result.json",
+      "originSessionFile": "/home/han/.codex/sessions/2026/11/19/rollout-2026-11-19T14-35-06-01a1f284-1ca3-7642-87f5-8f7cf43dc4e2.jsonl",
+      "originSessionFileSha256": "8753c4c793bd553584de6f3c1d302f73fdf89d115c9079a815faf9a500bcebb5",
+      "originSessionFileBytes": 1234764,
+      "oneBasedLineNumber": 386,
+      "byteOffset": 1172339,
+      "sizeBytes": 4384,
+      "sha256": "5489d74aab0d37ab11a04bd9afef5d10f77423c691ed23ceec7003771efd1eee",
+      "byteExact": true,
+      "excludedContent": "All user/assistant messages and unrelated tool events omitted."
+    }
+  ]
+}

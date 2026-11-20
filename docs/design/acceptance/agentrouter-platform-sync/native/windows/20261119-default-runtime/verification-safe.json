@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "status": "offline-verifier-exited-zero",
+  "observedAtUtc": "2026-11-20T02:43:36.889956+00:00",
+  "actualVerifierExitCode": 0,
+  "manifestSha256": "22348a60d229c3900b58773cc010487df4988c6d416c3adf6f4f259cba69a55d",
+  "verifierSourceSha256": "de5c9994f8ad95143d4f45bae657de99280261229ee1efe01a41a1be2889831d",
+  "stdout": "{\n  \"status\": \"offline-byte-integrity-and-independent-cross-references-verified\",\n  \"filesChecked\": 113,\n  \"historicalDesktopAndManaged60ActualNativeExitCodes\": [\n    0,\n    0\n  ],\n  \"nativeExternalRevalidationExitCodes\": [\n    1,\n    2,\n    1,\n    1\n  ],\n  \"frozenResourceTablesVerified\": 2,\n  \"currentFinalRevalidationPassed\": false,\n  \"nativeProcessStateQueried\": false\n}\n",
+  "stderr": "",
+  "nativeProcessStateQueried": false
+}
