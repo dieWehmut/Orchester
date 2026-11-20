@@ -530,6 +530,10 @@
     {
       "scope": "CurrentofficialWorkBuddyGlobal docsbuild432ddbdc516;6source-supported Linuxfeeds200 but all6 exact returnedpackageURLs404;AppImage400. Domestic retained; global Linux installation remains incomplete.",
       "proof": "native/wsl/20261120-workbuddy-global/current-global-linux-result-safe.json"
+    },
+    {
+      "scope": "Additional ownednpm cache6files191672408logicalBremoved0; prior5Linux8Windowscache cleanup and4localref3worktree2remote history hash-bound; current selectedabsences/patch-equivalence verified, dirty/unmergedretained. WindowsIO observationlimited.",
+      "proof": "maintenance/20261120-cache-and-branch-continuation/npm-cleanup-result-safe.json"
     }
   ],
   "completedHistoricalEpochs": [
@@ -565,7 +569,7 @@
   "historicalObservationsAreNotCurrentProcessLiveness": true,
   "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsIncluded": false,
   "historical38Unmodified": true,
-  "updatedAt": "2026-11-20T02:28:22.742781+00:00",
+  "updatedAt": "2026-11-20T02:31:12.718564+00:00",
   "currentCompiledInputUnionCount": 731,
   "currentWindowsCoreGateCount": 16,
   "currentWindowsCoreGatesPassed": true,
@@ -1140,5 +1144,18 @@
     404
   ],
   "currentWindowsDeepSeekInstallationRecheckProof": "native/windows/20261120-deepseek-runtime/summary-safe.json",
-  "currentWindowsDeepSeekGuiRuntimeIsAdditionalAssurance": true
+  "currentWindowsDeepSeekGuiRuntimeIsAdditionalAssurance": true,
+  "currentMaintenanceContinuation": {
+    "proof": "maintenance/20261120-cache-and-branch-continuation/npm-cleanup-result-safe.json",
+    "regularFileLogicalBytesRemoved": 191672408,
+    "regularFileAllocatedBytesRemoved": 191688704,
+    "cleanupActualExitCode": 0,
+    "previousIncrementalBytesCountedAgain": false,
+    "physicalCDriveReleaseClaimed": false,
+    "historicalCleanupProof": "maintenance/20261120-cache-and-branch-continuation/historical-cleanup-derived-safe.json",
+    "currentRefAndCacheObservation": "maintenance/20261120-cache-and-branch-continuation/current-readonly-safe.json",
+    "dirtyWorktreeRetained": true,
+    "unmergedRemoteBranchRetained": true,
+    "windowsCurrentCacheAbsenceClaimed": false
+  }
 }

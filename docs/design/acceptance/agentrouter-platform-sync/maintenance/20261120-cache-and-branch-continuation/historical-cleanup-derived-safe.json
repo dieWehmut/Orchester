@@ -1,0 +1,159 @@
+{
+  "schemaVersion": 1,
+  "derivedAtUtc": "2026-11-20T02:20:29.813676+00:00",
+  "recordType": "whitelisted-derived-summary-of-previously-unarchived-original-private-receipts",
+  "originalPrivateSourceBytesCopied": false,
+  "currentCleanupRerun": false,
+  "linuxHistoricalCleanup": {
+    "atUtc": "2026-11-16T07:51:12.834371+00:00",
+    "directories": [
+      {
+        "pathLabel": "repo/target/debug/incremental",
+        "removed": true,
+        "plannedReclaimableBytes": 19341176832
+      },
+      {
+        "pathLabel": "linux-home/.npm/_cacache",
+        "removed": true,
+        "plannedReclaimableBytes": 2634117120
+      },
+      {
+        "pathLabel": "linux-home/.cache/go-build",
+        "removed": true,
+        "plannedReclaimableBytes": 445292544
+      },
+      {
+        "pathLabel": "linux-home/.cargo/registry/cache",
+        "removed": true,
+        "plannedReclaimableBytes": 228618240
+      },
+      {
+        "pathLabel": "linux-home/.cache/pip",
+        "removed": true,
+        "plannedReclaimableBytes": 192512
+      }
+    ],
+    "auditedCandidateAllocatedBytes": 23413325824,
+    "plannedReclaimableBytes": 22649397248,
+    "preservedExternalHardlinkedBytes": 763928576,
+    "observedBlockingConsumers": 0,
+    "deletionPermissionErrors": 0,
+    "filesystemAvailableBeforeBytes": 571988881408,
+    "filesystemAvailableAfterBytes": 594638245888,
+    "observedFilesystemAvailableIncreaseBytes": 22649364480,
+    "measurementBoundary": "Linux filesystem free-space observation; plan estimates and allocated bytes are distinct metrics. Concurrent interval activity can affect the observed delta. No host C-drive or VHDX reclamation measurement."
+  },
+  "windowsHistoricalCleanup": {
+    "atUtc": "2026-11-16T07:54:29.234099+00:00",
+    "directories": [
+      {
+        "pathLabel": "windows-user/AppData/Local/npm-cache/_cacache",
+        "removed": true,
+        "auditedAllocatedBytes": 476655616
+      },
+      {
+        "pathLabel": "windows-user/AppData/Local/pnpm-cache",
+        "removed": true,
+        "auditedAllocatedBytes": 95846400
+      },
+      {
+        "pathLabel": "windows-user/.cargo/registry/cache",
+        "removed": true,
+        "auditedAllocatedBytes": 211554304
+      },
+      {
+        "pathLabel": "windows-user/AppData/Roaming/Code/CachedExtensionVSIXs",
+        "removed": true,
+        "auditedAllocatedBytes": 336842752
+      },
+      {
+        "pathLabel": "windows-user/AppData/Local/npm-cache/_libvips",
+        "removed": true,
+        "auditedAllocatedBytes": 7659520
+      },
+      {
+        "pathLabel": "windows-user/AppData/Local/npm-cache/_prebuilds",
+        "removed": true,
+        "auditedAllocatedBytes": 327680
+      },
+      {
+        "pathLabel": "windows-user/AppData/Local/NuGet/v3-cache",
+        "removed": true,
+        "auditedAllocatedBytes": 860160
+      },
+      {
+        "pathLabel": "windows-user/AppData/Local/pip/Cache",
+        "removed": true,
+        "auditedAllocatedBytes": 1331200
+      }
+    ],
+    "auditedCandidateAllocatedBytes": 1131077632,
+    "errors": 0,
+    "filesystemAvailableBeforeBytes": 6198132736,
+    "filesystemAvailableAfterBytes": 7329968128,
+    "observedFilesystemAvailableIncreaseBytes": 1131835392,
+    "preflightResultSha256BoundByCleanup": "5eaba09dbe266a4cf70529772f919b9ea02ea239ceb197dc1a1d1435d0c08b13",
+    "preflightTerminalSha256BoundByCleanup": "01ec95d562f0de8f4a21e0d2e85ebffbf32a6dfc7b7d29246aa264290dac5ff0",
+    "measurementBoundary": "Original C-volume available-space readings are interval observations; audited allocation is distinct, and the delta is not a guarantee that every changed byte was attributable only to cleanup."
+  },
+  "windowsHistoricalNativePreflight": {
+    "startedAtUtc": "2026-11-16T07:53:01.4601834Z",
+    "completedAtUtc": "2026-11-16T07:53:09.3717699Z",
+    "nativeExitCode": 0,
+    "classifierSelfChecksPassed": true,
+    "matchingConsumerProcessCount": 0,
+    "filesScanned": 1876,
+    "allExclusiveReadOpensSucceeded": true,
+    "allOwnedReadHandlesClosed": true,
+    "cacheDeletionPerformedByPreflight": false,
+    "sourceResultSha256": "5eaba09dbe266a4cf70529772f919b9ea02ea239ceb197dc1a1d1435d0c08b13",
+    "terminalSha256": "01ec95d562f0de8f4a21e0d2e85ebffbf32a6dfc7b7d29246aa264290dac5ff0"
+  },
+  "branchHistoricalCleanup": {
+    "atUtc": "2026-11-16T07:49:12.972037+00:00",
+    "deletedLocalBranches": [
+      "feat/additional-agent-monitors-backend",
+      "feat/additional-agent-monitors-frontend",
+      "fix/agent-process-source-status",
+      "fix/cursor-cli-official-identity"
+    ],
+    "recordedPatchEquivalentTips": {
+      "feat/additional-agent-monitors-backend": "84437b8ac8ec31ca538f55df4cc0465b3c0c2a51",
+      "feat/additional-agent-monitors-frontend": "4ca1eb9a5d246c456b675e58ff151182a2c5505a",
+      "fix/agent-process-source-status": "4b1e21e965c3d456f2d0e2c25ad4762bff37273c",
+      "fix/cursor-cli-official-identity": "ce4b591e74bbf4623a20a9cce7cdca5f20d1f862"
+    },
+    "removedWorktrees": [
+      "additional-agent-monitors-backend",
+      "additional-agent-monitors-frontend",
+      "cursor-cli-identity"
+    ],
+    "reportedDeletedRemoteBranches": [
+      "feat/agent-process-presence",
+      "feat/web-workspace-shell"
+    ],
+    "remoteDeletionSourceBoundary": "The delivery summary reports the prior deletions. Fresh read-only remote absence is independently recorded in current-readonly-safe.json; no original remote deletion terminal receipt is supplied here.",
+    "retainedRemoteUnmergedBranch": "feat/rail-reference-alignment",
+    "monitorValidationDirtyWorktreeRetained": true
+  },
+  "windowsHistoricalAdditionalBoundedAudit": {
+    "observedAtUtc": "2026-11-16T08:14:46.972804+00:00",
+    "status": "no-additional-clearly-unused-cache-candidates",
+    "cacheDeletionPerformed": false,
+    "knownIncrementalDirectoriesInspected": 4,
+    "allKnownIncrementalAllocatedBytesZero": true,
+    "wrapperVersionRetained": "8.14.3",
+    "additionalGradleDeletionCandidates": 0,
+    "directoryNamesInspected": 428,
+    "scanTimeLimitHit": false,
+    "scanBoundary": "Known Orchester-build incremental paths and standard Windows Gradle versions only; retained installed SDK, AVD, profiles, rollback files and active/unknown caches."
+  },
+  "alreadyArchivedCleanupExcludedFromThisAccounting": {
+    "archive": "maintenance/20261116-incremental-cache-cleanup",
+    "regularLogicalBytes": 11441931494,
+    "uniqueIdentityLogicalBytes": 10981446886,
+    "regularFiles": 42657,
+    "additionalDeletedBytesInThisHistoricalSummary": 0,
+    "explanation": "Separately archived main-integration cleanup is cross-referenced only and must not be counted again."
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "recordedAtUtc": "2026-11-20T02:25:20.242585+00:00",
+  "recordType": "derived-tool-execution-provenance",
+  "command": "python3 docs/design/acceptance/agentrouter-platform-sync/maintenance/20261120-cache-and-branch-continuation/cleanup-owned-npm-cache.py --execute",
+  "outputRedirectedTo": "npm-cleanup-result-safe.json",
+  "originalTool": "tools.exec_command",
+  "observedToolExitCode": 0,
+  "scriptResultExitCode": 0,
+  "scriptExecutedOnce": true,
+  "deletionRerun": false,
+  "sourceSha256": "1c6eaa6dfd41b4cb97c129ee508de23b54228eb54e72b0e7594360c5c3a26754",
+  "resultSha256": "5fa912244f314130f3ab24769fc3d89dc80dd539b8ae5d4d0b2d0e50d202a869",
+  "resultAndToolExitAgree": true,
+  "toolOutputCopiedVerbatim": false,
+  "physicalOrCDriveReleaseClaimed": false
+}

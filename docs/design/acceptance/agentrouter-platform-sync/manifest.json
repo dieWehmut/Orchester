@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "createdAt": "2026-11-20T02:28:22.982796+00:00",
+  "createdAt": "2026-11-20T02:31:12.919879+00:00",
   "status": "official-claude-installations-verified-other-platform-continuation-in-progress",
   "summaryPath": "summary.json",
   "files": [
@@ -658,6 +658,71 @@
       "path": "maintenance/20261116-incremental-cache-cleanup/source-mappings-safe.json",
       "sha256": "12a02f457bad88dc6fd13a06499eb87c6cb4026a3fe37ec785b5a738eb7c3328",
       "bytes": 3767
+    },
+    {
+      "path": "maintenance/20261120-cache-and-branch-continuation/README.md",
+      "sha256": "14390c853d4a37928dd95757c146aac81ff2ed96b7538ef2886732ff8a361dfa",
+      "bytes": 4909
+    },
+    {
+      "path": "maintenance/20261120-cache-and-branch-continuation/artifact-manifest.json",
+      "sha256": "d8403d0a1f148a2c6393fdf7527f6d396ef6d0d863d3b873eaf3127dac76082b",
+      "bytes": 1951
+    },
+    {
+      "path": "maintenance/20261120-cache-and-branch-continuation/cleanup-owned-npm-cache.py",
+      "sha256": "1c6eaa6dfd41b4cb97c129ee508de23b54228eb54e72b0e7594360c5c3a26754",
+      "bytes": 6844
+    },
+    {
+      "path": "maintenance/20261120-cache-and-branch-continuation/current-readonly-safe.json",
+      "sha256": "11776ed9fa68ebb78aec1107c89913341065ab37c6177e80fc38a611b24a461e",
+      "bytes": 3206
+    },
+    {
+      "path": "maintenance/20261120-cache-and-branch-continuation/historical-cleanup-derived-safe.json",
+      "sha256": "c3ded792745986b3df303fbf4bb8ed97c4eb4e7c51ca042ba38b647ec2ceba8e",
+      "bytes": 6649
+    },
+    {
+      "path": "maintenance/20261120-cache-and-branch-continuation/initial-current-readonly-failed-safe.json",
+      "sha256": "9f2427314f636fa349b44c7d1a9f4b0bd205d44a5d026d4c1f689902e70f2668",
+      "bytes": 2711
+    },
+    {
+      "path": "maintenance/20261120-cache-and-branch-continuation/initial-observer-source.py",
+      "sha256": "dad88c6ede077e2f3e4d887ee881d23d5238bd52e32ba5523ea701ea86322a00",
+      "bytes": 6977
+    },
+    {
+      "path": "maintenance/20261120-cache-and-branch-continuation/npm-cleanup-result-safe.json",
+      "sha256": "5fa912244f314130f3ab24769fc3d89dc80dd539b8ae5d4d0b2d0e50d202a869",
+      "bytes": 1733
+    },
+    {
+      "path": "maintenance/20261120-cache-and-branch-continuation/npm-execution-provenance-safe.json",
+      "sha256": "24d49e6a933a87a31143c613880c5b9e9d43ad6b01eca7064a264148bc27fe08",
+      "bytes": 790
+    },
+    {
+      "path": "maintenance/20261120-cache-and-branch-continuation/observe-current-readonly.py",
+      "sha256": "e256ac4217d5d851abbd3d92cd0aea3d782b0f435fe92e893695ace0eebcf2a3",
+      "bytes": 7298
+    },
+    {
+      "path": "maintenance/20261120-cache-and-branch-continuation/original-source-bindings-safe.json",
+      "sha256": "f8dc12731a7534678b63592bf4abd6452399a8305997d1fd08e8ba97a7f0a2eb",
+      "bytes": 2304
+    },
+    {
+      "path": "maintenance/20261120-cache-and-branch-continuation/review-safe.json",
+      "sha256": "61c7812f0313d3c774d9135e04d751ec893458c825374848085b6d0600991341",
+      "bytes": 2839
+    },
+    {
+      "path": "maintenance/20261120-cache-and-branch-continuation/validate.py",
+      "sha256": "849aefa08fa386eb8d06ee95bc9f75e6c71f41364028d835c39c4768c9d2ddd9",
+      "bytes": 6822
     },
     {
       "path": "maintenance/completed-official-installer-cache-cleanup.json",
@@ -5551,8 +5616,8 @@
     },
     {
       "path": "sources/requirement-delivery-audit.json",
-      "sha256": "f1c3823da0cdd46bf37b6994049f0426a8d4f67b7775e2cd1d62ae6a0be3f3f9",
-      "bytes": 60426
+      "sha256": "63786e2607499dc556c96aceb8e19cb4a4fe65647b9b1e44e0bd688d8d173510",
+      "bytes": 61164
     },
     {
       "path": "sources/workbuddy/cn-linux-update.json",
@@ -5576,8 +5641,8 @@
     },
     {
       "path": "summary.json",
-      "sha256": "d484d958bad7461836077e10362f94ada36cb96cee3f38cec2fff1581b8cf916",
-      "bytes": 88112
+      "sha256": "83b8ada881d3eb565cd870bd836b829438c09707e6f20e5e22c354f0d9f48aff",
+      "bytes": 89215
     },
     {
       "path": "tests/backend/a96a06e-deployment-gates-summary.json",

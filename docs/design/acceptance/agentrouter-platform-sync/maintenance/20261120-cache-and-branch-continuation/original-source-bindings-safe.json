@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "sourceRootScope": "external-private-orchester-delivery-state",
+  "sourceFiles": [
+    {
+      "sourceId": "20261116/root-cleanup/cache-cleanup-linux-private.json",
+      "bytes": 955,
+      "sha256": "9e88ce4a6bdb5b3da3eef39ae0d61b7c5fa66d052902b15584dcd12e7718d2d7",
+      "originalBytesPublished": false,
+      "relationship": "whitelisted-derived-fields-only"
+    },
+    {
+      "sourceId": "20261116/root-cleanup/cache-cleanup-windows-private.json",
+      "bytes": 1536,
+      "sha256": "7c217ee475c0bec1226fff21112a258bb14b4bfea8ee5448fee1bfe626713066",
+      "originalBytesPublished": false,
+      "relationship": "whitelisted-derived-fields-only"
+    },
+    {
+      "sourceId": "20261116/root-cleanup/branch-cleanup-local-private.json",
+      "bytes": 773,
+      "sha256": "4cd10cc62d7a7ab6f92ed8a7b0086bfc1e6b8885bf28fe165601764b65b40f9a",
+      "originalBytesPublished": false,
+      "relationship": "whitelisted-derived-fields-only"
+    },
+    {
+      "sourceId": "20261116/root-cleanup/current-task-delivery-summary-private.json",
+      "bytes": 3291,
+      "sha256": "f709437bcbbf4c1b50bc4ba7fbb78dfa33e188d753391894a72508cc34eda138",
+      "originalBytesPublished": false,
+      "relationship": "whitelisted-derived-fields-only"
+    },
+    {
+      "sourceId": "20261116/cache-cleanup-audit/cache-cleanup-plan-private.json",
+      "bytes": 8254,
+      "sha256": "d4ead24ce5df7656d8d7829156e28cf266654d5aaf141a5fca1be20e02bcc67c",
+      "originalBytesPublished": false,
+      "relationship": "whitelisted-derived-fields-only"
+    },
+    {
+      "sourceId": "20261116/cache-cleanup-audit/windows-cache-consumer-verification-private.json",
+      "bytes": 1744,
+      "sha256": "1599006212c8796cca4eafe76b3c271e3046bda38c6ef02c7c21a59d5cbeb051",
+      "originalBytesPublished": false,
+      "relationship": "whitelisted-derived-fields-only"
+    },
+    {
+      "sourceId": "20261116/cache-cleanup-audit/windows-extra-cache-audit-final-private.json",
+      "bytes": 2001,
+      "sha256": "f8feb9910026d1c0e4fef21b0580ffbfb1a4d9ef9ebcd2214f970e6a751967fb",
+      "originalBytesPublished": false,
+      "relationship": "whitelisted-derived-fields-only"
+    }
+  ],
+  "currentApplicationProfilesRead": false,
+  "rawLogsPublished": false,
+  "capabilityKeysPublished": false
+}

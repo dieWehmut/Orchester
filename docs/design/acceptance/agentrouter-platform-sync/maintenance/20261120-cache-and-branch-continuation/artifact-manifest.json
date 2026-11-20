@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "generatedAtUtc": "2026-11-20T02:25:20.243962+00:00",
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 4909,
+      "sha256": "14390c853d4a37928dd95757c146aac81ff2ed96b7538ef2886732ff8a361dfa"
+    },
+    {
+      "path": "cleanup-owned-npm-cache.py",
+      "bytes": 6844,
+      "sha256": "1c6eaa6dfd41b4cb97c129ee508de23b54228eb54e72b0e7594360c5c3a26754"
+    },
+    {
+      "path": "current-readonly-safe.json",
+      "bytes": 3206,
+      "sha256": "11776ed9fa68ebb78aec1107c89913341065ab37c6177e80fc38a611b24a461e"
+    },
+    {
+      "path": "historical-cleanup-derived-safe.json",
+      "bytes": 6649,
+      "sha256": "c3ded792745986b3df303fbf4bb8ed97c4eb4e7c51ca042ba38b647ec2ceba8e"
+    },
+    {
+      "path": "initial-current-readonly-failed-safe.json",
+      "bytes": 2711,
+      "sha256": "9f2427314f636fa349b44c7d1a9f4b0bd205d44a5d026d4c1f689902e70f2668"
+    },
+    {
+      "path": "initial-observer-source.py",
+      "bytes": 6977,
+      "sha256": "dad88c6ede077e2f3e4d887ee881d23d5238bd52e32ba5523ea701ea86322a00"
+    },
+    {
+      "path": "npm-cleanup-result-safe.json",
+      "bytes": 1733,
+      "sha256": "5fa912244f314130f3ab24769fc3d89dc80dd539b8ae5d4d0b2d0e50d202a869"
+    },
+    {
+      "path": "npm-execution-provenance-safe.json",
+      "bytes": 790,
+      "sha256": "24d49e6a933a87a31143c613880c5b9e9d43ad6b01eca7064a264148bc27fe08"
+    },
+    {
+      "path": "observe-current-readonly.py",
+      "bytes": 7298,
+      "sha256": "e256ac4217d5d851abbd3d92cd0aea3d782b0f435fe92e893695ace0eebcf2a3"
+    },
+    {
+      "path": "original-source-bindings-safe.json",
+      "bytes": 2304,
+      "sha256": "f8dc12731a7534678b63592bf4abd6452399a8305997d1fd08e8ba97a7f0a2eb"
+    },
+    {
+      "path": "validate.py",
+      "bytes": 6822,
+      "sha256": "849aefa08fa386eb8d06ee95bc9f75e6c71f41364028d835c39c4768c9d2ddd9"
+    }
+  ],
+  "excludesItselfAndReview": true,
+  "originalPrivateSourceCopies": 0
+}
