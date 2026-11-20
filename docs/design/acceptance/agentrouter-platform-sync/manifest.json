@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "createdAt": "2026-11-20T04:47:00.669626+00:00",
+  "createdAt": "2026-11-20T04:57:55.109211+00:00",
   "status": "default-installation-and-native-platform-history-verified-current-windows-revalidation-and-workbuddy-global-linux-pending",
   "summaryPath": "summary.json",
   "files": [
@@ -6400,6 +6400,41 @@
       "bytes": 3479
     },
     {
+      "path": "sources/audit/20261120-final-completion/README.md",
+      "sha256": "5aec4cd31d9c7a5cea7ba544b7edb186533dfeb845940669bf901c8ee1ea2455",
+      "bytes": 2032
+    },
+    {
+      "path": "sources/audit/20261120-final-completion/completion-safe.json",
+      "sha256": "e1bfe49f16dfc9b7d667fbe15b2086dd89c4331375eff9ef29818e28fb9a4259",
+      "bytes": 2452
+    },
+    {
+      "path": "sources/audit/20261120-final-completion/git-delivery-before-completion-safe.json",
+      "sha256": "4c4eba3838195c254ddeeff4eb8e3bf83bc24a0576041841de0e7fe5038e3574",
+      "bytes": 1779
+    },
+    {
+      "path": "sources/audit/20261120-final-completion/original-requirement-boundaries-safe.json",
+      "sha256": "6347fdf06d3cf542dc2a7544e4069daf0f0e4a09b2ff4e5db2d615f739c1b88c",
+      "bytes": 6443
+    },
+    {
+      "path": "sources/audit/20261120-final-completion/pages-mobile-open-safe.json",
+      "sha256": "87d9ef4492aff0a7f8eb7462c83dd8d7c83157794f640eab2e6acb78b32b6bd9",
+      "bytes": 1236
+    },
+    {
+      "path": "sources/audit/20261120-final-completion/subagent-reviews-safe.json",
+      "sha256": "35640cb4911a6a76b4ad4e083f9b688e6e7cb797a9a615e6582d50a4b70e2866",
+      "bytes": 4221
+    },
+    {
+      "path": "sources/audit/20261120-final-completion/verify-completion.py",
+      "sha256": "b103b99d38bd9e66741b26e262a1c9f57798ea0353823da7e6d91d8ab924c84a",
+      "bytes": 4702
+    },
+    {
       "path": "sources/audit/current-docs-post-native16-readonly-validation.json",
       "sha256": "e50f62e753f747f8f47836586e5ff1eefb3055444d9441397728fd950f80be74",
       "bytes": 1737
@@ -6646,8 +6681,8 @@
     },
     {
       "path": "sources/requirement-delivery-audit.json",
-      "sha256": "7e113a4151492e5a44d7a3e360917b4850bd946f63b950136b60bfe7399aeaa5",
-      "bytes": 70099
+      "sha256": "e80b0a3307b4dec3f0f6855edb4ce9c299506203a1765fb723c528e073d015f3",
+      "bytes": 72125
     },
     {
       "path": "sources/workbuddy/cn-linux-update.json",
@@ -6671,8 +6706,8 @@
     },
     {
       "path": "summary.json",
-      "sha256": "c93b1e37e08771c24fb2f6ca4e2c757f4e963e642bb49c7d796efc6826df76bd",
-      "bytes": 96618
+      "sha256": "0a8bbbf8560d7e1f7120f2aca33a96bdea6f49f9bd87247aee2092cb37334126",
+      "bytes": 97692
     },
     {
       "path": "tests/backend/a96a06e-deployment-gates-summary.json",

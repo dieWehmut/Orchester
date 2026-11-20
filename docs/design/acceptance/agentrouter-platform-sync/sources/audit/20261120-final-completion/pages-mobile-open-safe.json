@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "status": "actual-live-mobile-menu-open-and-escape-verified",
+  "scope": "Supplemental actual Chrome isolated-context observation of the deployed public Pages; no deployment, application account or model access.",
+  "site": "https://diewehmut.github.io/Orchester/",
+  "opened": {
+    "observedAtUtc": "2026-11-20T04:48:29.499Z",
+    "url": "https://diewehmut.github.io/Orchester/?final-audit=20261120",
+    "width": 390,
+    "height": 844,
+    "expanded": "true",
+    "menuId": "site-mobile-nav",
+    "menuPresent": true,
+    "menuVisible": true,
+    "links": [
+      {
+        "text": "Overview->",
+        "href": "/Orchester/"
+      },
+      {
+        "text": "Architecture->",
+        "href": "/Orchester/architecture"
+      },
+      {
+        "text": "Install->",
+        "href": "/Orchester/install"
+      }
+    ],
+    "fontLoaded": true,
+    "horizontalOverflow": false
+  },
+  "escaped": {
+    "observedAtUtc": "2026-11-20T04:48:47.979Z",
+    "width": 390,
+    "height": 844,
+    "expanded": "false",
+    "menuAbsent": true,
+    "focusOnMenuTrigger": true,
+    "horizontalOverflow": false
+  },
+  "isolatedPageClosed": true,
+  "otherBrowserPagesChanged": false,
+  "earlierObservationsRewritten": false
+}
