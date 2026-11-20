@@ -62,7 +62,8 @@ export function useRemoteControl() {
     project = ref<Project | null>(null),
     attachments = ref<FolderEntry[]>([]);
   let projectScoped = false,
-    projectRevision = 0;
+    projectRevision = 0,
+    projectCatalogRequest = 0;
   let client: RemoteClient | null = null,
     cursor = 0,
     generation = 0,
@@ -126,6 +127,7 @@ export function useRemoteControl() {
     connection++;
     historyRequest++;
     projectRevision++;
+    projectCatalogRequest++;
     agentSnapshotRequest++;
     agentSnapshot.value = null;
     agentSnapshotStatus.value = "idle";
@@ -305,7 +307,7 @@ export function useRemoteControl() {
     await action(async () => {
       const current = client,
         revision = projectRevision;
-      if (!current || !prompt.value.trim()) return;
+      if (!current || !agent.value || !prompt.value.trim()) return;
       const draft = prompt.value.trim(),
         files = JSON.stringify(attachments.value.map((file) => file.path));
       const data = {
@@ -405,10 +407,12 @@ export function useRemoteControl() {
     }
   }
   async function refreshProjects() {
-    const current = client;
-    if (!current) throw new Error("请先连接电脑");
-    const catalog = await current.request<{ projects: Project[] }>("/projects");
-    if (current === client) projects.value = catalog.projects;
+    const current = client,
+      version = connection,
+      revision = ++projectCatalogRequest;
+    const catalog = await remoteRequest<{ projects: Project[] }>("/projects");
+    assertConnection(current, version);
+    if (revision === projectCatalogRequest) projects.value = catalog.projects;
   }
   async function selectProject(target: Project) {
     await action(async () => {
@@ -438,38 +442,50 @@ export function useRemoteControl() {
     });
   }
   async function listAgents(projectId: string) {
-    if (!client) throw new Error("请先连接电脑");
-    return (
-      await client.request<{
-        agents: {
-          name: string;
-          available: boolean;
-          supports_resume: boolean;
-        }[];
-      }>(`/agents?project_id=${encodeURIComponent(projectId)}`)
-    ).agents;
+    const current = client,
+      version = connection;
+    const list = await remoteRequest<{
+      agents: {
+        name: string;
+        available: boolean;
+        supports_resume: boolean;
+      }[];
+    }>(`/agents?project_id=${encodeURIComponent(projectId)}`);
+    assertConnection(current, version);
+    return list.agents;
   }
   async function browseFolders(path?: string, offset = 0): Promise<FolderPage> {
-    if (!client) throw new Error("请先连接电脑");
     const query = new URLSearchParams({ offset: String(offset) });
     if (path) query.set("path", path);
-    return client.request<FolderPage>(`/folders?${query}`);
+    return remoteRequest<FolderPage>(`/folders?${query}`);
   }
   async function addProject(path: string): Promise<Project> {
-    if (!client) throw new Error("请先连接电脑");
-    const added = await client.request<Project>("/projects", "POST", { path });
+    const current = client,
+      version = connection;
+    const added = await remoteRequest<Project>("/projects", "POST", { path });
+    assertConnection(current, version);
     await refreshProjects();
+    assertConnection(current, version);
     return added;
+  }
+  function assertConnection(current: RemoteClient | null, version: number) {
+    if (current !== client || version !== connection)
+      throw new Error("连接已切换，请重试");
   }
   async function remoteRequest<T>(
     path: string,
     method = "GET",
     data?: unknown,
   ): Promise<T> {
-    if (!client) throw new Error("请先连接电脑");
+    const current = client,
+      version = connection;
+    if (!current) throw new Error("请先连接电脑");
     try {
-      return await client.request<T>(path, method, data);
+      const result = await current.request<T>(path, method, data);
+      assertConnection(current, version);
+      return result;
     } catch (error) {
+      assertConnection(current, version);
       if (error instanceof RemoteError && error.status === 401)
         connectionStatus.value = "needs_pairing";
       throw error;
