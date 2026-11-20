@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "actualVerifierExitCode": 0,
+  "manifestSha256": "446e2ebb72d7345d907a183e4700825735056feae26910e98ba5d65dd7bafaf6",
+  "stdout": "{\n  \"status\": \"offline-recovered-managed-runtime-evidence-verified\",\n  \"filesChecked\": 34,\n  \"nativeExternalExitCodes\": [\n    0,\n    0,\n    0\n  ],\n  \"resources\": 17,\n  \"originalRows\": 138,\n  \"observedSeconds\": 60.494701,\n  \"samples\": 88,\n  \"nativeOperations\": 0\n}\n",
+  "stderr": "",
+  "nativeOperations": 0
+}

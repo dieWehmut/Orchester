@@ -6,11 +6,13 @@
 
 [国际 WorkBuddy Linux 安装](acceptance/agentrouter-platform-sync/native/wsl/20261120-workbuddy-global-installed/README.md)现已完成。沿公开清单找到不同版本的精确厂商 CDN 地址后，核对官方站点对该 bucket 的引用，直接下载官方 `5.7.6.40488862-3e43260f` deb；实际 ELF、ASAR 和产品配置确认国际版身份，使用独立安装目录、`workbuddy-ai` 命令及 `.workbuddy-ai/app` 主配置目录，国内版入口与程序字节保留。隔离原 HOME、禁止外网的 Xvfb 环境实际显示 1199×799 的 WorkBuddy AI 窗口，Ctrl+Q 后应用和外层均退出 0。国际版仍会在新 HOME 的 `.workbuddy/logs` 生成辅助日志，不能称所有辅助路径均隔离；原用户目录未被测试读取。早期无显示环境导致的退出 139 和两次 Xvfb 准备失败保留，未宣称 `--version` 成功、版本最新、登录或模型可用。29 项归档摘要、19 项语义负例和 9 个实际公开文件散列通过。
 
+[Windows Remote 7338 恢复验收](acceptance/agentrouter-platform-sync/native/windows/20261120-recovered-managed-runtime/README.md)现已通过。原生检查确认旧 manager / server 均不存在且端口空闲后，仅启动一次有界句柄管理器；独立附着观察持续 60.494701 秒、88 次采样，17 个资源、6 个数据库 / 26 张表中的 138 条原始记录，以及设置、追加日志和 6 组备份均保留，匿名鉴权门返回 401，外部执行器退出 0。管理器仅释放由原句柄证明已退出的子进程，根服务句柄持续保留；随后独立探针再次以精确出生时间核对 manager `49728` / server `39092`、源码和程序摘要、父子关系及监听归属，实际退出 0。首次观察失败及 Linux 桥接 300 秒超时均保留，旧进程退出原因未知；不宣称永久存活、Windows 开机自启动或原 7338 令牌逐项联网。这两项并非原始用户追加要求，原数据保留与已验收的鉴权、终端功能仍分别有实证。两个实际续验缺口均已补齐，最终原始需求对账及远程交付复核正在收尾。
+
 ## 11 月 19–20 日续验
 
 [默认 Desktop / Remote 原生验收](acceptance/agentrouter-platform-sync/native/windows/20261119-default-runtime/README.md)已恢复原执行器的实际退出证据。11 月 19 日默认桌面保留 213 条原记录，显示 21 个产品、42 张图标，并通过原生托盘正常退出；GUI、Node 和外部执行器均退出 0。默认 Remote 7338 完成 60.38 秒、107 次采样，17 项资源、138 条原始数据库行和 6 份备份保留通过，匿名认证门返回 401，实际外部执行器退出 0。更新方法仍为此前已验证的默认目录原子替换，未执行 NSIS 安装器。
 
-11 月 20 日的 Remote 最终复查仍未通过：一次完整阶段检查后在创建固定摘要文件处实际退出 1，源码与既有同名文件指向重名冲突；后续修正仍有退出 2 及身份守卫失败。最后一次原生短探针成功于 01:59:37 UTC；随后 Windows 挂载 `/mnt/c` 持续返回 I/O errno 5，当前进程状态无法继续核验。历史成功不替代这次复验；Remote 7338 原保存令牌的实际请求及开机自动启动也未在此归档中验证。原进程、用户应用和持久实例未被本轮重启或强制停止。
+11 月 20 日较早一轮的 Remote 复查未通过（后继恢复结果见上）：一次完整阶段检查后在创建固定摘要文件处实际退出 1，源码与既有同名文件指向重名冲突；后续修正仍有退出 2 及身份守卫失败。最后一次原生短探针成功于 01:59:37 UTC；随后 Windows 挂载 `/mnt/c` 持续返回 I/O errno 5，当前进程状态无法继续核验。历史成功不替代这次复验；Remote 7338 原保存令牌的实际请求及开机自动启动也未在此归档中验证。原进程、用户应用和持久实例未被本轮重启或强制停止。
 
 [Claude 官方安装归档](acceptance/agentrouter-platform-sync/native/claude/20261119-official-installations/README.md)已补齐 Windows 与 WSL 的安装缺口：Windows Store 原生安装退出 0，当前用户注册包为 `5.11492.5.0`，已安装 EXE / ASAR 为 `5.11492.5`，Anthropic 签名 Valid；WSL 官方签名仓库、deb、实际 APT 安装与版本命令构成完整来源链。Linux 独立 WSLg 窗口实际显示地域限制页面，Ctrl+Q 后退出 0，16 个原 pidfd 全部终止。Windows 独立 GUI 测试因已有外部应用进程而未执行；安装通过不代表登录或模型可用。55 个归档文件的离线校验及 17 个语义、签名负向用例通过，原始失败和版本纠正记录均保留。
 
@@ -22,13 +24,13 @@
 
 [DeepSeek 原生复核](acceptance/agentrouter-platform-sync/native/windows/20261120-deepseek-runtime/README.md)实际退出 0，确认官方已安装 `0.2.2-rc.1`、Valid 厂商签名及当前用户注册；原 DataElement 产品仍保留。发现 4 个原产品进程仍在运行，因此未启动共享原数据目录的第二个 GUI。GUI 与启动后资料保留属于额外验证边界，安装结论已有实证；未要求登录或模型调用。
 
-[国际 WorkBuddy Linux 官方渠道续查](acceptance/agentrouter-platform-sync/native/wsl/20261120-workbuddy-global/README.md)仍未取得可安装包。最新官方文档构建为 `432ddbdc516`；6 个来源明确的 Linux 更新渠道均返回 `5.5.2.37849279`，但原样返回的 6 个下载地址全部为 HTTP 404，企业 AppImage 接口为 HTTP 400。国内版程序摘要不变，未将国内版充作国际版；此项原生安装及配置隔离仍未完成，需要可用的官方国际版 Linux 包。
+[较早的国际 WorkBuddy Linux 官方渠道续查](acceptance/agentrouter-platform-sync/native/wsl/20261120-workbuddy-global/README.md)当时未取得可安装包。最新官方文档构建为 `432ddbdc516`；6 个来源明确的 Linux 更新渠道均返回 `5.5.2.37849279`，但原样返回的 6 个下载地址全部为 HTTP 404，企业 AppImage 接口为 HTTP 400。国内版程序摘要不变，未将国内版充作国际版；该观察时尚未安装；后续通过不同的官方厂商包完成安装，见本页最新续验。
 
 [缓存与分支续审](acceptance/agentrouter-platform-sync/maintenance/20261120-cache-and-branch-continuation/README.md)补存此前 5 个 Linux、8 个 Windows 缓存目录及 4 个本地分支、3 个工作树、2 个远程分支的清理摘要。本次另清理闲置 npm 下载缓存 191,672,408 逻辑字节，实际退出 0，37 项归档检查通过；未重复计入此前 11.44 GB 增量缓存。未合并分支和有改动的工作树保留，Windows I/O 错误不作当前缓存不存在或 C 盘释放量的证明。
 
 [当前 Pages 实测](acceptance/agentrouter-platform-sync/sources/audit/20261120-completion-review/pages-live-safe.json)确认线上 CSS、霞鹜文楷字体和 favicon 与当前构建字节一致，实际浏览器显示 21 个产品、42 张图标，390×844 下无横向溢出，菜单打开、Escape 关闭与路由跳转关闭均通过。首次导航超时、一次深色字体尚未加载的观察保留；没有宣称本地 JS 与 CI 制品逐字节相等。[源码范围复核](acceptance/agentrouter-platform-sync/sources/audit/20261120-completion-review/current-source-scope-safe.json)确认原 731 项中 728 项未变，3 项变化仅为已审查的官网 HTML / CSS 和字体 README，另增加官网 favicon；全部 368 项后端输入仍与冻结 71 相等。此前“731 项全部相等”的结论仅适用于其历史日期。
 
-本轮以最多 9 个代理并行处理，6 项变更分别验证、提交并合入 `main`，远程分支已实际回读匹配。[分步交付记录](acceptance/agentrouter-platform-sync/maintenance/git-delivery/20261120-six-step-delivery-safe.json)保留两次 TLS 推送失败及后续成功重试。当前仍待 Windows 通道恢复后的运行复验和国际版 WorkBuddy Linux 官方包，完整目标保持未完成。
+此前一轮以最多 9 个代理并行处理，6 项变更分别验证、提交并合入 `main`，远程分支已实际回读匹配。[分步交付记录](acceptance/agentrouter-platform-sync/maintenance/git-delivery/20261120-six-step-delivery-safe.json)保留两次 TLS 推送失败及后续成功重试。当时尚待 Windows 运行复验和国际版 WorkBuddy Linux 包；这两个缺口已在上面的后继记录闭合。
 
 ## 此前检查点
 

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "status": "default-installation-and-native-platform-history-verified-current-windows-revalidation-and-workbuddy-global-linux-pending",
+  "status": "technical-requirements-verified-final-original-requirement-and-delivery-review-pending",
   "finalCodeRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
   "historicalSourceRevision": "a96a06e445ab6bdc4483ac297c69f8a0e2382bc9",
   "historicalCatalogProductCount": 20,
@@ -565,7 +565,7 @@
     "Prior source71 Linux7337 deployment/1023019 and oneoriginal7337/info200 before fresh23:31UTC absence; originalreceipts preserved historical"
   ],
   "pendingCurrentEpochScopes": [
-    "Use recovered native Windows access to restore/revalidate current managed Remote7338 identity, listener,17resources, original138state rows and401authentication gate after strict original PID absence. Original saved7338tokenwire and Windowsautostart remain unrequested unmeasured limits."
+    "Complete final original-requirement reconciliation and push/read back the final reviewed main commit."
   ],
   "folderResponsibilities": {
     "sources": "Official origins, source/provenance and current safe source audits",
@@ -583,14 +583,12 @@
   "historicalObservationsAreNotCurrentProcessLiveness": true,
   "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsIncluded": false,
   "historical38Unmodified": true,
-  "updatedAt": "2026-11-20T04:25:06.016766+00:00",
+  "updatedAt": "2026-11-20T04:46:43.326454+00:00",
   "currentCompiledInputUnionCount": 731,
   "currentWindowsCoreGateCount": 16,
   "currentWindowsCoreGatesPassed": true,
   "currentWindowsNativeRuntimeGateCount": 18,
   "currentWindowsNativeRuntimeVerified": true,
-  "currentDeveloperRuntimeConcurrencyIncludingRoot": 9,
-  "configuredMaxThreads": 8,
   "requirementAuditPath": "sources/requirement-delivery-audit.json",
   "currentWindowsNativeWorkerPidAbsenceVerified": true,
   "currentWindowsOriginalWorkerHandleIdentityVerified": false,
@@ -860,23 +858,6 @@
   "historicalWindowsCursorAccessErrorAt1509": 0,
   "historicalWindowsSameUserInteractiveSessionProved": true,
   "currentWindowsInteractiveReadinessCurrentState": "2026-11-13 source-epoch input-desktop/cursor and GUI/desktop18/MSAA/backup/default-directory-update observations retained; no 2026-11-16 native process liveness or gateway availability revalidation; current native execution channel not ready; default-launch-task213-retention-and-managed7338-runtime-pending",
-  "currentInternationalWorkBuddyLinuxAvailabilityProof": "native/wsl/workbuddy-global-current-20261113/final-global-linux-continuation-safe.json",
-  "currentInternationalWorkBuddyLinuxAvailabilityObservedAtUtc": "2026-11-12T22:34:38.328828+00:00",
-  "currentInternationalWorkBuddyLinuxMetadataHttpStatuses": [
-    200,
-    200,
-    200,
-    200
-  ],
-  "currentInternationalWorkBuddyLinuxAdvertisedPayloadRangeGetHttpStatuses": [
-    404,
-    404,
-    404,
-    404
-  ],
-  "currentInternationalWorkBuddyOfficialHomepageAndClientsBytesEqualHistory": true,
-  "currentInternationalWorkBuddyLinuxInstalled": false,
-  "currentInternationalWorkBuddyLinuxActualProfileNamespaceVerified": false,
   "historicalWindowsStoreBootstrapperActualExitCode": 1612,
   "prior607EleventhContinuationCheckpointDelivered": true,
   "currentMergedWorktreeCleanupProof": "maintenance/workspace-current/20261113/actual-local-worktree-cleanup-safe.json",
@@ -1189,12 +1170,12 @@
   "currentWindowsDefaultRuntimeProof": "native/windows/20261119-default-runtime/scope-safe.json",
   "currentWindowsDefaultRuntimeExternalOsExitCode": 0,
   "currentWindowsDefaultRuntimeObservedAtUtc": "2026-11-19T06:41:22.5424812Z",
-  "currentWindowsManagedRemote7338LastFullRuntimeObservedAtUtc": "2026-11-19T06:50:42.4541503Z",
+  "currentWindowsManagedRemote7338LastFullRuntimeObservedAtUtc": "2026-11-20T04:14:37.2292772Z",
   "currentWindowsManagedRemote7338LastFullRuntimeExternalOsExitCode": 0,
-  "currentWindowsManagedRemote7338LastFullRuntimeSeconds": 60.3769552,
-  "currentWindowsManagedRemote7338LastFullRuntimeSamples": 107,
+  "currentWindowsManagedRemote7338LastFullRuntimeSeconds": 60.494701,
+  "currentWindowsManagedRemote7338LastFullRuntimeSamples": 88,
   "currentWindowsManagedRemote7338OriginalRowsRetained": 138,
-  "currentWindowsManagedRemote7338CurrentRevalidationVerified": false,
+  "currentWindowsManagedRemote7338CurrentRevalidationVerified": true,
   "currentWindowsManagedRemote7338OriginalSavedTokenWireVerified": false,
   "currentWindowsManagedRemote7338AutostartVerified": false,
   "latestWindowsStateObservation": {
@@ -1207,7 +1188,6 @@
   "documentedPublishedMainRevisionScope": "Six preceding content changes before the delivery receipt commit; actual ls-remote readback.",
   "currentContinuationDeliveryProof": "maintenance/git-delivery/20261120-six-step-delivery-safe.json",
   "currentContinuationContentCommitCount": 6,
-  "currentContinuationPeakAgentConcurrencyIncludingRoot": 9,
   "currentWindowsNativeExecutionChannelObservedAtUtc": "2026-11-20T03:28:09.711549+00:00",
   "currentWindowsDrvfsOriginalMountRepaired": false,
   "currentWindowsFreshReadRouteUsesNonAdminServer": true,
@@ -1220,5 +1200,47 @@
   "historicalBeforeGlobalInstall_pendingCurrentEpochScopes": [
     "Use recovered native Windows access to restore/revalidate current managed Remote7338 identity, listener,17resources, original138state rows and401authentication gate after strict original PID absence. Original saved7338tokenwire and Windowsautostart remain unrequested unmeasured limits.",
     "Obtain and verify a downloadable genuine official WorkBuddy Global Linux package, then install it separately from domestic WorkBuddy while preserving original data. Six current exact advertised package URLs returned404; enterpriseAppImage400. No permanent unsupported-policy or domestic-substitution claim."
+  ],
+  "historicalBefore20261120Installation_currentInternationalWorkBuddyLinuxAvailabilityProof": "native/wsl/workbuddy-global-current-20261113/final-global-linux-continuation-safe.json",
+  "historicalBefore20261120Installation_currentInternationalWorkBuddyLinuxAvailabilityObservedAtUtc": "2026-11-12T22:34:38.328828+00:00",
+  "historicalBefore20261120Installation_currentInternationalWorkBuddyLinuxMetadataHttpStatuses": [
+    200,
+    200,
+    200,
+    200
+  ],
+  "historicalBefore20261120Installation_currentInternationalWorkBuddyLinuxAdvertisedPayloadRangeGetHttpStatuses": [
+    404,
+    404,
+    404,
+    404
+  ],
+  "historicalBefore20261120Installation_currentInternationalWorkBuddyOfficialHomepageAndClientsBytesEqualHistory": true,
+  "historicalBefore20261120Installation_currentInternationalWorkBuddyLinuxInstalled": false,
+  "historicalBefore20261120Installation_currentInternationalWorkBuddyLinuxActualProfileNamespaceVerified": false,
+  "historicalEarlierContinuation_currentDeveloperRuntimeConcurrencyIncludingRoot": 9,
+  "historicalEarlierContinuation_configuredMaxThreads": 8,
+  "historicalEarlierContinuation_currentContinuationPeakAgentConcurrencyIncludingRoot": 9,
+  "currentRuntimeAgentCapacityIncludingRoot": 17,
+  "currentFinalReviewAssignedSubagentCount": 16,
+  "currentInternationalWorkBuddyLinuxInstalled": true,
+  "currentInternationalWorkBuddyLinuxActualProfileNamespaceVerified": true,
+  "currentInternationalWorkBuddyLinuxProof": "native/wsl/20261120-workbuddy-global-installed/summary-safe.json",
+  "currentInternationalWorkBuddyLinuxProfileScope": ".workbuddy-ai/app primary profile; .workbuddy/logs shared helper namespace disclosed; original HOME hidden.",
+  "historicalBefore20261120Recovery_currentWindowsManagedRemote7338LastFullRuntimeObservedAtUtc": "2026-11-19T06:50:42.4541503Z",
+  "historicalBefore20261120Recovery_currentWindowsManagedRemote7338LastFullRuntimeExternalOsExitCode": 0,
+  "historicalBefore20261120Recovery_currentWindowsManagedRemote7338LastFullRuntimeSeconds": 60.3769552,
+  "historicalBefore20261120Recovery_currentWindowsManagedRemote7338LastFullRuntimeSamples": 107,
+  "historicalBefore20261120Recovery_currentWindowsManagedRemote7338CurrentRevalidationVerified": false,
+  "currentWindowsManagedRemote7338Proof": "native/windows/20261120-recovered-managed-runtime/scope-safe.json",
+  "currentWindowsManagedRemote7338ManagerPid": 49728,
+  "currentWindowsManagedRemote7338ServerPid": 39092,
+  "currentWindowsManagedRemote7338PostObserverProbeVerified": true,
+  "currentWindowsManagedRemote7338PostObserverProbeObservedAtUtc": "2026-11-20T04:16:35.5558862Z",
+  "currentWindowsManagedRemote7338PostObserverExternalOsExitCode": 0,
+  "currentWindowsDeploymentLimits": [
+    "Foreground managed runtime; no Windows autostart or indefinite-uptime claim.",
+    "Original saved7338token wire is untested, not an original separate completion gate.",
+    "Original /mnt/c EIO is unrepaired; the independent native route is verified."
   ]
 }

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "createdAt": "2026-11-20T04:25:06.255743+00:00",
+  "createdAt": "2026-11-20T04:47:00.669626+00:00",
   "status": "default-installation-and-native-platform-history-verified-current-windows-revalidation-and-workbuddy-global-linux-pending",
   "summaryPath": "summary.json",
   "files": [
@@ -2993,6 +2993,186 @@
       "path": "native/windows/20261120-interop-route-recovery/verification-safe.json",
       "sha256": "a9c2b58e1e90a04ac631c2a590f35440feeba46a3b7b68bd429c20704452ea6a",
       "bytes": 261
+    },
+    {
+      "path": "native/windows/20261120-recovered-managed-runtime/README.md",
+      "sha256": "dc44e2cb9b9915e0650220a0bae980612dd946b8e478fbf6d998564e40088573",
+      "bytes": 2134
+    },
+    {
+      "path": "native/windows/20261120-recovered-managed-runtime/dependencies/frozen-17-resources-safe.json",
+      "sha256": "d285c13753132a9ab87b13ab5412f733ae6337f697cc8d6ce97794367d2b0a62",
+      "bytes": 3455
+    },
+    {
+      "path": "native/windows/20261120-recovered-managed-runtime/dependencies/sibling-source-bindings-safe.json",
+      "sha256": "3a229b4c44e9d993cb3dabb58438b088c18f4c1d0f3c1f82fbd9312458c66101",
+      "bytes": 1348
+    },
+    {
+      "path": "native/windows/20261120-recovered-managed-runtime/execution/03-preflight-state-and-pins-execution-1795146522133261599/execution-safe.json",
+      "sha256": "5976f8091aab7eb502cc2532fb9294e3ab0bd0aac60e8c9df602f2c9cc140282",
+      "bytes": 925
+    },
+    {
+      "path": "native/windows/20261120-recovered-managed-runtime/execution/03-preflight-state-and-pins-execution-1795146522133261599/stdout-safe.log",
+      "sha256": "b162fa637af907c1831788dddad20162be29dd81b40757dc38a37686c01529f2",
+      "bytes": 4686
+    },
+    {
+      "path": "native/windows/20261120-recovered-managed-runtime/execution/04-pruning-native-fixture-execution-1795147254024551205/execution-safe.json",
+      "sha256": "6ef150fb125465b697d29828f3ead0118e48f119c2bbc64b679b017adaf8e358",
+      "bytes": 922
+    },
+    {
+      "path": "native/windows/20261120-recovered-managed-runtime/execution/04-pruning-native-fixture-execution-1795147254024551205/stdout-safe.log",
+      "sha256": "66f5bced4198e90c251723cafb99c24fde5807119cef6b6cdeccd1dde3afccf8",
+      "bytes": 710
+    },
+    {
+      "path": "native/windows/20261120-recovered-managed-runtime/execution/attached-observer-execution-safe.json",
+      "sha256": "4c958d1b367b3315b14602e45dd167e85c0edab013534ddc89c013fb0aa722fa",
+      "bytes": 925
+    },
+    {
+      "path": "native/windows/20261120-recovered-managed-runtime/execution/attached-observer-stdout-safe.log",
+      "sha256": "f0b6268573c7434a08b42dd640a618a2a8b02d65b38c559f7edd12480a4f0a37",
+      "bytes": 3361
+    },
+    {
+      "path": "native/windows/20261120-recovered-managed-runtime/execution/post-observer-probe-execution-safe.json",
+      "sha256": "d9b1af82237cc466fc28db34323ce527b5dace6f8e697ea3b4a27f3a0018e84a",
+      "bytes": 925
+    },
+    {
+      "path": "native/windows/20261120-recovered-managed-runtime/execution/post-observer-probe-stdout-safe.log",
+      "sha256": "9227c3f704d523e4bb703879eec3e8f830c14acc125a574aca1f72cee4299ba2",
+      "bytes": 1279
+    },
+    {
+      "path": "native/windows/20261120-recovered-managed-runtime/execution/safe-receipt-export-execution-safe.json",
+      "sha256": "339b3b49d0fcbfc2d9a77a00b7c3806c416868a19dfc0e1755076f9a6d3ff66f",
+      "bytes": 924
+    },
+    {
+      "path": "native/windows/20261120-recovered-managed-runtime/failures/first-launch-bridge-timeout-derived-safe.json",
+      "sha256": "12e2807686dceb75a2627f492ce2ba6767ec8e20b8ebd45cf25a3e419ba62d54",
+      "bytes": 554
+    },
+    {
+      "path": "native/windows/20261120-recovered-managed-runtime/failures/first-launch-observer-failure-safe.json",
+      "sha256": "190ac5d5552c6331b223dacdc4e822da8e644b7a8f2564fd886043ed1d15241a",
+      "bytes": 412
+    },
+    {
+      "path": "native/windows/20261120-recovered-managed-runtime/handoff/post-observer-native-probe-safe.json",
+      "sha256": "d4b229e6fe43378c11d2fa68ef496ce53ac2e511ad3a02d12a0c2bb5a2855576",
+      "bytes": 1407
+    },
+    {
+      "path": "native/windows/20261120-recovered-managed-runtime/handoff/runtime-location-safe.json",
+      "sha256": "8cbba6a94a9dc65208bd0042ce0a167e2ab9c442bcacc70a1fd4ac12bdcf7833",
+      "bytes": 640
+    },
+    {
+      "path": "native/windows/20261120-recovered-managed-runtime/launch/managed-7338-ready-safe.json",
+      "sha256": "363fac466c09c4b8dfc5b090df683c72493050407e367a39c53756ca0d63528f",
+      "bytes": 955
+    },
+    {
+      "path": "native/windows/20261120-recovered-managed-runtime/manifest-safe.json",
+      "sha256": "446e2ebb72d7345d907a183e4700825735056feae26910e98ba5d65dd7bafaf6",
+      "bytes": 6538
+    },
+    {
+      "path": "native/windows/20261120-recovered-managed-runtime/observation/attached-observer-final-safe.json",
+      "sha256": "ce35ef03bd54b00ddff697fe7d309ec0b300d776385a1e939632c9e2fe084f2a",
+      "bytes": 4035
+    },
+    {
+      "path": "native/windows/20261120-recovered-managed-runtime/observation/managed-7338-current-safe.json",
+      "sha256": "46e17dc5a594f52062b69ea05a10a2ac77f866c5093d2373c78041047c80d472",
+      "bytes": 11327
+    },
+    {
+      "path": "native/windows/20261120-recovered-managed-runtime/observation/static-http-resources-safe.json",
+      "sha256": "c9e4288032fdfa82c5022d0dbe4a36cc9e097672c3c8d0709ecf174c7a8d690e",
+      "bytes": 5420
+    },
+    {
+      "path": "native/windows/20261120-recovered-managed-runtime/preflight/native-preflight-result-safe.json",
+      "sha256": "7335d855af292062bc64ad27cf698847c2ecfeb3f2fe05ba66ca35f4848f8553",
+      "bytes": 8604
+    },
+    {
+      "path": "native/windows/20261120-recovered-managed-runtime/scope-safe.json",
+      "sha256": "15e4138a790cd49daa126ed5a4e37c6c6148a03596cbd43460dc8eabc17b7bb9",
+      "bytes": 1455
+    },
+    {
+      "path": "native/windows/20261120-recovered-managed-runtime/semantic-negative-controls-safe.json",
+      "sha256": "944342879b5921daaaa89b0b017e8b0b7c652cc6fb4bab5bc2b6da4296d66b05",
+      "bytes": 584
+    },
+    {
+      "path": "native/windows/20261120-recovered-managed-runtime/sources/02-offline-original-state-retention.mjs",
+      "sha256": "62ca32147156ae79829c266721c2aec960cbad51ff52287982ca75c315eb1488",
+      "bytes": 7720
+    },
+    {
+      "path": "native/windows/20261120-recovered-managed-runtime/sources/03-preflight-state-and-pins.ps1",
+      "sha256": "a7a6b50cad8418c1e859484487511a01e483b2ab392bef7abe49ca4841b7f767",
+      "bytes": 8032
+    },
+    {
+      "path": "native/windows/20261120-recovered-managed-runtime/sources/04-pruning-native-fixture.ps1",
+      "sha256": "e12c59438d89f178b8cb07c10b477b6ca19dd6254a9771a433b8698afc0874b3",
+      "bytes": 5168
+    },
+    {
+      "path": "native/windows/20261120-recovered-managed-runtime/sources/05-launch-and-observe-recovered.ps1",
+      "sha256": "ee00f590c820044c3199c3367787539e78f0b305972a1043636e09895184f2c0",
+      "bytes": 21060
+    },
+    {
+      "path": "native/windows/20261120-recovered-managed-runtime/sources/06-bounded-managed-7338.ps1",
+      "sha256": "74ea5384accf2b1fa8d51ad404b2e72a562c7f3efd26bd9398d69ea7e2b88406",
+      "bytes": 15439
+    },
+    {
+      "path": "native/windows/20261120-recovered-managed-runtime/sources/06-current-recovered-readonly-probe.ps1",
+      "sha256": "a17a865c440effc87a9386fd4a505f3591418c3a2d144954220440091f91a435",
+      "bytes": 5449
+    },
+    {
+      "path": "native/windows/20261120-recovered-managed-runtime/sources/09-attach-recovered-observer.ps1",
+      "sha256": "7ae0e1f263e7e678aa75f38e45bb66ab083819470fc590dabaa31139cb955c15",
+      "bytes": 17681
+    },
+    {
+      "path": "native/windows/20261120-recovered-managed-runtime/sources/09-invoke-attached-observer.ps1",
+      "sha256": "06c203c371d381d008f4aeaae8da1984cae86910730ef5f3422d93bbfc75e92e",
+      "bytes": 472
+    },
+    {
+      "path": "native/windows/20261120-recovered-managed-runtime/sources/OwnedRuntimeProcessesBounded.cs",
+      "sha256": "80f4d4ac33fb05560978ae74aac77f1357bb9ec2b30035fc89871c108bff4478",
+      "bytes": 19126
+    },
+    {
+      "path": "native/windows/20261120-recovered-managed-runtime/sources/native_bridge.py",
+      "sha256": "25681075af7414b556a7c95a08b8f284a706633716ea78f8bb5b26f453304210",
+      "bytes": 3003
+    },
+    {
+      "path": "native/windows/20261120-recovered-managed-runtime/verification-safe.json",
+      "sha256": "fe726313899c666bdf2e3dd5bd25430ac694febb1c3c1c1e170c0a2b14184a03",
+      "bytes": 497
+    },
+    {
+      "path": "native/windows/20261120-recovered-managed-runtime/verify-evidence.py",
+      "sha256": "6e26c18b38d36045c6516e37cec2f811e057c5c7cc6f048b39a6919ee9372269",
+      "bytes": 4177
     },
     {
       "path": "native/windows/a96a06e-build/final-result.json",
@@ -6466,8 +6646,8 @@
     },
     {
       "path": "sources/requirement-delivery-audit.json",
-      "sha256": "c79620cb644f964edce9b9a4f23fb0c92240aad39c97952ba1691bf4a2cb8152",
-      "bytes": 67557
+      "sha256": "7e113a4151492e5a44d7a3e360917b4850bd946f63b950136b60bfe7399aeaa5",
+      "bytes": 70099
     },
     {
       "path": "sources/workbuddy/cn-linux-update.json",
@@ -6491,8 +6671,8 @@
     },
     {
       "path": "summary.json",
-      "sha256": "0713106751d48911d8be5d9e7b300c220094002cfc362c5cfaedb6f953af3926",
-      "bytes": 94689
+      "sha256": "c93b1e37e08771c24fb2f6ca4e2c757f4e963e642bb49c7d796efc6826df76bd",
+      "bytes": 96618
     },
     {
       "path": "tests/backend/a96a06e-deployment-gates-summary.json",

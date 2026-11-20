@@ -1,0 +1,113 @@
+{
+    "schemaVersion":  1,
+    "status":  "native-original-runtime-absent-whole-package-pins-and-original-state-before-launch-verified",
+    "observedAtUtc":  "2026-11-20T03:48:42.1359741Z",
+    "old81620And98280NativeAbsent":  true,
+    "successfulNativeListenerAndProcessQueries":  true,
+    "no7338ListenerByTwoNativeMethods":  true,
+    "wholeInstalledRemoteFrozenPackageExact":  true,
+    "sourceAndNativeImagePins":  [
+                                     {
+                                         "sha":  "14a2c2c3bee403def8651c88172e8b33e40f89aaab02a4dbafd1b3b01d52f702",
+                                         "path":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\default-finish-0e6df6887414\\06-stable-managed-7338.ps1"
+                                     },
+                                     {
+                                         "sha":  "964d1b5482b103d1694de60bfc0a230b056c48483631003c7600de6f9deb6487",
+                                         "path":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\default-finish-0e6df6887414\\03-successor-original-retention.mjs"
+                                     },
+                                     {
+                                         "sha":  "24c8f9806256cc54b239b03f6b4adc976c3fee50c30bc0f2ecf601971c22ce2a",
+                                         "path":  "C:\\Users\\han\\Downloads\\OrchesterRemote\\orchester.exe"
+                                     },
+                                     {
+                                         "sha":  "60c9b29843624dd8af6b6a7b26147753be6aeef65098b9a503cc50850afe410f",
+                                         "path":  "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+                                     },
+                                     {
+                                         "sha":  "d335743a632acae0c90968e482b87eda44aaf1dae241e938e62b5c7833598d45",
+                                         "path":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\continue-20261111-monitors-final21-71def64\\p18m-1113-bf492b45\\OwnedRuntimeProcesses.cs"
+                                     },
+                                     {
+                                         "sha":  "2d4e07f3d703043ea9af8fbf6377814f08135253837b4e36b8f075ea3aeb2f4f",
+                                         "path":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\continue-20261111-monitors-final21-71def64\\monitor-final-common.ps1"
+                                     },
+                                     {
+                                         "sha":  "ba4e6d110e8c1592a1ecd390f6b05f3da124b13871a5be62b341a07a853c6c32",
+                                         "path":  "C:\\Users\\han\\AppData\\Local\\dsh-shortcut\\node\\node-v24.21.0-win-x64\\node.exe"
+                                     },
+                                     {
+                                         "sha":  "62ca32147156ae79829c266721c2aec960cbad51ff52287982ca75c315eb1488",
+                                         "path":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\recovered-managed-20261120-1a99045f10da457ab16fa64d3094d757\\02-offline-original-state-retention.mjs"
+                                     }
+                                 ],
+    "signedSystemImagePins":  [
+                                  {
+                                      "path":  "C:\\WINDOWS\\System32\\cmd.exe",
+                                      "sha256":  "15cd209c995b7d3009c91ca40892d5b8f1fb162f3e5f10716642ea278e8e0d7b",
+                                      "authenticodeStatus":  "Valid",
+                                      "signerSubject":  "CN=Microsoft Windows, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
+                                  },
+                                  {
+                                      "path":  "C:\\WINDOWS\\System32\\conhost.exe",
+                                      "sha256":  "c86146188b78e484f32cc29e2331689659943b47689a85570342044f499938ac",
+                                      "authenticodeStatus":  "Valid",
+                                      "signerSubject":  "CN=Microsoft Windows, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
+                                  },
+                                  {
+                                      "path":  "C:\\WINDOWS\\System32\\wsl.exe",
+                                      "sha256":  "fcd08205b608b5c4831e0dcb1801dd274436cd2c8420815f18ae58a085891a18",
+                                      "authenticodeStatus":  "Valid",
+                                      "signerSubject":  "CN=Microsoft Windows, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
+                                  },
+                                  {
+                                      "path":  "C:\\Program Files\\WSL\\wsl.exe",
+                                      "sha256":  "051b7a9b7bda66817c052aced998e026610e5d4d18d63f45629d35d5cb5471c8",
+                                      "authenticodeStatus":  "Valid",
+                                      "signerSubject":  "CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
+                                  },
+                                  {
+                                      "path":  "C:\\Program Files\\WSL\\wslhost.exe",
+                                      "sha256":  "1f214fbb69efcd138260c4aa4e35182bfe5371afe4055b59a3133d8f88f9c3b7",
+                                      "authenticodeStatus":  "Valid",
+                                      "signerSubject":  "CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
+                                  }
+                              ],
+    "offlineStateGateSha256":  "a49e82a508dd5a3bfeb1df9900aa3a1f437197787d69d057cf80650908691ec2",
+    "offlineStateRetentionResult":  {
+                                        "schemaVersion":  1,
+                                        "status":  "original-user-state-before-recovered-managed-launch-retained",
+                                        "originalSettingsAndLogsRetained":  true,
+                                        "originalDatabaseRowsRetained":  true,
+                                        "privateValuesIncluded":  false,
+                                        "installerOrModelCalls":  0,
+                                        "originalExternalSavedTokenWireVerified":  false,
+                                        "zeroByteRuntimeLeaseReadAndEmptyWithoutLiveServer":  true,
+                                        "phase":  "offline-preflight",
+                                        "staticFileCount":  2,
+                                        "appendOnlyLogCount":  2,
+                                        "sqliteDatabaseCount":  6,
+                                        "originalTableCount":  26,
+                                        "originalRowCount":  138,
+                                        "freshBackupSafeSha256":  "c2277a82ccf1df70c61ac18190fdc803801053f54d36dcbdcff06febd89a090d",
+                                        "runtimeResultSha256":  "a49e82a508dd5a3bfeb1df9900aa3a1f437197787d69d057cf80650908691ec2",
+                                        "webviewByteEqualityAfterStartupClaimed":  false,
+                                        "completeOriginalWebviewBackupStillPreserved":  true,
+                                        "allSixOfflineBackupInventoriesStillExact":  true,
+                                        "sqliteComparedUsingPrivateScratchCopies":  true,
+                                        "originalBackupDatabasesOpened":  false,
+                                        "liveSharedMemoryFilesRead":  false,
+                                        "sqliteSharedMemoryUsesPrivateScratchOnly":  true,
+                                        "actualNativeNodeExitCode":  0,
+                                        "observedAtUtc":  "2026-11-20T03:48:41.744Z"
+                                    },
+    "actualNativeRetentionNodeExitCode":  0,
+    "retentionNodePid":  266604,
+    "retentionNodeCreatedFileTimeExact":  "134396201155248146",
+    "retentionNodeOriginalHandleHeldUntilExit":  true,
+    "nativeRoot":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\recovered-managed-20261120-1a99045f10da457ab16fa64d3094d757",
+    "processSignals":  0,
+    "runtimeStarts":  0,
+    "credentialCommands":  0,
+    "modelCalls":  0,
+    "privateStateValuesIncluded":  false
+}

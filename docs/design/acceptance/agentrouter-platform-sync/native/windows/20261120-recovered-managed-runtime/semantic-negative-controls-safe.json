@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "status": "three-semantic-mutations-rejected-after-byte-manifest-reseal",
+  "cases": [
+    {
+      "case": "wrong-native-exit",
+      "manifestRegenerated": true,
+      "actualVerifierExitCode": 1,
+      "rejected": true
+    },
+    {
+      "case": "wrong-original-row-count",
+      "manifestRegenerated": true,
+      "actualVerifierExitCode": 1,
+      "rejected": true
+    },
+    {
+      "case": "wrong-manager-source-binding",
+      "manifestRegenerated": true,
+      "actualVerifierExitCode": 1,
+      "rejected": true
+    }
+  ],
+  "nativeOperations": 0
+}

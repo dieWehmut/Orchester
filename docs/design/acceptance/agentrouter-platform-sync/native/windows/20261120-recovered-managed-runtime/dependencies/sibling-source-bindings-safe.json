@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "status": "compact-archive-pinned-public-prerequisites-linked",
+  "links": [
+    {
+      "path": "../20261119-default-runtime/sources/03-successor-original-retention.mjs",
+      "sha256": "964d1b5482b103d1694de60bfc0a230b056c48483631003c7600de6f9deb6487",
+      "sizeBytes": 7860,
+      "scope": "public archived exact prerequisite source or package input; no private data included"
+    },
+    {
+      "path": "../20261119-default-runtime/dependencies/monitor-final-common.ps1",
+      "sha256": "2d4e07f3d703043ea9af8fbf6377814f08135253837b4e36b8f075ea3aeb2f4f",
+      "sizeBytes": 7856,
+      "scope": "public archived exact prerequisite source or package input; no private data included"
+    },
+    {
+      "path": "../20261119-default-runtime/dependencies/retain-owned-observation.ps1",
+      "sha256": "6f758142622e49e7b6e7892c7b254a5dda53b990425d0ff7b9e54d84a7523344",
+      "sizeBytes": 2859,
+      "scope": "public archived exact prerequisite source or package input; no private data included"
+    },
+    {
+      "path": "../20261119-default-runtime/dependencies/fresh-runtime-inputs.json",
+      "sha256": "b364598c896cbcd8f4c7a70129a3ecbb6088f8930a0ea591a3860aaba6c7f86f",
+      "sizeBytes": 13666,
+      "scope": "public archived exact prerequisite source or package input; no private data included"
+    }
+  ]
+}
