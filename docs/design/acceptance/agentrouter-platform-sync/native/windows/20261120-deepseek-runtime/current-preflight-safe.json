@@ -1,0 +1,138 @@
+{
+    "schemaVersion":  1,
+    "observedAtUtc":  "2026-11-20T02:08:02.0257044Z",
+    "status":  "read_only_preflight",
+    "appLaunches":  0,
+    "processSignals":  0,
+    "environmentWrites":  0,
+    "profileWrites":  0,
+    "authActions":  0,
+    "modelCalls":  0,
+    "rawProfileOrEnvironmentValuesOutput":  false,
+    "nativePowerShellAst":  [
+                                {
+                                    "sourceLabel":  "ds-official-runtime-v2.ps1",
+                                    "sha256":  "21e5fa2cc600d1b6e0d82142e1a97701056734d4f7a6aea400cbc0ff2511909d",
+                                    "parseErrors":  0
+                                },
+                                {
+                                    "sourceLabel":  "ds-data-retention-v2.ps1",
+                                    "sha256":  "62bd839118de4fe4d39b04c7c82ecaec111917681ebc856f5f7659669f1a08f3",
+                                    "parseErrors":  0
+                                },
+                                {
+                                    "sourceLabel":  "ds-home4.ps1",
+                                    "sha256":  "6bb58303bfb8f79b9aa7d9437fe4f6719363723cbc432ba9e75d15c091d91a95",
+                                    "parseErrors":  0
+                                },
+                                {
+                                    "sourceLabel":  "ds-caption-quit2.ps1",
+                                    "sha256":  "9b6d0f04e856d76ab3f03ee3eedb208ce5052aea2b8c83bb977dc620155eb33b",
+                                    "parseErrors":  0
+                                }
+                            ],
+    "nativeCSharpCompilation":  [
+                                    {
+                                        "sourceLabel":  "runtime-native.cs",
+                                        "sha256":  "6e4686cc67fcf108a04dfe3b48928ecfb1189c030d01ef9c554ad4a26e72e839",
+                                        "compiled":  true,
+                                        "errorType":  null
+                                    },
+                                    {
+                                        "sourceLabel":  "ds-retention-native-v2.cs",
+                                        "sha256":  "7b69020f0d6bdb356697208b23f190e76531bb431e7a17a87b220595e3aeea52",
+                                        "compiled":  false,
+                                        "errorType":  "System.Exception"
+                                    },
+                                    {
+                                        "sourceLabel":  "ds-retention-json-v2.cs",
+                                        "sha256":  "dd2324f1c9fc5f30dcf39d6519ba248805d79b1ede429b2c0b575f6e5119ab16",
+                                        "compiled":  true,
+                                        "errorType":  null
+                                    }
+                                ],
+    "installedOfficialImageExists":  true,
+    "officialInstalled":  {
+                              "bytes":  246343656,
+                              "sha256":  "bad50d18a3cf42621ac03aeaf1dc527ee20384ca4c0b7eee64512954ddb9a76e",
+                              "signature":  "Valid",
+                              "signerSimpleName":  "Hangzhou DeepSeek Artificial Intelligence Co., Ltd.",
+                              "numericPEVersion":  "0.2.2.0"
+                          },
+    "officialRegisteredVersion":  "0.2.2-rc.1",
+    "officialRegisteredPublisher":  "Hangzhou DeepSeek Artificial Intelligence Co., Ltd.",
+    "originalDataElementImageExists":  true,
+    "originalDataElementRegisteredVersion":  "0.13.0",
+    "currentKnownDeepSeekProcesses":  [
+                                          {
+                                              "knownProductName":  "DSH Desktop",
+                                              "pid":  41052,
+                                              "creationFileTime":  "134396117231980756",
+                                              "sessionId":  1,
+                                              "exactOfficialInstalledImage":  false,
+                                              "exactOriginalDataElementImage":  true
+                                          },
+                                          {
+                                              "knownProductName":  "DSH Desktop",
+                                              "pid":  51424,
+                                              "creationFileTime":  "134396117245419841",
+                                              "sessionId":  1,
+                                              "exactOfficialInstalledImage":  false,
+                                              "exactOriginalDataElementImage":  true
+                                          },
+                                          {
+                                              "knownProductName":  "DSH Desktop",
+                                              "pid":  177128,
+                                              "creationFileTime":  "134396117238164439",
+                                              "sessionId":  1,
+                                              "exactOfficialInstalledImage":  false,
+                                              "exactOriginalDataElementImage":  true
+                                          },
+                                          {
+                                              "knownProductName":  "DSH Desktop",
+                                              "pid":  277176,
+                                              "creationFileTime":  "134396117238266672",
+                                              "sessionId":  1,
+                                              "exactOfficialInstalledImage":  false,
+                                              "exactOriginalDataElementImage":  true
+                                          }
+                                      ],
+    "dshHomeScopes":  [
+                          {
+                              "scope":  "Process",
+                              "set":  false
+                          },
+                          {
+                              "scope":  "User",
+                              "set":  false
+                          },
+                          {
+                              "scope":  "Machine",
+                              "set":  false
+                          }
+                      ],
+    "interactiveDesktopReady":  true,
+    "historicalHomeBaselineExists":  true,
+    "historicalHomeBaseline":  {
+                                   "sha256":  "8e3759cce27c2837c47fc82aff24bbabdb2d9b8aba132f93af0c6aeee15c0e4b",
+                                   "bytes":  6212,
+                                   "baselineUsable":  true,
+                                   "originalSharedHomeUsed":  true,
+                                   "tree":  {
+                                                "FileCount":  25661,
+                                                "DirectoryCount":  6761,
+                                                "ReparseEntryCount":  482,
+                                                "ContentTreeSha256":  "1d237267aa735411a8c4e89adfab555734c96946d2faf0a6fc478fa741392045",
+                                                "MetadataTreeSha256":  "540243dbac0907c5b32f56ebbdcb5fc9e8f4591cdec5540cd2a690ee681ed898",
+                                                "TwoNativeMetadataCensusesEqual":  true,
+                                                "PerFileNativeIdentityAndMetadataStable":  true,
+                                                "ObservationAtomic":  false,
+                                                "ConcurrentWritersPrevented":  false,
+                                                "MetadataScope":  "native file IDs, names, kind, size, creation/mtime, attributes, link reparse bytes/target identity; last-access excluded",
+                                                "BudgetBoundary":  "900s checks between native/filesystem operations; blocking calls require executor deadline"
+                                            },
+                                   "allNativeFileHandlesReleased":  true
+                               },
+    "currentNativePowerShellSha256":  "60c9b29843624dd8af6b6a7b26147753be6aeef65098b9a503cc50850afe410f",
+    "completedAtUtc":  "2026-11-20T02:08:03.9074353Z"
+}

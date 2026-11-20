@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "scope": "Only this DeepSeek optional runtime assessment archive; no native app was launched",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da",
+      "bytes": 8
+    },
+    {
+      "path": "README.md",
+      "sha256": "3f28b3e80c1ce9196940b03d4d48f606198251c0c64419749afab9d56adaa93e",
+      "bytes": 2914
+    },
+    {
+      "path": "current-preflight-execution-safe.json",
+      "sha256": "a35eeee865924ebcc0a3fbce0c37f809ca067a5302158e3de5cb82409020412a",
+      "bytes": 474
+    },
+    {
+      "path": "current-preflight-safe.json",
+      "sha256": "498cd786cce0898774535128cdeb7b5089777b0cd1ce18e425e768d51825af7f",
+      "bytes": 8524
+    },
+    {
+      "path": "preparation-review-safe.json",
+      "sha256": "0c269f567fc3f5b361a5923b9058eca499cc720d576bf20b7fdab6d228ae3d13",
+      "bytes": 3074
+    },
+    {
+      "path": "prepared-retention-v3-declarations.diff",
+      "sha256": "b7ca5f8d1088df45ad8615bdcc262694774060e3dea03296fe74d662061c22b6",
+      "bytes": 984
+    },
+    {
+      "path": "source-map.json",
+      "sha256": "7cc9045e29bc95e268a87e08328f004540eb64ae791d2fc9761dbdbedb4c8605",
+      "bytes": 1729
+    },
+    {
+      "path": "summary-safe.json",
+      "sha256": "6eccb67e8e4b6611b83fbffb7f1d4e3aa6dd8ee285efe9657c92a4bbebda2479",
+      "bytes": 2607
+    },
+    {
+      "path": "validate.py",
+      "sha256": "9fa0bb6e66d05ef723ddc68365a52192d10c254ae8b9bf00b5e0156290b23fe3",
+      "bytes": 9927
+    }
+  ]
+}

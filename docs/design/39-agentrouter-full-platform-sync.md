@@ -8,6 +8,12 @@
 
 同一 Android Studio 实例于 11 月 16 日完成项目同步（44.193 秒），11 月 19 日实际分析凭据插件（0 错误、0 警告）。同 APK 的 4 项原生测试来自此前正确 Windows 目标；单元任务 NO-SOURCE 不计测试通过。真实键盘 resize 已在此前自有 7339 后端完成，本次没有重新验证当前 7337 resize。58 个公开文件的校验在 Python 3.10 / 3.14 通过，12 项语义负向检查均拒绝；最终重复读取的 Windows 原件发生 I/O 错误，不影响已保留归档的离线校验，也不构成新一次原生通过。
 
+[安装覆盖复核](acceptance/agentrouter-platform-sync/native/20261120-installation-coverage/coverage.md)逐项列出原 21 项与新增 6 项产品，区别 CLI、编辑器扩展、桌面包及实际版本命令范围。45 个当前可访问的 WSL 公开入口文件均存在；WSL Codex 包元数据已变为 `0.171.0`，本次没有运行 Codex 或消耗其额度，旧 `0.167.1` 命令结果保留原日期。Windows 挂载 I/O 错误使本次 41 个入口无法重新观察，不能将其写成缺失。
+
+[DeepSeek 原生复核](acceptance/agentrouter-platform-sync/native/windows/20261120-deepseek-runtime/README.md)实际退出 0，确认官方已安装 `0.2.2-rc.1`、Valid 厂商签名及当前用户注册；原 DataElement 产品仍保留。发现 4 个原产品进程仍在运行，因此未启动共享原数据目录的第二个 GUI。GUI 与启动后资料保留属于额外验证边界，安装结论已有实证；未要求登录或模型调用。
+
+[国际 WorkBuddy Linux 官方渠道续查](acceptance/agentrouter-platform-sync/native/wsl/20261120-workbuddy-global/README.md)仍未取得可安装包。最新官方文档构建为 `432ddbdc516`；6 个来源明确的 Linux 更新渠道均返回 `5.5.2.37849279`，但原样返回的 6 个下载地址全部为 HTTP 404，企业 AppImage 接口为 HTTP 400。国内版程序摘要不变，未将国内版充作国际版；此项原生安装及配置隔离仍未完成，需要可用的官方国际版 Linux 包。
+
 ## 此前检查点
 
 本轮扩展范围与此前[38 的桌面/手机交付历史](38-desktop-mobile-final-delivery.md)分别归档，原源码、失败和退出边界保留。本检查点生产源码为 `71def643cb08b208cc79687f79255c504eb14dc6`。此前十三轮检查点已推送并合并到 main `3f01075b3490f6920cd7e42d730fd339456728d9`；其中新增六种 CLI 的 Windows / WSL 共 12 个安装单元及常用命令均通过版本检查，见[追加安装记录](40-additional-agent-installations.md)。执行跨 2026-11-11 至 2026-11-13（Asia/Shanghai），原 receipt UTC 日期和 `20261111` 目录保持原值。监控目录分别展示 WorkBuddy 国内、国际两版，共 21 providers、7 services、42 项主题映射与 24 份官方图标。

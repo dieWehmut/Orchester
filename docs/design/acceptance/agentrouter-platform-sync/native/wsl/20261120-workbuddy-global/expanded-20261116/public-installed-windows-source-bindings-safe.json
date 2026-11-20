@@ -1,0 +1,39 @@
+{
+  "observedAtUtc": "2026-11-16T10:31:18.370724+00:00",
+  "scope": "Read-only international installed Windows app public code, not actual Linux package proof",
+  "entries": [
+    {
+      "archive": "/mnt/c/Users/han/WorkBuddy/WorkBuddyAI/resources/app.asar",
+      "entry": "package.json",
+      "bytes": 10158,
+      "sha256": "a672cdabc92257df0ff8bb3020a86d7d8f46a6d36a10699d7f11e2b2476ad116"
+    },
+    {
+      "archive": "/mnt/c/Users/han/WorkBuddy/WorkBuddyAI/resources/app.asar",
+      "entry": "main/workbuddy-product-config.js",
+      "bytes": 28623,
+      "sha256": "3c63786599e0a8e660a03cb088a42c34b417fb3f1ea72fc364ebc99508b1fe23"
+    },
+    {
+      "archive": "/mnt/c/Users/han/WorkBuddy/WorkBuddyAI/resources/app.asar",
+      "entry": "main/update-service.js",
+      "bytes": 8754,
+      "sha256": "17c5e3992f4f79cc79b772591fa4397f20e1ca78244a45c9a4d853b7ea9c830c"
+    },
+    {
+      "archive": "/mnt/c/Users/han/WorkBuddy/WorkBuddyAI/resources/app.asar",
+      "entry": "main/update-service.linux.js",
+      "bytes": 19631,
+      "sha256": "eb0b027ca78f38054fe432768eed575de308c8ad8917470882222daf6eb7d1af"
+    },
+    {
+      "archive": "/mnt/c/Users/han/WorkBuddy/WorkBuddyAI/resources/app.asar",
+      "entry": "main/appimage-self-update.js",
+      "bytes": 14841,
+      "sha256": "9457413ddcc7c48f5b719beb30c0c8306d0f578def88535508b12ee93e76b6b7"
+    }
+  ],
+  "applicationRuns": 0,
+  "privateStateRead": false,
+  "repoMutations": 0
+}

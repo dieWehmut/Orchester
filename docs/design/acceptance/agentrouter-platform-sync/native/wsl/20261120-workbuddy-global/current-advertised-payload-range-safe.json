@@ -1,0 +1,82 @@
+{
+  "observedAtUtc": "2026-11-20T02:01:28.868898+00:00",
+  "source": "current-exact-feed-requests-safe.json",
+  "onlyUrlsReturnedByCurrentFeed": true,
+  "requests": [
+    {
+      "name": "workbuddy-linux-x64-deb-payload-0",
+      "requestedUrl": "https://download.codebuddy.ai/workbuddy/saas/linux-x64-deb/WorkBuddy-linux-x64-deb-5.5.2.37849279-910352f0.deb",
+      "observedAtUtc": "2026-11-20T02:01:18.849968+00:00",
+      "method": "GET",
+      "tlsVerificationDisabled": false,
+      "rangeHeader": "bytes=0-1023",
+      "httpStatus": 404,
+      "finalUrl": "https://download.codebuddy.ai/workbuddy/saas/linux-x64-deb/WorkBuddy-linux-x64-deb-5.5.2.37849279-910352f0.deb",
+      "bytesRead": 502,
+      "sha256": "4c84340e80a0f13a4d2e1ef3355a80b3ab6826b7b41d982eda2c7df8260ccaf2",
+      "contentType": "application/xml",
+      "boundedAtBytes": 1025,
+      "Content-Length": "502"
+    },
+    {
+      "name": "workbuddy-linux-x64-rpm-payload-0",
+      "requestedUrl": "https://download.codebuddy.ai/workbuddy/saas/linux-x64-rpm/WorkBuddy-linux-x64-rpm-5.5.2.37849279-910352f0.rpm",
+      "observedAtUtc": "2026-11-20T02:01:18.851044+00:00",
+      "method": "GET",
+      "tlsVerificationDisabled": false,
+      "rangeHeader": "bytes=0-1023",
+      "httpStatus": 404,
+      "finalUrl": "https://download.codebuddy.ai/workbuddy/saas/linux-x64-rpm/WorkBuddy-linux-x64-rpm-5.5.2.37849279-910352f0.rpm",
+      "bytesRead": 502,
+      "sha256": "d95bd02e593eaa6b77b9b75e96e9f54320d1902673494049ebbd31dfaf18c25d",
+      "contentType": "application/xml",
+      "boundedAtBytes": 1025,
+      "Content-Length": "502"
+    },
+    {
+      "name": "workbuddy-linux-arm64-deb-payload-0",
+      "requestedUrl": "https://download.codebuddy.ai/workbuddy/saas/linux-arm64-deb/WorkBuddy-linux-arm64-deb-5.5.2.37849279-910352f0.deb",
+      "observedAtUtc": "2026-11-20T02:01:18.851879+00:00",
+      "method": "GET",
+      "tlsVerificationDisabled": false,
+      "rangeHeader": "bytes=0-1023",
+      "httpStatus": 404,
+      "finalUrl": "https://download.codebuddy.ai/workbuddy/saas/linux-arm64-deb/WorkBuddy-linux-arm64-deb-5.5.2.37849279-910352f0.deb",
+      "bytesRead": 506,
+      "sha256": "25c18d1d1f803f3b00c44ca670671b62ece30e83c1ddc3275cce6abcaa2a4850",
+      "contentType": "application/xml",
+      "boundedAtBytes": 1025,
+      "Content-Length": "506"
+    },
+    {
+      "name": "workbuddy-linux-uos-x64-payload-0",
+      "requestedUrl": "https://download.codebuddy.ai/workbuddy/saas/linux-uos-x64/WorkBuddy-linux-uos-x64-5.5.2.37849279-910352f0.deb",
+      "observedAtUtc": "2026-11-20T02:01:18.852532+00:00",
+      "method": "GET",
+      "tlsVerificationDisabled": false,
+      "rangeHeader": "bytes=0-1023",
+      "httpStatus": 404,
+      "finalUrl": "https://download.codebuddy.ai/workbuddy/saas/linux-uos-x64/WorkBuddy-linux-uos-x64-5.5.2.37849279-910352f0.deb",
+      "bytesRead": 502,
+      "sha256": "f03d6e6a151c46107ca2af6524608dde8fad9f4efeffebf20ce9b62083e94feb",
+      "contentType": "application/xml",
+      "boundedAtBytes": 1025,
+      "Content-Length": "502"
+    },
+    {
+      "name": "workbuddy-linux-kylin-x64-payload-0",
+      "requestedUrl": "https://download.codebuddy.ai/workbuddy/saas/linux-kylin-x64/WorkBuddy-linux-kylin-x64-5.5.2.37849279-910352f0.deb",
+      "observedAtUtc": "2026-11-20T02:01:18.853009+00:00",
+      "method": "GET",
+      "tlsVerificationDisabled": false,
+      "rangeHeader": "bytes=0-1023",
+      "httpStatus": 404,
+      "finalUrl": "https://download.codebuddy.ai/workbuddy/saas/linux-kylin-x64/WorkBuddy-linux-kylin-x64-5.5.2.37849279-910352f0.deb",
+      "bytesRead": 506,
+      "sha256": "9aff32a35c2807b898c79910b9be3b0c2433671e19e3f558b1ba577955e6c19d",
+      "contentType": "application/xml",
+      "boundedAtBytes": 1025,
+      "Content-Length": "506"
+    }
+  ]
+}

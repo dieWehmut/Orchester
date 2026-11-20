@@ -1,0 +1,1005 @@
+{
+  "schemaVersion": 1,
+  "observedAtUtc": "2026-11-20T02:18:55.969883+00:00",
+  "scope": "selected installed public entries, manifests, and registered wrappers; source-backed historical execution retained separately",
+  "sources": {
+    "windows/current-installation-matrix/final-current-windows-installation-matrix-safe.json": {
+      "sha256": "320d93efc8e4d0be8847bfe5600c3835a31211311e1493f018605d923d7a088c",
+      "bytes": 24809
+    },
+    "wsl/current-matrix/current-native-installation-matrix-safe.json": {
+      "sha256": "ba384b5d57ecbb1604f6f4d8e4958e2bbbc8d5e9dd5772fd771a57676c0d075e",
+      "bytes": 27092
+    },
+    "windows/legacy-current-public-metadata/current-dsh-cursor-antigravity-wslhost-public-safe.json": {
+      "sha256": "e13cb328f570bf7fcb763ef7ecccd306e57f7ee4ea233297765a867184594c10",
+      "bytes": 7909
+    },
+    "windows/deepseek-official-installed-20261112/corrected-verification-safe.json": {
+      "sha256": "e2ce4fbf66b5e037e7d48fe47b039aaf60b94ba2df38c81273d6b3f5d8453f11",
+      "bytes": 2449
+    },
+    "wsl/legacy-current/final-wsl-install-safe.json": {
+      "sha256": "f1ef551e24e0fd68e81aa2e61d6f6386716b3444387d33593e7f4d60989cda59",
+      "bytes": 8184
+    },
+    "wsl/legacy-current/dsh-native-cli-checks-safe.json": {
+      "sha256": "e7990a448315f06a1fe7fa781d65c1615926727e67f95fd26a8e5dcd564f3b00",
+      "bytes": 1476
+    },
+    "additional-agents/root-integration/command-entry-matrix-safe.json": {
+      "sha256": "bdd7011055307ba3a34ce370523c4c77721beba76b2e433d10e79cf118868680",
+      "bytes": 2465
+    },
+    "additional-agents/root-integration/registered-command-entries-safe.json": {
+      "sha256": "7b3254dc9b97cafad70dcf84da3f529eaba19333311fad0eece3f3fe3d9c42ab",
+      "bytes": 3856
+    },
+    "additional-agents/root-integration/registered-command-version-gates-safe.json": {
+      "sha256": "57e8c8f432be8ab21eda09583f1fac458c95ebc3ea658ce075fb91d2d373773f",
+      "bytes": 4074
+    },
+    "additional-agents/root-integration/wsl-registered-command-version-gates-safe.json": {
+      "sha256": "9a04ceea07a7f461138399edcbd10baa2f33f267d91bd351743c5572ab8c0dcd",
+      "bytes": 1548
+    },
+    "claude/20261119-official-installations/windows/original/current-registered-installed-proof-safe.json": {
+      "sha256": "81f1a9eff58eebc9b37f524d7024403a757d39dc11d0eefe51313f2c1403d026",
+      "bytes": 1395
+    },
+    "claude/20261119-official-installations/linux/evidence/20261119/final-native-linux-verification-safe.json": {
+      "sha256": "fa36207bcbb54fea27c4bfb330809bb2ab9d4716bad2aa4c6e972200e2f37b88",
+      "bytes": 640
+    }
+  },
+  "checks": [
+    {
+      "platform": "windows",
+      "tool": "claude",
+      "kind": "installed-entry",
+      "path": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\@anthropic-ai\\claude-code\\bin\\claude.exe",
+      "exists": null,
+      "observationStatus": "unavailable-in-current-runtime-no-Windows-mount"
+    },
+    {
+      "platform": "windows",
+      "tool": "claude",
+      "kind": "public-package-manifest",
+      "path": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\@anthropic-ai\\claude-code\\package.json",
+      "exists": null,
+      "observationStatus": "unavailable-in-current-runtime-no-Windows-mount"
+    },
+    {
+      "platform": "windows",
+      "tool": "codex",
+      "kind": "installed-entry",
+      "path": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\@openai\\codex\\bin\\codex.js",
+      "exists": null,
+      "observationStatus": "unavailable-in-current-runtime-no-Windows-mount"
+    },
+    {
+      "platform": "windows",
+      "tool": "codex",
+      "kind": "public-package-manifest",
+      "path": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\@openai\\codex\\package.json",
+      "exists": null,
+      "observationStatus": "unavailable-in-current-runtime-no-Windows-mount"
+    },
+    {
+      "platform": "windows",
+      "tool": "crush",
+      "kind": "installed-entry",
+      "path": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\@charmland\\crush\\run-crush.js",
+      "exists": null,
+      "observationStatus": "unavailable-in-current-runtime-no-Windows-mount"
+    },
+    {
+      "platform": "windows",
+      "tool": "crush",
+      "kind": "public-package-manifest",
+      "path": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\@charmland\\crush\\package.json",
+      "exists": null,
+      "observationStatus": "unavailable-in-current-runtime-no-Windows-mount"
+    },
+    {
+      "platform": "windows",
+      "tool": "gemini",
+      "kind": "installed-entry",
+      "path": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\@google\\gemini-cli\\bundle\\gemini.js",
+      "exists": null,
+      "observationStatus": "unavailable-in-current-runtime-no-Windows-mount"
+    },
+    {
+      "platform": "windows",
+      "tool": "gemini",
+      "kind": "public-package-manifest",
+      "path": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\@google\\gemini-cli\\package.json",
+      "exists": null,
+      "observationStatus": "unavailable-in-current-runtime-no-Windows-mount"
+    },
+    {
+      "platform": "windows",
+      "tool": "hermes",
+      "kind": "installed-entry",
+      "path": "C:\\Users\\han\\AppData\\Local\\hermes\\bin\\hermes.exe",
+      "exists": null,
+      "observationStatus": "unavailable-in-current-runtime-no-Windows-mount"
+    },
+    {
+      "platform": "windows",
+      "tool": "openclaw",
+      "kind": "installed-entry",
+      "path": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\openclaw\\openclaw.mjs",
+      "exists": null,
+      "observationStatus": "unavailable-in-current-runtime-no-Windows-mount"
+    },
+    {
+      "platform": "windows",
+      "tool": "openclaw",
+      "kind": "public-package-manifest",
+      "path": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\openclaw\\package.json",
+      "exists": null,
+      "observationStatus": "unavailable-in-current-runtime-no-Windows-mount"
+    },
+    {
+      "platform": "windows",
+      "tool": "opencode",
+      "kind": "installed-entry",
+      "path": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\opencode-ai\\.\\bin\\opencode.exe",
+      "exists": null,
+      "observationStatus": "unavailable-in-current-runtime-no-Windows-mount"
+    },
+    {
+      "platform": "windows",
+      "tool": "opencode",
+      "kind": "public-package-manifest",
+      "path": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\opencode-ai\\package.json",
+      "exists": null,
+      "observationStatus": "unavailable-in-current-runtime-no-Windows-mount"
+    },
+    {
+      "platform": "windows",
+      "tool": "pi",
+      "kind": "installed-entry",
+      "path": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\@earendil-works\\pi-coding-agent\\dist\\bundle\\cli.js",
+      "exists": null,
+      "observationStatus": "unavailable-in-current-runtime-no-Windows-mount"
+    },
+    {
+      "platform": "windows",
+      "tool": "pi",
+      "kind": "public-package-manifest",
+      "path": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\@earendil-works\\pi-coding-agent\\package.json",
+      "exists": null,
+      "observationStatus": "unavailable-in-current-runtime-no-Windows-mount"
+    },
+    {
+      "platform": "windows",
+      "tool": "qwen",
+      "kind": "installed-entry",
+      "path": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\@qwen-code\\qwen-code\\cli-entry.js",
+      "exists": null,
+      "observationStatus": "unavailable-in-current-runtime-no-Windows-mount"
+    },
+    {
+      "platform": "windows",
+      "tool": "qwen",
+      "kind": "public-package-manifest",
+      "path": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\@qwen-code\\qwen-code\\package.json",
+      "exists": null,
+      "observationStatus": "unavailable-in-current-runtime-no-Windows-mount"
+    },
+    {
+      "platform": "windows",
+      "tool": "workbuddy",
+      "kind": "installed-entry",
+      "path": "C:\\Users\\han\\software\\workbuddy\\WorkBuddy.exe",
+      "exists": null,
+      "observationStatus": "unavailable-in-current-runtime-no-Windows-mount"
+    },
+    {
+      "platform": "windows",
+      "tool": "workbuddy_global",
+      "kind": "installed-entry",
+      "path": "C:\\Users\\han\\WorkBuddy\\WorkBuddyAI\\WorkBuddyAI.exe",
+      "exists": null,
+      "observationStatus": "unavailable-in-current-runtime-no-Windows-mount"
+    },
+    {
+      "platform": "windows",
+      "tool": "zcode",
+      "kind": "installed-entry",
+      "path": "C:\\Users\\han\\AppData\\Local\\Programs\\ZCode\\ZCode.exe",
+      "exists": null,
+      "observationStatus": "unavailable-in-current-runtime-no-Windows-mount"
+    },
+    {
+      "platform": "windows",
+      "tool": "craft",
+      "kind": "installed-entry",
+      "path": "C:\\Users\\han\\AppData\\Local\\Programs\\@craft-agentelectron\\Craft Agents.exe",
+      "exists": null,
+      "observationStatus": "unavailable-in-current-runtime-no-Windows-mount"
+    },
+    {
+      "platform": "windows",
+      "tool": "trae",
+      "kind": "installed-entry",
+      "path": "C:\\Users\\han\\AppData\\Local\\Programs\\Trae\\Trae.exe",
+      "exists": null,
+      "observationStatus": "unavailable-in-current-runtime-no-Windows-mount"
+    },
+    {
+      "platform": "windows",
+      "tool": "cline",
+      "kind": "extension-manifest",
+      "path": "C:\\Users\\han\\.vscode\\extensions\\saoudrizwan.claude-dev-4.1.26\\package.json",
+      "exists": null,
+      "observationStatus": "unavailable-in-current-runtime-no-Windows-mount"
+    },
+    {
+      "platform": "windows",
+      "tool": "roo",
+      "kind": "extension-manifest",
+      "path": "C:\\Users\\han\\.vscode\\extensions\\rooveterinaryinc.roo-cline-3.54.0\\package.json",
+      "exists": null,
+      "observationStatus": "unavailable-in-current-runtime-no-Windows-mount"
+    },
+    {
+      "platform": "windows",
+      "tool": "kilo",
+      "kind": "extension-manifest",
+      "path": "C:\\Users\\han\\.vscode\\extensions\\kilocode.kilo-code-7.8.27-win32-x64\\package.json",
+      "exists": null,
+      "observationStatus": "unavailable-in-current-runtime-no-Windows-mount"
+    },
+    {
+      "platform": "windows",
+      "tool": "claude",
+      "kind": "extension-manifest",
+      "path": "C:\\Users\\han\\.vscode\\extensions\\anthropic.claude-code-2.1.322-win32-x64\\package.json",
+      "exists": null,
+      "observationStatus": "unavailable-in-current-runtime-no-Windows-mount"
+    },
+    {
+      "platform": "wsl",
+      "tool": "codex",
+      "kind": "entry",
+      "path": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@openai/codex/bin/codex.js",
+      "exists": true,
+      "bytes": 8925,
+      "sha256": "0e0c66f50074965a40cbd12f625b0a35963baf41bbd8c201a93e32fddbe2e073",
+      "baselineSha256": "e14fc83739c13c1074b12bd1acce4010c893c7f6fbfc1593b4a31d74cabb57af",
+      "matchesSelectedBaseline": false
+    },
+    {
+      "platform": "wsl",
+      "tool": "codex",
+      "kind": "public-package-manifest",
+      "path": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@openai/codex/package.json",
+      "exists": true,
+      "bytes": 1082,
+      "sha256": "ae2f7921e56e3a9a1648197ae8f45d6014b7ae34917992d4846e663893672add",
+      "baselineSha256": "e8e3347884c49f8105400f410399e54831c999988c964d289a12f08d28c0d1da",
+      "matchesSelectedBaseline": false,
+      "publicManifest": {
+        "name": "@openai/codex",
+        "version": "0.171.0",
+        "bin": {
+          "codex": "bin/codex.js"
+        }
+      }
+    },
+    {
+      "platform": "wsl",
+      "tool": "claude",
+      "kind": "entry",
+      "path": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@anthropic-ai/claude-code/bin/claude.exe",
+      "exists": true,
+      "bytes": 341914128,
+      "sha256": "bfb3703ad5380242328459bc62ada4bde8ae7ba57c6e1eeadb9c00e08874c478",
+      "baselineSha256": "bfb3703ad5380242328459bc62ada4bde8ae7ba57c6e1eeadb9c00e08874c478",
+      "matchesSelectedBaseline": true
+    },
+    {
+      "platform": "wsl",
+      "tool": "claude",
+      "kind": "public-package-manifest",
+      "path": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@anthropic-ai/claude-code/package.json",
+      "exists": true,
+      "bytes": 1476,
+      "sha256": "4d880cb9add93733fa259286f7b0d5a03c69e4eace22be39b90d3b32792a4c08",
+      "baselineSha256": "4d880cb9add93733fa259286f7b0d5a03c69e4eace22be39b90d3b32792a4c08",
+      "matchesSelectedBaseline": true,
+      "publicManifest": {
+        "name": "@anthropic-ai/claude-code",
+        "version": "2.1.322",
+        "bin": {
+          "claude": "bin/claude.exe"
+        }
+      }
+    },
+    {
+      "platform": "wsl",
+      "tool": "gemini",
+      "kind": "entry",
+      "path": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@google/gemini-cli/bundle/gemini.js",
+      "exists": true,
+      "bytes": 5152,
+      "sha256": "fcc38edd4f864c2f5fa582d7d133c19b1a04c697ad3143ab8045f92b77644c68",
+      "baselineSha256": "fcc38edd4f864c2f5fa582d7d133c19b1a04c697ad3143ab8045f92b77644c68",
+      "matchesSelectedBaseline": true
+    },
+    {
+      "platform": "wsl",
+      "tool": "gemini",
+      "kind": "public-package-manifest",
+      "path": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@google/gemini-cli/package.json",
+      "exists": true,
+      "bytes": 705,
+      "sha256": "3251e00608874812d7327f41cddb09a6f8e13613124c36d21fbf537e2510bbaa",
+      "baselineSha256": "3251e00608874812d7327f41cddb09a6f8e13613124c36d21fbf537e2510bbaa",
+      "matchesSelectedBaseline": true,
+      "publicManifest": {
+        "name": "@google/gemini-cli",
+        "version": "0.68.0",
+        "bin": {
+          "gemini": "bundle/gemini.js"
+        }
+      }
+    },
+    {
+      "platform": "wsl",
+      "tool": "qwen",
+      "kind": "entry",
+      "path": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@qwen-code/qwen-code/cli-entry.js",
+      "exists": true,
+      "bytes": 18590,
+      "sha256": "113efe4104a9fc66f507d34bfd6abbd896ceb77de47f4b468a0825a327fdc6a5",
+      "baselineSha256": "113efe4104a9fc66f507d34bfd6abbd896ceb77de47f4b468a0825a327fdc6a5",
+      "matchesSelectedBaseline": true
+    },
+    {
+      "platform": "wsl",
+      "tool": "qwen",
+      "kind": "public-package-manifest",
+      "path": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@qwen-code/qwen-code/package.json",
+      "exists": true,
+      "bytes": 2151,
+      "sha256": "f7d94b9a470441e8447a21fa427f44e3d86f296aec782f999b7d26b54b4d359a",
+      "baselineSha256": "f7d94b9a470441e8447a21fa427f44e3d86f296aec782f999b7d26b54b4d359a",
+      "matchesSelectedBaseline": true,
+      "publicManifest": {
+        "name": "@qwen-code/qwen-code",
+        "version": "0.27.2",
+        "bin": {
+          "qwen": "cli-entry.js"
+        }
+      }
+    },
+    {
+      "platform": "wsl",
+      "tool": "opencode",
+      "kind": "entry",
+      "path": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/opencode-ai/bin/opencode.exe",
+      "exists": true,
+      "bytes": 214386864,
+      "sha256": "7df4e4136301f16589b0f30bf91a61380fca5f8ef22dd36570f5ebe1d4ec802c",
+      "baselineSha256": "7df4e4136301f16589b0f30bf91a61380fca5f8ef22dd36570f5ebe1d4ec802c",
+      "matchesSelectedBaseline": true
+    },
+    {
+      "platform": "wsl",
+      "tool": "opencode",
+      "kind": "public-package-manifest",
+      "path": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/opencode-ai/package.json",
+      "exists": true,
+      "bytes": 812,
+      "sha256": "b611692992fefe03641adf42bd26d1d3affc2ed7848122d6347879aa7890afc7",
+      "baselineSha256": "b611692992fefe03641adf42bd26d1d3affc2ed7848122d6347879aa7890afc7",
+      "matchesSelectedBaseline": true,
+      "publicManifest": {
+        "name": "opencode-ai",
+        "version": "1.19.5",
+        "bin": {
+          "opencode": "./bin/opencode.exe"
+        }
+      }
+    },
+    {
+      "platform": "wsl",
+      "tool": "openclaw",
+      "kind": "entry",
+      "path": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/openclaw/openclaw.mjs",
+      "exists": true,
+      "bytes": 23906,
+      "sha256": "469e60c9f60b615ff71c985a54238ee532a8f949866d76aebe7d6e4bc7219902",
+      "baselineSha256": "469e60c9f60b615ff71c985a54238ee532a8f949866d76aebe7d6e4bc7219902",
+      "matchesSelectedBaseline": true
+    },
+    {
+      "platform": "wsl",
+      "tool": "openclaw",
+      "kind": "public-package-manifest",
+      "path": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/openclaw/package.json",
+      "exists": true,
+      "bytes": 152890,
+      "sha256": "18f674ce22047b21d3e832372dff012914a5511cf98044ee0db4b8a065fa317d",
+      "baselineSha256": "18f674ce22047b21d3e832372dff012914a5511cf98044ee0db4b8a065fa317d",
+      "matchesSelectedBaseline": true,
+      "publicManifest": {
+        "name": "openclaw",
+        "version": "2026.11.3",
+        "bin": {
+          "openclaw": "openclaw.mjs"
+        }
+      }
+    },
+    {
+      "platform": "wsl",
+      "tool": "pi",
+      "kind": "entry",
+      "path": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@earendil-works/pi-coding-agent/dist/bundle/cli.js",
+      "exists": true,
+      "bytes": 160,
+      "sha256": "e79626f2dd6f94aa45d30f3fa63cd84319a6eefcd150b353cfaf274366926774",
+      "baselineSha256": "e79626f2dd6f94aa45d30f3fa63cd84319a6eefcd150b353cfaf274366926774",
+      "matchesSelectedBaseline": true
+    },
+    {
+      "platform": "wsl",
+      "tool": "pi",
+      "kind": "public-package-manifest",
+      "path": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@earendil-works/pi-coding-agent/package.json",
+      "exists": true,
+      "bytes": 3937,
+      "sha256": "18b422b7d80f2caa2551d253c0a8409e1caa54b954bfb7d18252e507bb8a0318",
+      "baselineSha256": "18b422b7d80f2caa2551d253c0a8409e1caa54b954bfb7d18252e507bb8a0318",
+      "matchesSelectedBaseline": true,
+      "publicManifest": {
+        "name": "@earendil-works/pi-coding-agent",
+        "version": "1.5.2",
+        "bin": {
+          "pi": "dist/bundle/cli.js"
+        }
+      }
+    },
+    {
+      "platform": "wsl",
+      "tool": "crush",
+      "kind": "entry",
+      "path": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@charmland/crush/run-crush.js",
+      "exists": true,
+      "bytes": 158,
+      "sha256": "2cc1ac87cc237a6383702b59f985160e637d3ec853bbccba2d7ef6bbf4d94361",
+      "baselineSha256": "2cc1ac87cc237a6383702b59f985160e637d3ec853bbccba2d7ef6bbf4d94361",
+      "matchesSelectedBaseline": true
+    },
+    {
+      "platform": "wsl",
+      "tool": "crush",
+      "kind": "public-package-manifest",
+      "path": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@charmland/crush/package.json",
+      "exists": true,
+      "bytes": 3495,
+      "sha256": "cd5f13ee8ccb4ea7f3826b4eafc3ecb70774b5d5c4cdf06a6f2b90beaf51a21a",
+      "baselineSha256": "cd5f13ee8ccb4ea7f3826b4eafc3ecb70774b5d5c4cdf06a6f2b90beaf51a21a",
+      "matchesSelectedBaseline": true,
+      "publicManifest": {
+        "name": "@charmland/crush",
+        "version": "0.100.0",
+        "bin": {
+          "crush": "run-crush.js"
+        }
+      }
+    },
+    {
+      "platform": "wsl",
+      "tool": "cline",
+      "kind": "entry",
+      "path": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/cline/bin/cline",
+      "exists": true,
+      "bytes": 5439,
+      "sha256": "37848dcde533871a1a95af479221c8768292652ae73c73a8825288a67470f355",
+      "baselineSha256": "37848dcde533871a1a95af479221c8768292652ae73c73a8825288a67470f355",
+      "matchesSelectedBaseline": true
+    },
+    {
+      "platform": "wsl",
+      "tool": "cline",
+      "kind": "public-package-manifest",
+      "path": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/cline/package.json",
+      "exists": true,
+      "bytes": 1226,
+      "sha256": "a5c17df711f84636e22e867f4b0ea8ac09e98f6d0fad684daea38a20bf1acfe4",
+      "baselineSha256": "a5c17df711f84636e22e867f4b0ea8ac09e98f6d0fad684daea38a20bf1acfe4",
+      "matchesSelectedBaseline": true,
+      "publicManifest": {
+        "name": "cline",
+        "version": "3.0.74",
+        "bin": {
+          "cline": "./bin/cline"
+        }
+      }
+    },
+    {
+      "platform": "wsl",
+      "tool": "kilo",
+      "kind": "entry",
+      "path": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@kilocode/cli/bin/kilo",
+      "exists": true,
+      "bytes": 6307,
+      "sha256": "9a87f9e371c52fdc3259841fd8c79c8ed540b3fb00bb6998e3626a58b5407767",
+      "baselineSha256": "9a87f9e371c52fdc3259841fd8c79c8ed540b3fb00bb6998e3626a58b5407767",
+      "matchesSelectedBaseline": true
+    },
+    {
+      "platform": "wsl",
+      "tool": "kilo",
+      "kind": "public-package-manifest",
+      "path": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@kilocode/cli/package.json",
+      "exists": true,
+      "bytes": 1249,
+      "sha256": "20e2231aa0b00e6e7abf1c0140ce2f5ec2efb90f7bf880dd3d4f1659e4a59978",
+      "baselineSha256": "20e2231aa0b00e6e7abf1c0140ce2f5ec2efb90f7bf880dd3d4f1659e4a59978",
+      "matchesSelectedBaseline": true,
+      "publicManifest": {
+        "name": "@kilocode/cli",
+        "version": "7.8.27",
+        "bin": {
+          "kilo": "./bin/kilo",
+          "kilocode": "./bin/kilo"
+        }
+      }
+    },
+    {
+      "platform": "wsl",
+      "tool": "hermes",
+      "kind": "entry",
+      "path": "/home/han/.local/bin/hermes",
+      "exists": true,
+      "bytes": 70,
+      "sha256": "4a7f7a45c033cbece7437b75a0dadc98ec279a21c4f9f1d832f2adc5edf16788",
+      "baselineSha256": "4a7f7a45c033cbece7437b75a0dadc98ec279a21c4f9f1d832f2adc5edf16788",
+      "matchesSelectedBaseline": true
+    },
+    {
+      "platform": "wsl",
+      "tool": "cline",
+      "kind": "publicManifest",
+      "path": "/home/han/.vscode-server/extensions/saoudrizwan.claude-dev-4.1.26/package.json",
+      "exists": true,
+      "bytes": 18112,
+      "sha256": "e2371193a4cb2304109744f273c5715f1f3b295d9864077731a1803c8867b685",
+      "baselineSha256": "e2371193a4cb2304109744f273c5715f1f3b295d9864077731a1803c8867b685",
+      "matchesSelectedBaseline": true,
+      "publicManifest": {
+        "name": "claude-dev",
+        "version": "4.1.26",
+        "publisher": "saoudrizwan"
+      }
+    },
+    {
+      "platform": "wsl",
+      "tool": "roo",
+      "kind": "publicManifest",
+      "path": "/home/han/.vscode-server/extensions/rooveterinaryinc.roo-cline-3.54.0/package.json",
+      "exists": true,
+      "bytes": 14791,
+      "sha256": "e042dcf931e7d22f620b9273da2d7dc717050cedba3f49e81337217869e4de79",
+      "baselineSha256": "e042dcf931e7d22f620b9273da2d7dc717050cedba3f49e81337217869e4de79",
+      "matchesSelectedBaseline": true,
+      "publicManifest": {
+        "name": "roo-cline",
+        "version": "3.54.0",
+        "publisher": "RooVeterinaryInc"
+      }
+    },
+    {
+      "platform": "wsl",
+      "tool": "kilo",
+      "kind": "publicManifest",
+      "path": "/home/han/.vscode-server/extensions/kilocode.kilo-code-7.8.27-linux-x64/package.json",
+      "exists": true,
+      "bytes": 44803,
+      "sha256": "38d6c4bb69683ecae4f51994ab2b40366ad3afa703a6831d3f6d6409b64703e1",
+      "baselineSha256": "38d6c4bb69683ecae4f51994ab2b40366ad3afa703a6831d3f6d6409b64703e1",
+      "matchesSelectedBaseline": true,
+      "publicManifest": {
+        "name": "kilo-code",
+        "version": "7.8.27",
+        "publisher": "kilocode"
+      }
+    },
+    {
+      "platform": "wsl",
+      "tool": "claude",
+      "kind": "publicManifest",
+      "path": "/home/han/.vscode-server/extensions/anthropic.claude-code-2.1.322-linux-x64/package.json",
+      "exists": true,
+      "bytes": 21632,
+      "sha256": "45152e1b1d34bdf04246d0c620bb00fb462e209e5f4557513487264b7cd1f305",
+      "baselineSha256": "45152e1b1d34bdf04246d0c620bb00fb462e209e5f4557513487264b7cd1f305",
+      "matchesSelectedBaseline": true,
+      "publicManifest": {
+        "name": "claude-code",
+        "version": "2.1.322",
+        "publisher": "Anthropic"
+      }
+    },
+    {
+      "platform": "wsl",
+      "tool": "zcode",
+      "kind": "entry",
+      "path": "/home/han/.local/opt/zcode/3.17.2/opt/ZCode/zcode",
+      "exists": true,
+      "bytes": 228605256,
+      "sha256": "10a14d05c6ff4f94075cfb3eeb6ed6571be33ebcc08cbd675b5ce9ff84706564",
+      "baselineSha256": "10a14d05c6ff4f94075cfb3eeb6ed6571be33ebcc08cbd675b5ce9ff84706564",
+      "matchesSelectedBaseline": true
+    },
+    {
+      "platform": "wsl",
+      "tool": "zcode",
+      "kind": "launcher",
+      "path": "/home/han/.local/bin/zcode",
+      "exists": true,
+      "bytes": 302,
+      "sha256": "af4a6bab7752e4471d5e9ca6b8c24aed7f2093ecfed6bb32cacd3af3727f75bc",
+      "baselineSha256": "af4a6bab7752e4471d5e9ca6b8c24aed7f2093ecfed6bb32cacd3af3727f75bc",
+      "matchesSelectedBaseline": true
+    },
+    {
+      "platform": "wsl",
+      "tool": "craft",
+      "kind": "entry",
+      "path": "/home/han/.local/opt/craft-agents/0.15.9/squashfs-root/@craft-agentelectron",
+      "exists": true,
+      "bytes": 199855320,
+      "sha256": "feab9d1667bce2ffc67eea1bccbbfaf99743ab26e2f01033369d60e99cff7d22",
+      "baselineSha256": "feab9d1667bce2ffc67eea1bccbbfaf99743ab26e2f01033369d60e99cff7d22",
+      "matchesSelectedBaseline": true
+    },
+    {
+      "platform": "wsl",
+      "tool": "craft",
+      "kind": "launcher",
+      "path": "/home/han/.local/bin/craft-agents",
+      "exists": true,
+      "bytes": 328,
+      "sha256": "b14512ff93ff254b2ce853289ac8079c9eec9c27698e6253aa5490da0c680bac",
+      "baselineSha256": "b14512ff93ff254b2ce853289ac8079c9eec9c27698e6253aa5490da0c680bac",
+      "matchesSelectedBaseline": true
+    },
+    {
+      "platform": "wsl",
+      "tool": "workbuddy",
+      "kind": "entry",
+      "path": "/home/han/.local/opt/workbuddy/5.6.2.40046327/opt/WorkBuddy/workbuddy",
+      "exists": true,
+      "bytes": 200842456,
+      "sha256": "13bf1da1273c22f0536ee6a52fbadb3561dd31b63c11e80f7feff6beccac1578",
+      "baselineSha256": "13bf1da1273c22f0536ee6a52fbadb3561dd31b63c11e80f7feff6beccac1578",
+      "matchesSelectedBaseline": true
+    },
+    {
+      "platform": "wsl",
+      "tool": "workbuddy",
+      "kind": "launcher",
+      "path": "/home/han/.local/bin/workbuddy",
+      "exists": true,
+      "bytes": 322,
+      "sha256": "11adc0efee1ff96693c1055a1a3e3c62e8cd81d408bf9dacbc4e4f8f4ab334ac",
+      "baselineSha256": "11adc0efee1ff96693c1055a1a3e3c62e8cd81d408bf9dacbc4e4f8f4ab334ac",
+      "matchesSelectedBaseline": true
+    },
+    {
+      "platform": "wsl",
+      "tool": "trae",
+      "kind": "entry",
+      "path": "/home/han/.local/opt/trae/3.4.17/usr/share/trae-cn/trae-cn",
+      "exists": true,
+      "bytes": 202947800,
+      "sha256": "7d25cc69e7b52045276c1540d7e0bf015726f82c7e024cd858570e0197f757d1",
+      "baselineSha256": "7d25cc69e7b52045276c1540d7e0bf015726f82c7e024cd858570e0197f757d1",
+      "matchesSelectedBaseline": true
+    },
+    {
+      "platform": "wsl",
+      "tool": "trae",
+      "kind": "launcher",
+      "path": "/home/han/.local/bin/trae",
+      "exists": true,
+      "bytes": 348,
+      "sha256": "a532c31f2b4bdd8c1ead0ac5d48f71c79c638206592d1753b80ccbb01d4d7d68",
+      "baselineSha256": "a532c31f2b4bdd8c1ead0ac5d48f71c79c638206592d1753b80ccbb01d4d7d68",
+      "matchesSelectedBaseline": true
+    },
+    {
+      "platform": "windows",
+      "tool": "antigravity",
+      "kind": "installed-entry",
+      "path": "C:\\Users\\han\\AppData\\Local\\Programs\\antigravity\\Antigravity.exe",
+      "exists": null,
+      "observationStatus": "unavailable-in-current-runtime-no-Windows-mount"
+    },
+    {
+      "platform": "windows",
+      "tool": "cursor",
+      "kind": "installed-entry",
+      "path": "C:\\Users\\han\\software\\cursor\\cursor\\Cursor.exe",
+      "exists": null,
+      "observationStatus": "unavailable-in-current-runtime-no-Windows-mount"
+    },
+    {
+      "platform": "windows",
+      "tool": "deepseek",
+      "kind": "installed-entry",
+      "path": "C:\\Users\\han\\AppData\\Local\\Programs\\DeepSeekHarnessOfficial\\DeepSeek Harness.exe",
+      "exists": null,
+      "observationStatus": "unavailable-in-current-runtime-no-Windows-mount"
+    },
+    {
+      "platform": "wsl",
+      "tool": "deepseek",
+      "kind": "launcher",
+      "path": "/home/han/.local/bin/dsh",
+      "exists": true,
+      "bytes": 182,
+      "sha256": "27bd3e00f6c2fb887cdf3551da389806d81937de85d7ff0b4f2522b032146785"
+    },
+    {
+      "platform": "wsl",
+      "tool": "cursor",
+      "kind": "launcher",
+      "path": "/home/han/.local/bin/cursor",
+      "exists": true,
+      "bytes": 349,
+      "sha256": "edd8d04ec0e10cea5f32108fe3b59023a8c198a026df9df16b0b26509e556962"
+    },
+    {
+      "platform": "wsl",
+      "tool": "cursor",
+      "kind": "installed-entry",
+      "path": "/home/han/.local/opt/cursor/3.29.15/usr/share/cursor/cursor",
+      "exists": true,
+      "bytes": 224689400,
+      "sha256": "b52bd49b56f0deb8c30cd25a72fdda71ff07f8e72aa502f2f8851a8c1d3ca239",
+      "baselineSha256": "b52bd49b56f0deb8c30cd25a72fdda71ff07f8e72aa502f2f8851a8c1d3ca239",
+      "matchesSelectedBaseline": true
+    },
+    {
+      "platform": "wsl",
+      "tool": "antigravity",
+      "kind": "launcher",
+      "path": "/home/han/.local/bin/antigravity",
+      "exists": true,
+      "bytes": 320,
+      "sha256": "13452dad2175eabab20a295db66d7495d74d349c3db91d200fa05d4a13427c67"
+    },
+    {
+      "platform": "wsl",
+      "tool": "antigravity",
+      "kind": "installed-entry",
+      "path": "/home/han/.local/opt/antigravity/2.31.0/Antigravity-x64/antigravity",
+      "exists": true,
+      "bytes": 228826440,
+      "sha256": "3ba9114b7fbaafaf548f72c5d1bc86b7dc81098a85361784359c2c1199625bfc",
+      "baselineSha256": "3ba9114b7fbaafaf548f72c5d1bc86b7dc81098a85361784359c2c1199625bfc",
+      "matchesSelectedBaseline": true
+    },
+    {
+      "platform": "wsl",
+      "tool": "deepseek",
+      "kind": "public-package-manifest",
+      "path": "/home/han/.local/share/orchester-legacy-tools/deepseek-harness/0.2.2-rc.1/node_modules/@deepseek-ai/dsh/package.json",
+      "exists": true,
+      "bytes": 8329,
+      "sha256": "3e14837ceb3bbc0ba419ed08e9b5ba164338369b1268b93c3c25d89f7b1c9953",
+      "baselineSha256": "3e14837ceb3bbc0ba419ed08e9b5ba164338369b1268b93c3c25d89f7b1c9953",
+      "matchesSelectedBaseline": true,
+      "publicManifest": {
+        "name": "@deepseek-ai/dsh",
+        "version": "0.2.2-rc.1",
+        "bin": {
+          "dsh": "lib/bin.js"
+        }
+      }
+    },
+    {
+      "platform": "windows",
+      "tool": "copilot",
+      "kind": "registered-wrapper",
+      "path": "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\bin\\copilot.cmd",
+      "exists": null,
+      "observationStatus": "unavailable-in-current-runtime-no-Windows-mount"
+    },
+    {
+      "platform": "windows",
+      "tool": "copilot",
+      "kind": "wrapper-target",
+      "path": "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\copilot\\bin\\copilot.cmd",
+      "exists": null,
+      "observationStatus": "unavailable-in-current-runtime-no-Windows-mount"
+    },
+    {
+      "platform": "windows",
+      "tool": "cn",
+      "kind": "registered-wrapper",
+      "path": "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\bin\\cn.cmd",
+      "exists": null,
+      "observationStatus": "unavailable-in-current-runtime-no-Windows-mount"
+    },
+    {
+      "platform": "windows",
+      "tool": "cn",
+      "kind": "wrapper-target",
+      "path": "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\continue\\node_modules\\.bin\\cn.cmd",
+      "exists": null,
+      "observationStatus": "unavailable-in-current-runtime-no-Windows-mount"
+    },
+    {
+      "platform": "windows",
+      "tool": "aider",
+      "kind": "registered-wrapper",
+      "path": "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\bin\\aider.cmd",
+      "exists": null,
+      "observationStatus": "unavailable-in-current-runtime-no-Windows-mount"
+    },
+    {
+      "platform": "windows",
+      "tool": "aider",
+      "kind": "wrapper-target",
+      "path": "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\aider\\venv\\Scripts\\aider.exe",
+      "exists": null,
+      "observationStatus": "unavailable-in-current-runtime-no-Windows-mount"
+    },
+    {
+      "platform": "windows",
+      "tool": "goose",
+      "kind": "registered-wrapper",
+      "path": "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\bin\\goose.cmd",
+      "exists": null,
+      "observationStatus": "unavailable-in-current-runtime-no-Windows-mount"
+    },
+    {
+      "platform": "windows",
+      "tool": "goose",
+      "kind": "wrapper-target",
+      "path": "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\goose\\bin\\goose.exe",
+      "exists": null,
+      "observationStatus": "unavailable-in-current-runtime-no-Windows-mount"
+    },
+    {
+      "platform": "windows",
+      "tool": "amp",
+      "kind": "registered-wrapper",
+      "path": "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\bin\\amp.cmd",
+      "exists": null,
+      "observationStatus": "unavailable-in-current-runtime-no-Windows-mount"
+    },
+    {
+      "platform": "windows",
+      "tool": "amp",
+      "kind": "wrapper-target",
+      "path": "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\amp\\node_modules\\@ampcode\\cli\\bin\\amp.exe",
+      "exists": null,
+      "observationStatus": "unavailable-in-current-runtime-no-Windows-mount"
+    },
+    {
+      "platform": "windows",
+      "tool": "auggie",
+      "kind": "registered-wrapper",
+      "path": "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\bin\\auggie.cmd",
+      "exists": null,
+      "observationStatus": "unavailable-in-current-runtime-no-Windows-mount"
+    },
+    {
+      "platform": "windows",
+      "tool": "auggie",
+      "kind": "wrapper-target",
+      "path": "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\auggie\\node_modules\\.bin\\auggie.cmd",
+      "exists": null,
+      "observationStatus": "unavailable-in-current-runtime-no-Windows-mount"
+    },
+    {
+      "platform": "wsl",
+      "tool": "copilot",
+      "kind": "registered-command",
+      "path": "/home/han/.local/bin/copilot",
+      "exists": true,
+      "bytes": 2118,
+      "sha256": "d83678c00d0560eb715628b49318f6fc77e634696743aee025496956015f88e0",
+      "recordedTarget": "/home/han/.local/share/orchester-agents/copilot/bin/copilot",
+      "currentRealPath": "/home/han/.local/share/orchester-agents/copilot/node_modules/@github/copilot/npm-loader.js",
+      "recordedTargetRealPath": "/home/han/.local/share/orchester-agents/copilot/node_modules/@github/copilot/npm-loader.js",
+      "currentShellResolution": "/home/han/.local/bin/copilot",
+      "registrationTargetMatches": true
+    },
+    {
+      "platform": "wsl",
+      "tool": "cn",
+      "kind": "registered-command",
+      "path": "/home/han/.local/bin/cn",
+      "exists": true,
+      "bytes": 73,
+      "sha256": "8b9c1d5bff438d558b537e1e8436ae645728bd6f100fa6e7a2a810d01413e18f",
+      "recordedTarget": "/home/han/.local/share/orchester-agents/continue/node_modules/.bin/cn",
+      "currentRealPath": "/home/han/.local/share/orchester-agents/continue/node_modules/@continuedev/cli/dist/cn.js",
+      "recordedTargetRealPath": "/home/han/.local/share/orchester-agents/continue/node_modules/@continuedev/cli/dist/cn.js",
+      "currentShellResolution": "/home/han/.local/bin/cn",
+      "registrationTargetMatches": true
+    },
+    {
+      "platform": "wsl",
+      "tool": "aider",
+      "kind": "registered-command",
+      "path": "/home/han/.local/bin/aider",
+      "exists": true,
+      "bytes": 337,
+      "sha256": "98ab33671767821d48daca76b6edf1b367f2ba4d763fc9670e61e1ae9205170a",
+      "recordedTarget": "/home/han/.local/share/orchester-agents/aider/venv/bin/aider",
+      "currentRealPath": "/home/han/.local/share/orchester-agents/aider/venv/bin/aider",
+      "recordedTargetRealPath": "/home/han/.local/share/orchester-agents/aider/venv/bin/aider",
+      "currentShellResolution": "/home/han/.local/bin/aider",
+      "registrationTargetMatches": true
+    },
+    {
+      "platform": "wsl",
+      "tool": "goose",
+      "kind": "registered-command",
+      "path": "/home/han/.local/bin/goose",
+      "exists": true,
+      "bytes": 208612352,
+      "sha256": "4ee4e39acff02e725e6959a71b5f4d91da9e8c0bd7b95bc2dce4a753abbecede",
+      "recordedTarget": "/home/han/.local/share/orchester-agents/goose/bin/goose",
+      "currentRealPath": "/home/han/.local/share/orchester-agents/goose/bin/goose",
+      "recordedTargetRealPath": "/home/han/.local/share/orchester-agents/goose/bin/goose",
+      "currentShellResolution": "/home/han/.local/bin/goose",
+      "registrationTargetMatches": true
+    },
+    {
+      "platform": "wsl",
+      "tool": "amp",
+      "kind": "registered-command",
+      "path": "/home/han/.local/bin/amp",
+      "exists": true,
+      "bytes": 155723952,
+      "sha256": "8e7d7f19cb2321bba7821fe8d1869cbd071be403dffdb47875dfc23dd0487db2",
+      "recordedTarget": "/home/han/.local/share/orchester-agents/amp/node_modules/.bin/amp",
+      "currentRealPath": "/home/han/.local/share/orchester-agents/amp/node_modules/@ampcode/cli/bin/amp",
+      "recordedTargetRealPath": "/home/han/.local/share/orchester-agents/amp/node_modules/@ampcode/cli/bin/amp",
+      "currentShellResolution": "/home/han/.local/bin/amp",
+      "registrationTargetMatches": true
+    },
+    {
+      "platform": "wsl",
+      "tool": "auggie",
+      "kind": "registered-command",
+      "path": "/home/han/.local/bin/auggie",
+      "exists": true,
+      "bytes": 13446452,
+      "sha256": "7d809fef34f9cb0eae57559ced737e225ec74a390cf325ea453871d847d716c9",
+      "recordedTarget": "/home/han/.local/share/orchester-agents/auggie/node_modules/.bin/auggie",
+      "currentRealPath": "/home/han/.local/share/orchester-agents/auggie/node_modules/@augmentcode/auggie/augment.mjs",
+      "recordedTargetRealPath": "/home/han/.local/share/orchester-agents/auggie/node_modules/@augmentcode/auggie/augment.mjs",
+      "currentShellResolution": "/home/han/.local/bin/auggie",
+      "registrationTargetMatches": true
+    }
+  ],
+  "summary": {
+    "checks": 86,
+    "missingSelectedPaths": 0,
+    "unavailableSelectedWindowsPaths": 41,
+    "changedSelectedBaselineFiles": 2,
+    "additionalWslBindingsMatch": true
+  },
+  "limits": [
+    "The current worker runtime exposes no /mnt/c/Windows or /mnt/c/Users/han; Windows selected paths are unavailable to observe, not absent.",
+    "No agent CLI, Windows Codex, GUI, login, model, quota, installer, profile or credential operation was run.",
+    "Hashes prove only selected files, not whole packages, executable version output, model support, account availability, or GUI acceptance.",
+    "Historical registration is not refreshed by mounted-file hashing.",
+    "WorkBuddy Global Linux is assigned to its independent owner; no official Linux payload inferred from domestic WorkBuddy.",
+    "Claude official installation receipts are frozen source references from 2026-11-19."
+  ]
+}

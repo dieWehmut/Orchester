@@ -1,0 +1,65 @@
+{
+  "requests": [
+    {
+      "name": "current-docs-metadata",
+      "requestedUrl": "https://download.codebuddy.ai/web/docs/432ddbdc5163b609ba369b67c6df80135f705555/docs/static/chunks/metadata.871a46c3.js",
+      "observedAtUtc": "2026-11-20T02:03:56.922328+00:00",
+      "method": "GET",
+      "tlsVerificationDisabled": false,
+      "httpStatus": 200,
+      "finalUrl": "https://download.codebuddy.ai/web/docs/432ddbdc5163b609ba369b67c6df80135f705555/docs/static/chunks/metadata.871a46c3.js",
+      "bytesRead": 180717,
+      "sha256": "871a46c36a305333fbe9527ca9507c29cc4a133858170e552ea5494abbe228cb",
+      "contentType": "application/javascript",
+      "boundedAtBytes": 3000001,
+      "Content-Length": "180717",
+      "ETag": "\"301ddf0b66132b9308d5995056c1571d\"",
+      "Last-Modified": "Thu, 19 Nov 2026 11:24:31 GMT",
+      "retryReason": "Initial exact source-supported request failed at transport layer",
+      "initialReceipt": "current-docs-index-http-safe.json"
+    },
+    {
+      "name": "workbuddy-linux-arm64-rpm",
+      "requestedUrl": "https://www.workbuddy.ai/v2/update?platform=workbuddy-linux-arm64-rpm",
+      "observedAtUtc": "2026-11-20T02:04:34.769039+00:00",
+      "method": "GET",
+      "tlsVerificationDisabled": false,
+      "httpStatus": 200,
+      "finalUrl": "https://www.workbuddy.ai/v2/update?platform=workbuddy-linux-arm64-rpm",
+      "bytesRead": 271,
+      "sha256": "f69b1924dd62b059c7293cc9486bc77bd6b087dc11537e346cc53be4235af20c",
+      "contentType": "application/json; charset=utf-8",
+      "boundedAtBytes": 3000001,
+      "Content-Length": "271",
+      "publicJson": {
+        "version": "5.5.2.37849279",
+        "url": "https://download.codebuddy.ai/workbuddy/saas/linux-arm64-rpm/WorkBuddy-linux-arm64-rpm-5.5.2.37849279-910352f0.rpm",
+        "productVersion": "5.5.2.37849279",
+        "sha256hash": "",
+        "timestamp": 1788572479,
+        "hash": "",
+        "name": "",
+        "supportsFastUpdate": false
+      },
+      "retryReason": "Initial exact source-supported request failed at transport layer",
+      "initialReceipt": "current-exact-feed-requests-safe.json"
+    },
+    {
+      "name": "workbuddy-linux-arm64-rpm-payload-retry",
+      "requestedUrl": "https://download.codebuddy.ai/workbuddy/saas/linux-arm64-rpm/WorkBuddy-linux-arm64-rpm-5.5.2.37849279-910352f0.rpm",
+      "observedAtUtc": "2026-11-20T02:04:49.679508+00:00",
+      "method": "GET",
+      "tlsVerificationDisabled": false,
+      "rangeHeader": "bytes=0-1023",
+      "httpStatus": 404,
+      "finalUrl": "https://download.codebuddy.ai/workbuddy/saas/linux-arm64-rpm/WorkBuddy-linux-arm64-rpm-5.5.2.37849279-910352f0.rpm",
+      "bytesRead": 506,
+      "sha256": "ee13e7486795852124125c3ea05b0b34d8a3daf2f5f98f6174dcf3ee60a89041",
+      "contentType": "application/xml",
+      "boundedAtBytes": 1025,
+      "Content-Length": "506",
+      "sourceFeed": "current-transport-retry-safe.json"
+    }
+  ],
+  "retryBudgetPerFailedRequest": 1
+}

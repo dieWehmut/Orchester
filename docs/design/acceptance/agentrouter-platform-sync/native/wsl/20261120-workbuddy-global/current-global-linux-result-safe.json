@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 1,
+  "observedAtUtc": "2026-11-20T02:12:38.900417+00:00",
+  "status": "current-source-supported-official-international-linux-package-unavailable-native-installation-remains-incomplete",
+  "scope": "Fresh 2026-11-20 official international homepage/source-linked client, current 2026-11-19 docs build, six source-supported Linux package channels, enterprise AppImage route, current-version feed semantics, and the complete prior expanded 2026-11-16 research receipts.",
+  "officialHomepage": "https://www.workbuddy.ai/",
+  "primaryFetchMethod": "Certificate-verified HTTPS GET; exact feed-returned payloads use Range bytes=0-1023. Initial transport failures retained and retried once.",
+  "homepageAndThreeDownloadClientAssetsByteIdenticalTo20261116": true,
+  "homepageOperatingSystem": "Windows, macOS",
+  "internationalDownloadKeys": [
+    "macArm64",
+    "macX64",
+    "windows",
+    "useOnline"
+  ],
+  "linuxTileStaticFlags": {
+    "domesticOnly": true,
+    "appStoreOnly": true
+  },
+  "currentOfficialDocs": {
+    "buildCommit": "432ddbdc5163b609ba369b67c6df80135f705555",
+    "buildInfo": "prod / main@432ddbdc516 / build 2026/11/19 19:21:55 / commit 2026/11/19 19:21:04",
+    "metadataRouteCount": 1954,
+    "globalDownloadHistoryMetadataKeyPresent": false,
+    "domesticDownloadHistoryMetadataKeyPresent": true,
+    "globalChangelogMentionsLinuxReliability": true,
+    "reviewedChangelogQuickstartFAQDirectLinuxPackageLinksCount": 0,
+    "domesticHistoryPackageLinksCount": 303,
+    "domesticHistoryLinuxPackageLinksCount": 0
+  },
+  "sourceSupportedChannels": [
+    {
+      "platform": "workbuddy-linux-x64-deb",
+      "metadataStatus": 200,
+      "advertisedVersion": "5.5.2.37849279",
+      "vendorDigestProvided": false,
+      "alternateDownloadUrlsReturned": false
+    },
+    {
+      "platform": "workbuddy-linux-x64-rpm",
+      "metadataStatus": 200,
+      "advertisedVersion": "5.5.2.37849279",
+      "vendorDigestProvided": false,
+      "alternateDownloadUrlsReturned": false
+    },
+    {
+      "platform": "workbuddy-linux-arm64-deb",
+      "metadataStatus": 200,
+      "advertisedVersion": "5.5.2.37849279",
+      "vendorDigestProvided": false,
+      "alternateDownloadUrlsReturned": false
+    },
+    {
+      "platform": "workbuddy-linux-arm64-rpm",
+      "metadataStatus": 200,
+      "advertisedVersion": "5.5.2.37849279",
+      "vendorDigestProvided": false,
+      "alternateDownloadUrlsReturned": false
+    },
+    {
+      "platform": "workbuddy-linux-uos-x64",
+      "metadataStatus": 200,
+      "advertisedVersion": "5.5.2.37849279",
+      "vendorDigestProvided": false,
+      "alternateDownloadUrlsReturned": false
+    },
+    {
+      "platform": "workbuddy-linux-kylin-x64",
+      "metadataStatus": 200,
+      "advertisedVersion": "5.5.2.37849279",
+      "vendorDigestProvided": false,
+      "alternateDownloadUrlsReturned": false
+    }
+  ],
+  "exactAdvertisedPackageUrlsAndStatus": [
+    {
+      "url": "https://download.codebuddy.ai/workbuddy/saas/linux-x64-deb/WorkBuddy-linux-x64-deb-5.5.2.37849279-910352f0.deb",
+      "httpStatus": 404
+    },
+    {
+      "url": "https://download.codebuddy.ai/workbuddy/saas/linux-x64-rpm/WorkBuddy-linux-x64-rpm-5.5.2.37849279-910352f0.rpm",
+      "httpStatus": 404
+    },
+    {
+      "url": "https://download.codebuddy.ai/workbuddy/saas/linux-arm64-deb/WorkBuddy-linux-arm64-deb-5.5.2.37849279-910352f0.deb",
+      "httpStatus": 404
+    },
+    {
+      "url": "https://download.codebuddy.ai/workbuddy/saas/linux-uos-x64/WorkBuddy-linux-uos-x64-5.5.2.37849279-910352f0.deb",
+      "httpStatus": 404
+    },
+    {
+      "url": "https://download.codebuddy.ai/workbuddy/saas/linux-kylin-x64/WorkBuddy-linux-kylin-x64-5.5.2.37849279-910352f0.deb",
+      "httpStatus": 404
+    },
+    {
+      "url": "https://download.codebuddy.ai/workbuddy/saas/linux-arm64-rpm/WorkBuddy-linux-arm64-rpm-5.5.2.37849279-910352f0.rpm",
+      "httpStatus": 404
+    }
+  ],
+  "versionSensitiveFeedEvidence": {
+    "publicSourceVersion5_9_4Status": 204,
+    "advertisedVersion5_5_2_37849279Status": 204,
+    "historicalPublicVersion5_2_7Status": 200,
+    "historicalPublicVersionStillReturns": "5.5.2.37849279; same exact x64 deb URL",
+    "versionParameterIsNotAnArchiveSelector": true,
+    "publicWindowsSourceVersionDoesNotProveLinuxPackageIdentity": true
+  },
+  "enterpriseAppImage": {
+    "httpStatus": 400,
+    "publicResponse": {
+      "code": 10001,
+      "msg": "10001:no upgrade config found for clientType=workbuddy, platform=linux-x64-appimage",
+      "requestId": "a24f3907-5bb5-4c68-9426-b206e09b0ddf"
+    },
+    "routeScope": "Enterprise cloud-hosted/self-hosted source path; not proof of a public SaaS Linux build"
+  },
+  "globalNativePackageDownloaded": false,
+  "globalNativeElfIdentityVerified": false,
+  "globalNativeProfileNamespaceVerified": false,
+  "globalNativeInstalled": false,
+  "domesticUsedAsInternationalSubstitute": false,
+  "allVersionsOrAllChannelsUnavailableClaimed": false,
+  "permanentLinuxUnsupportedClaimed": false,
+  "newSourceSupportedWorkingAlternativeFound": false,
+  "archiveHistoricalReceiptsByteVerifiedCount": 10,
+  "preservationEvidence": "native-preservation-safe.json",
+  "readinessBoundary": "Need an official source-backed working international Linux package URL or corrected vendor feed. Verify downloaded package identity, native ELF and product/profile namespaces before installing in a separate native prefix. Existing international Windows public source cannot establish actual Linux identity.",
+  "networkCollectionLimitations": [
+    "One current docs metadata request initially failed with TLS EOF and one arm64 RPM feed request initially failed with a closed connection. Exact source-supported retries succeeded; initial errors and retries are retained."
+  ],
+  "webToolObservation": "Official https://www.workbuddy.ai/ opened via web tool, but returned no readable lines; direct verified HTTPS source receipts provide detailed evidence.",
+  "existingInstallationWrites": 0,
+  "privateProfileReads": 0,
+  "profileNamespaceWrites": 0,
+  "windowsApplicationCommands": 0,
+  "nativeApplicationStarts": 0,
+  "installerExecutions": 0,
+  "modelCalls": 0,
+  "authenticationActions": 0
+}

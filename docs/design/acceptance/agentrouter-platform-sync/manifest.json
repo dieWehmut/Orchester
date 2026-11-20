@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "createdAt": "2026-11-20T02:22:50.634554+00:00",
+  "createdAt": "2026-11-20T02:28:22.982796+00:00",
   "status": "official-claude-installations-verified-other-platform-continuation-in-progress",
   "summaryPath": "summary.json",
   "files": [
@@ -793,6 +793,26 @@
       "path": "maintenance/workspace-current/same-user-process-path-observation-safe.json",
       "sha256": "430674f4cb23284de97e1aba0283ef1d542b25e7ac96ad7efc0205131ee49d44",
       "bytes": 1465
+    },
+    {
+      "path": "native/20261120-installation-coverage/artifact-manifest.json",
+      "sha256": "1928f88c4c678cd3a936e92c413fdc87072ccf9d14b38d4d1e117468b0a77aeb",
+      "bytes": 615
+    },
+    {
+      "path": "native/20261120-installation-coverage/audit.py",
+      "sha256": "7d906dd847984e7d59b664c24940ea6d9e65d58611209af22f74dfa94babe933",
+      "bytes": 6242
+    },
+    {
+      "path": "native/20261120-installation-coverage/coverage.md",
+      "sha256": "3cf5e4a58f944fd824981d46a3d5d0e9aa5fc6ec7bd1b82a9a017dd71fa834b1",
+      "bytes": 6205
+    },
+    {
+      "path": "native/20261120-installation-coverage/current-public-entry-audit-safe.json",
+      "sha256": "e7fb9cf3a57eacdd29098b097bb7f12fdfd1cd49e4888e205137135ac54e5087",
+      "bytes": 38741
     },
     {
       "path": "native/additional-agents/aider-goose/aider/final-aider-installed-safe.json",
@@ -2188,6 +2208,56 @@
       "path": "native/ios/final21-public-sync.json",
       "sha256": "f0367aa2a85acada61325260b3c5f8e69f37aebfa8cac8ddccd2f01e7aada894",
       "bytes": 4708
+    },
+    {
+      "path": "native/windows/20261120-deepseek-runtime/.gitattributes",
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da",
+      "bytes": 8
+    },
+    {
+      "path": "native/windows/20261120-deepseek-runtime/README.md",
+      "sha256": "3f28b3e80c1ce9196940b03d4d48f606198251c0c64419749afab9d56adaa93e",
+      "bytes": 2914
+    },
+    {
+      "path": "native/windows/20261120-deepseek-runtime/artifact-manifest.json",
+      "sha256": "b6752fdec4fcd988c1591a71d12296b081c46327e00bf32de25fe08a10a19454",
+      "bytes": 1546
+    },
+    {
+      "path": "native/windows/20261120-deepseek-runtime/current-preflight-execution-safe.json",
+      "sha256": "a35eeee865924ebcc0a3fbce0c37f809ca067a5302158e3de5cb82409020412a",
+      "bytes": 474
+    },
+    {
+      "path": "native/windows/20261120-deepseek-runtime/current-preflight-safe.json",
+      "sha256": "498cd786cce0898774535128cdeb7b5089777b0cd1ce18e425e768d51825af7f",
+      "bytes": 8524
+    },
+    {
+      "path": "native/windows/20261120-deepseek-runtime/preparation-review-safe.json",
+      "sha256": "0c269f567fc3f5b361a5923b9058eca499cc720d576bf20b7fdab6d228ae3d13",
+      "bytes": 3074
+    },
+    {
+      "path": "native/windows/20261120-deepseek-runtime/prepared-retention-v3-declarations.diff",
+      "sha256": "b7ca5f8d1088df45ad8615bdcc262694774060e3dea03296fe74d662061c22b6",
+      "bytes": 984
+    },
+    {
+      "path": "native/windows/20261120-deepseek-runtime/source-map.json",
+      "sha256": "7cc9045e29bc95e268a87e08328f004540eb64ae791d2fc9761dbdbedb4c8605",
+      "bytes": 1729
+    },
+    {
+      "path": "native/windows/20261120-deepseek-runtime/summary-safe.json",
+      "sha256": "6eccb67e8e4b6611b83fbffb7f1d4e3aa6dd8ee285efe9657c92a4bbebda2479",
+      "bytes": 2607
+    },
+    {
+      "path": "native/windows/20261120-deepseek-runtime/validate.py",
+      "sha256": "9fa0bb6e66d05ef723ddc68365a52192d10c254ae8b9bf00b5e0156290b23fe3",
+      "bytes": 9927
     },
     {
       "path": "native/windows/a96a06e-build/final-result.json",
@@ -4750,6 +4820,141 @@
       "bytes": 4022
     },
     {
+      "path": "native/wsl/20261120-workbuddy-global/README.md",
+      "sha256": "34f02e8c88665589a21bbddfc51382850b896ef14019654ff5b5fa05321cb8d4",
+      "bytes": 2423
+    },
+    {
+      "path": "native/wsl/20261120-workbuddy-global/archive-validation-safe.json",
+      "sha256": "e35100bfdb88434255cc173913a31d3b5a8ffbe1c29a25634954dc012bb8290b",
+      "bytes": 550
+    },
+    {
+      "path": "native/wsl/20261120-workbuddy-global/current-advertised-payload-range-safe.json",
+      "sha256": "f119b63e5e739e153f5282a2a0723c71cbfb941c1d82e617868f85d56adf8cc0",
+      "bytes": 3812
+    },
+    {
+      "path": "native/wsl/20261120-workbuddy-global/current-client-http-safe.json",
+      "sha256": "416c9097c05225a7e4cac145e48b549382b54cfeae212a22da13584479805c95",
+      "bytes": 2494
+    },
+    {
+      "path": "native/wsl/20261120-workbuddy-global/current-docs-index-http-safe.json",
+      "sha256": "4e3c55415d5e7558c0ca36e54bace5e81fedec53ef8b11a39c9b43c504a178cb",
+      "bytes": 2133
+    },
+    {
+      "path": "native/wsl/20261120-workbuddy-global/current-docs-link-review-safe.json",
+      "sha256": "be8b85c7822a8e1dd34a88541774b50f53405f0e40d9fbed404c5427f0d3630b",
+      "bytes": 1741
+    },
+    {
+      "path": "native/wsl/20261120-workbuddy-global/current-domestic-history-link-review-safe.json",
+      "sha256": "ff437effa49c144aef95c680df023575db90c3374f76cdb14517947bdfc8acfe",
+      "bytes": 998
+    },
+    {
+      "path": "native/wsl/20261120-workbuddy-global/current-exact-feed-requests-safe.json",
+      "sha256": "20f47d0c273e8fbedf350f1c7690408578a67d0dc00b4aca35d03eb37fefe4c3",
+      "bytes": 8711
+    },
+    {
+      "path": "native/wsl/20261120-workbuddy-global/current-global-linux-result-safe.json",
+      "sha256": "93b80d3f8bbb783c5bc2dab2bb79724bffec264a32ffe62d82fea50c67d125ff",
+      "bytes": 6191
+    },
+    {
+      "path": "native/wsl/20261120-workbuddy-global/current-primary-http-safe.json",
+      "sha256": "fc9e61f2136500a5432b3805cc40c8673f750a123e825bcaf2bd221a3391969e",
+      "bytes": 3396
+    },
+    {
+      "path": "native/wsl/20261120-workbuddy-global/current-source-linked-assets-safe.json",
+      "sha256": "827fe56431be1ca604bf3cca43340aa3e822c4d582efe6d2a6227a639a80ce80",
+      "bytes": 3247
+    },
+    {
+      "path": "native/wsl/20261120-workbuddy-global/current-transport-retry-safe.json",
+      "sha256": "e0d41761f22530e5c28e9c2e333fb1a68e9d97f506950fcb53dabe76681fa051",
+      "bytes": 2973
+    },
+    {
+      "path": "native/wsl/20261120-workbuddy-global/expanded-20261116/additional-linux-payload-range-safe.json",
+      "sha256": "3d87e9088b06a70b964d7786edf4973d073372a912fe1edcdfb94dbe3b5096d7",
+      "bytes": 1322
+    },
+    {
+      "path": "native/wsl/20261120-workbuddy-global/expanded-20261116/additional-source-supported-linux-channels-safe.json",
+      "sha256": "45712a69d57044bd08233d1c75d16f9879c81179f35ec67812e05e6c35da4fac",
+      "bytes": 2552
+    },
+    {
+      "path": "native/wsl/20261120-workbuddy-global/expanded-20261116/expanded-official-global-linux-investigation-summary-safe.json",
+      "sha256": "2a65f91a3332e4b95b78bbf555f62241835536a8131528d7896c2bd467dee125",
+      "bytes": 5944
+    },
+    {
+      "path": "native/wsl/20261120-workbuddy-global/expanded-20261116/historical-client-version-feed-safe.json",
+      "sha256": "a55c4e434b9fce80e35f733f31b8ab1f32a38ba226834132d30b3809b41b5c65",
+      "bytes": 875
+    },
+    {
+      "path": "native/wsl/20261120-workbuddy-global/expanded-20261116/official-docs-and-history-link-review-safe.json",
+      "sha256": "9c4a4052c6c7e9326283765bae29001d42ec614e695aa2112e899213db9aafa8",
+      "bytes": 2234
+    },
+    {
+      "path": "native/wsl/20261120-workbuddy-global/expanded-20261116/official-docs-index-requests-safe.json",
+      "sha256": "8b865a32bf8ab350d53a4e09351ac1c98caf11094614fe74043fd2f8bdb79fa0",
+      "bytes": 2269
+    },
+    {
+      "path": "native/wsl/20261120-workbuddy-global/expanded-20261116/official-history-changelog-requests-safe.json",
+      "sha256": "519b681e0e6725cbf8b0dca1c041682fefd340a88f1c1cf221b7628632b7482b",
+      "bytes": 2408
+    },
+    {
+      "path": "native/wsl/20261120-workbuddy-global/expanded-20261116/official-history-page-route-requests-safe.json",
+      "sha256": "678dd56772412d8d8996977cee148468f0615fd02f1e7e2b045358adc53a4f7b",
+      "bytes": 3821
+    },
+    {
+      "path": "native/wsl/20261120-workbuddy-global/expanded-20261116/public-installed-windows-source-bindings-safe.json",
+      "sha256": "877628a164472d04678585c5662d7e4c22d1d017ebbe6ee8a92d02515672b545",
+      "bytes": 1452
+    },
+    {
+      "path": "native/wsl/20261120-workbuddy-global/expanded-20261116/selected-doc-route-map-safe.json",
+      "sha256": "804d09d21435fcaabef4eaadb54ffeeecf96560ae5b87d99ce0df78d41a7db85",
+      "bytes": 6906
+    },
+    {
+      "path": "native/wsl/20261120-workbuddy-global/expanded-20261116/source-supported-new-requests-safe.json",
+      "sha256": "2df11528559f328844a1d4db6871cf19312be13dab46c99648a3837ff9a70097",
+      "bytes": 3104
+    },
+    {
+      "path": "native/wsl/20261120-workbuddy-global/historical-archive-integrity-safe.json",
+      "sha256": "16910af333ceae351d8ab333836d7a7dfb0399b6aaa8af9c0602a0b8c05745ac",
+      "bytes": 2662
+    },
+    {
+      "path": "native/wsl/20261120-workbuddy-global/native-preservation-safe.json",
+      "sha256": "f0121d781d9fbfd96090f8a8bf1203c033064ea15a5b7ed8a708c005e4801a06",
+      "bytes": 664
+    },
+    {
+      "path": "native/wsl/20261120-workbuddy-global/public-source-bindings-safe.json",
+      "sha256": "03eec3cff337d05c708e5927a458bf359486162611276f3e0a0fd7364329ab27",
+      "bytes": 6450
+    },
+    {
+      "path": "native/wsl/20261120-workbuddy-global/safe-evidence-manifest.json",
+      "sha256": "eab3e17c4844ec37c7221ddcf688c0199dc86e581dc4e5d1a01853d4d4caae40",
+      "bytes": 4861
+    },
+    {
       "path": "native/wsl/current-matrix/agentrouter-scope-correspondence-safe.json",
       "sha256": "d1ef5b80a893875e8f2e34816aaa49609a0803f1ad9f37b58e6918f7865f0b4f",
       "bytes": 4321
@@ -5346,8 +5551,8 @@
     },
     {
       "path": "sources/requirement-delivery-audit.json",
-      "sha256": "551e16422cbf174a12e4a948f542297d17d00001924b499df21ee426d1ef0fb3",
-      "bytes": 58811
+      "sha256": "f1c3823da0cdd46bf37b6994049f0426a8d4f67b7775e2cd1d62ae6a0be3f3f9",
+      "bytes": 60426
     },
     {
       "path": "sources/workbuddy/cn-linux-update.json",
@@ -5371,8 +5576,8 @@
     },
     {
       "path": "summary.json",
-      "sha256": "f06f0ab6e0764a019e2fc7e53232d5b4750931f51d8633417f8814fc289b625a",
-      "bytes": 86534
+      "sha256": "d484d958bad7461836077e10362f94ada36cb96cee3f38cec2fff1581b8cf916",
+      "bytes": 88112
     },
     {
       "path": "tests/backend/a96a06e-deployment-gates-summary.json",

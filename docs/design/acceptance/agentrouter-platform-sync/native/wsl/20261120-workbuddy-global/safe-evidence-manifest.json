@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 1,
+  "observedAtUtc": "2026-11-20T02:13:33.155932+00:00",
+  "scope": "All files in this dated archive except this manifest itself",
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 2423,
+      "sha256": "34f02e8c88665589a21bbddfc51382850b896ef14019654ff5b5fa05321cb8d4"
+    },
+    {
+      "path": "archive-validation-safe.json",
+      "bytes": 550,
+      "sha256": "e35100bfdb88434255cc173913a31d3b5a8ffbe1c29a25634954dc012bb8290b"
+    },
+    {
+      "path": "current-advertised-payload-range-safe.json",
+      "bytes": 3812,
+      "sha256": "f119b63e5e739e153f5282a2a0723c71cbfb941c1d82e617868f85d56adf8cc0"
+    },
+    {
+      "path": "current-client-http-safe.json",
+      "bytes": 2494,
+      "sha256": "416c9097c05225a7e4cac145e48b549382b54cfeae212a22da13584479805c95"
+    },
+    {
+      "path": "current-docs-index-http-safe.json",
+      "bytes": 2133,
+      "sha256": "4e3c55415d5e7558c0ca36e54bace5e81fedec53ef8b11a39c9b43c504a178cb"
+    },
+    {
+      "path": "current-docs-link-review-safe.json",
+      "bytes": 1741,
+      "sha256": "be8b85c7822a8e1dd34a88541774b50f53405f0e40d9fbed404c5427f0d3630b"
+    },
+    {
+      "path": "current-domestic-history-link-review-safe.json",
+      "bytes": 998,
+      "sha256": "ff437effa49c144aef95c680df023575db90c3374f76cdb14517947bdfc8acfe"
+    },
+    {
+      "path": "current-exact-feed-requests-safe.json",
+      "bytes": 8711,
+      "sha256": "20f47d0c273e8fbedf350f1c7690408578a67d0dc00b4aca35d03eb37fefe4c3"
+    },
+    {
+      "path": "current-global-linux-result-safe.json",
+      "bytes": 6191,
+      "sha256": "93b80d3f8bbb783c5bc2dab2bb79724bffec264a32ffe62d82fea50c67d125ff"
+    },
+    {
+      "path": "current-primary-http-safe.json",
+      "bytes": 3396,
+      "sha256": "fc9e61f2136500a5432b3805cc40c8673f750a123e825bcaf2bd221a3391969e"
+    },
+    {
+      "path": "current-source-linked-assets-safe.json",
+      "bytes": 3247,
+      "sha256": "827fe56431be1ca604bf3cca43340aa3e822c4d582efe6d2a6227a639a80ce80"
+    },
+    {
+      "path": "current-transport-retry-safe.json",
+      "bytes": 2973,
+      "sha256": "e0d41761f22530e5c28e9c2e333fb1a68e9d97f506950fcb53dabe76681fa051"
+    },
+    {
+      "path": "expanded-20261116/additional-linux-payload-range-safe.json",
+      "bytes": 1322,
+      "sha256": "3d87e9088b06a70b964d7786edf4973d073372a912fe1edcdfb94dbe3b5096d7"
+    },
+    {
+      "path": "expanded-20261116/additional-source-supported-linux-channels-safe.json",
+      "bytes": 2552,
+      "sha256": "45712a69d57044bd08233d1c75d16f9879c81179f35ec67812e05e6c35da4fac"
+    },
+    {
+      "path": "expanded-20261116/expanded-official-global-linux-investigation-summary-safe.json",
+      "bytes": 5944,
+      "sha256": "2a65f91a3332e4b95b78bbf555f62241835536a8131528d7896c2bd467dee125"
+    },
+    {
+      "path": "expanded-20261116/historical-client-version-feed-safe.json",
+      "bytes": 875,
+      "sha256": "a55c4e434b9fce80e35f733f31b8ab1f32a38ba226834132d30b3809b41b5c65"
+    },
+    {
+      "path": "expanded-20261116/official-docs-and-history-link-review-safe.json",
+      "bytes": 2234,
+      "sha256": "9c4a4052c6c7e9326283765bae29001d42ec614e695aa2112e899213db9aafa8"
+    },
+    {
+      "path": "expanded-20261116/official-docs-index-requests-safe.json",
+      "bytes": 2269,
+      "sha256": "8b865a32bf8ab350d53a4e09351ac1c98caf11094614fe74043fd2f8bdb79fa0"
+    },
+    {
+      "path": "expanded-20261116/official-history-changelog-requests-safe.json",
+      "bytes": 2408,
+      "sha256": "519b681e0e6725cbf8b0dca1c041682fefd340a88f1c1cf221b7628632b7482b"
+    },
+    {
+      "path": "expanded-20261116/official-history-page-route-requests-safe.json",
+      "bytes": 3821,
+      "sha256": "678dd56772412d8d8996977cee148468f0615fd02f1e7e2b045358adc53a4f7b"
+    },
+    {
+      "path": "expanded-20261116/public-installed-windows-source-bindings-safe.json",
+      "bytes": 1452,
+      "sha256": "877628a164472d04678585c5662d7e4c22d1d017ebbe6ee8a92d02515672b545"
+    },
+    {
+      "path": "expanded-20261116/selected-doc-route-map-safe.json",
+      "bytes": 6906,
+      "sha256": "804d09d21435fcaabef4eaadb54ffeeecf96560ae5b87d99ce0df78d41a7db85"
+    },
+    {
+      "path": "expanded-20261116/source-supported-new-requests-safe.json",
+      "bytes": 3104,
+      "sha256": "2df11528559f328844a1d4db6871cf19312be13dab46c99648a3837ff9a70097"
+    },
+    {
+      "path": "historical-archive-integrity-safe.json",
+      "bytes": 2662,
+      "sha256": "16910af333ceae351d8ab333836d7a7dfb0399b6aaa8af9c0602a0b8c05745ac"
+    },
+    {
+      "path": "native-preservation-safe.json",
+      "bytes": 664,
+      "sha256": "f0121d781d9fbfd96090f8a8bf1203c033064ea15a5b7ed8a708c005e4801a06"
+    },
+    {
+      "path": "public-source-bindings-safe.json",
+      "bytes": 6450,
+      "sha256": "03eec3cff337d05c708e5927a458bf359486162611276f3e0a0fd7364329ab27"
+    }
+  ]
+}

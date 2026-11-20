@@ -1,0 +1,24 @@
+{
+  "observedAtUtc": "2026-11-20T02:09:31.899959+00:00",
+  "source": "Exact cn_workbuddy_download-history.md key in current official docs metadata and previously verified official .cn history route",
+  "request": {
+    "name": "current-domestic-history",
+    "requestedUrl": "https://www.workbuddy.cn/docs/workbuddy/Download-History",
+    "observedAtUtc": "2026-11-20T02:09:31.639326+00:00",
+    "method": "GET",
+    "tlsVerificationDisabled": false,
+    "httpStatus": 200,
+    "finalUrl": "https://www.workbuddy.cn/docs/workbuddy/Download-History",
+    "bytesRead": 116284,
+    "sha256": "eb8704bbf9d8fe811ad016843246bd4b7a80883883e7b53cc4cbf01b6d6fd0c1",
+    "contentType": "text/html; charset=utf-8",
+    "boundedAtBytes": 3000001,
+    "Content-Length": "116284",
+    "ETag": "\"6afd4d8f-1c63c\"",
+    "Last-Modified": "Wed, 18 Nov 2026 07:02:39 GMT"
+  },
+  "directPackageLinksCount": 303,
+  "linuxPackageLinks": [],
+  "internationalLinuxPackageLinks": [],
+  "domesticUsedAsSubstitute": false
+}

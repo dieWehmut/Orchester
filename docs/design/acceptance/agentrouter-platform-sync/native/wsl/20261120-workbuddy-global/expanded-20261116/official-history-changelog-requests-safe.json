@@ -1,0 +1,48 @@
+{
+  "observedAtUtc": "2026-11-16T10:35:23.706426+00:00",
+  "scope": "Exact mapped global changelog/quickstart/FAQ and separately domestic history; domestic package not a substitute",
+  "requests": [
+    {
+      "name": "workbuddy_changelog.md",
+      "url": "https://download.codebuddy.ai/web/docs/0dac6a52efc8f0ff38fbaadc81a771177042ff33/docs/static/workbuddy_changelog.md.LZ6JZVj4.js",
+      "curlExit": 0,
+      "httpStatus": 404,
+      "finalUrl": "https://download.codebuddy.ai/web/docs/0dac6a52efc8f0ff38fbaadc81a771177042ff33/docs/static/workbuddy_changelog.md.LZ6JZVj4.js",
+      "bytes": 518,
+      "sha256": "02f1de421e51b25f171341ff06f0e0cd308dbb38f6a0dfe9f8e7db7b35ff5c92",
+      "error": ""
+    },
+    {
+      "name": "workbuddy_quickstart.md",
+      "url": "https://download.codebuddy.ai/web/docs/0dac6a52efc8f0ff38fbaadc81a771177042ff33/docs/static/workbuddy_quickstart.md.Ck3rbjNY.js",
+      "curlExit": 0,
+      "httpStatus": 404,
+      "finalUrl": "https://download.codebuddy.ai/web/docs/0dac6a52efc8f0ff38fbaadc81a771177042ff33/docs/static/workbuddy_quickstart.md.Ck3rbjNY.js",
+      "bytes": 519,
+      "sha256": "f6c8983e92ded0c0295bfda18786a719c3c742b9fdb8c19073792387b3d46040",
+      "error": ""
+    },
+    {
+      "name": "workbuddy_from-beginner-to-expert-guide_faq.md",
+      "url": "https://download.codebuddy.ai/web/docs/0dac6a52efc8f0ff38fbaadc81a771177042ff33/docs/static/workbuddy_from-beginner-to-expert-guide_faq.md.BycwuTnO.js",
+      "curlExit": 0,
+      "httpStatus": 404,
+      "finalUrl": "https://download.codebuddy.ai/web/docs/0dac6a52efc8f0ff38fbaadc81a771177042ff33/docs/static/workbuddy_from-beginner-to-expert-guide_faq.md.BycwuTnO.js",
+      "bytes": 542,
+      "sha256": "76bd46d3d688729c3b5952d2d192ec7b67783234042aeaa2db5ec7e06790757a",
+      "error": ""
+    },
+    {
+      "name": "cn_workbuddy_download-history.md",
+      "url": "https://download.codebuddy.ai/web/docs/0dac6a52efc8f0ff38fbaadc81a771177042ff33/docs/static/cn_workbuddy_download-history.md.YIF1SgM7.js",
+      "curlExit": 0,
+      "httpStatus": 404,
+      "finalUrl": "https://download.codebuddy.ai/web/docs/0dac6a52efc8f0ff38fbaadc81a771177042ff33/docs/static/cn_workbuddy_download-history.md.YIF1SgM7.js",
+      "bytes": 528,
+      "sha256": "ad558030abeed1fd6041680925e42848e666eb93e0dd525e28dfeab79900ac7e",
+      "error": ""
+    }
+  ],
+  "privateStateRead": false,
+  "installations": 0
+}

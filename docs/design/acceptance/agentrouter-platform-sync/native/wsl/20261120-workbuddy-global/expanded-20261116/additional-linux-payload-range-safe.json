@@ -1,0 +1,30 @@
+{
+  "observedAtUtc": "2026-11-16T10:39:11.576241+00:00",
+  "scope": "Actual bounded RangeGET of exact two additional global Linux URLs returned by official API, not guessed filenames",
+  "requests": [
+    {
+      "platform": "workbuddy-linux-uos-x64",
+      "url": "https://download.codebuddy.ai/workbuddy/saas/linux-uos-x64/WorkBuddy-linux-uos-x64-5.5.2.37849279-910352f0.deb",
+      "curlExit": 0,
+      "httpStatus": 404,
+      "finalUrl": "https://download.codebuddy.ai/workbuddy/saas/linux-uos-x64/WorkBuddy-linux-uos-x64-5.5.2.37849279-910352f0.deb",
+      "bytes": 502,
+      "sha256": "afeffbf1fe3c41dacc27fb7ecdc7b3d2f72086ce66c3ade48c75083386befce2",
+      "arArchiveMagic": false,
+      "error": ""
+    },
+    {
+      "platform": "workbuddy-linux-kylin-x64",
+      "url": "https://download.codebuddy.ai/workbuddy/saas/linux-kylin-x64/WorkBuddy-linux-kylin-x64-5.5.2.37849279-910352f0.deb",
+      "curlExit": 0,
+      "httpStatus": 404,
+      "finalUrl": "https://download.codebuddy.ai/workbuddy/saas/linux-kylin-x64/WorkBuddy-linux-kylin-x64-5.5.2.37849279-910352f0.deb",
+      "bytes": 502,
+      "sha256": "d0c4624e839ac6dbe59434b1ee21ac67334ce4138985df3266c09ec209b5c70e",
+      "arArchiveMagic": false,
+      "error": ""
+    }
+  ],
+  "nativeOrInstallationActions": 0,
+  "trustVerificationDisabled": false
+}

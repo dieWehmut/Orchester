@@ -1,0 +1,42 @@
+{
+  "observedAtUtc": "2026-11-20T02:08:12.503115+00:00",
+  "currentBuildCommit": "432ddbdc5163b609ba369b67c6df80135f705555",
+  "buildInfo": "prod / main@432ddbdc516 / build 2026/11/19 19:21:55 / commit 2026/11/19 19:21:04",
+  "reviewedPages": [
+    {
+      "name": "docs-changelog",
+      "publicBodySha256": "5d2ce16370b5604fe8461ad3d57a90e8754f8afddab307b51cb931f3b16ad384",
+      "publicTextSha256": "9971afffd7560d18025b701452271edd27247559dcad614cdffeb46ff9383920",
+      "linuxMentions": [
+        "Installation and update reliability (macOS, Windows, Linux)"
+      ],
+      "packageLinks": [],
+      "historyRoutes": []
+    },
+    {
+      "name": "docs-quickstart",
+      "publicBodySha256": "a97828be273fcbf4eeafcbccf6878bc5a1e0167b7a5b42f23efe074c6f515565",
+      "publicTextSha256": "1b4d86293572cc4c1ada0126108cbdcbb5ed75c5405e7f83e3ebe32db2f410ea",
+      "linuxMentions": [],
+      "packageLinks": [],
+      "historyRoutes": []
+    },
+    {
+      "name": "docs-faq",
+      "publicBodySha256": "706568ec457134ca1a98e2379f70b0d233a177ccffe6c3acd6a2acc89f01d45a",
+      "publicTextSha256": "a82496dd4a1315407dd23b48cebb7e438040bb371d760fdf618a6e74a90145f4",
+      "linuxMentions": [],
+      "packageLinks": [],
+      "historyRoutes": []
+    }
+  ],
+  "historyOrLinuxRouteSourceSnippets": [],
+  "globalWorkbuddyDownloadHistoryMetadataPresent": false,
+  "directSourcePackageUrls": [],
+  "metadataRouteCount": 1954,
+  "domesticWorkbuddyDownloadHistoryMetadataPresent": true,
+  "matchingMetadataRoutes": {
+    "cn_workbuddy_download-history.md": "C5cU20_T"
+  },
+  "note": "Shared sidebar has a Chinese domestic history route; exact metadata keys distinguish cn_workbuddy_download-history.md from absent workbuddy_download-history.md."
+}
