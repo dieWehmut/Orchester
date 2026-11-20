@@ -1,0 +1,15 @@
+{
+  "observedAtUtc": "2026-11-16T10:10:30.958381+00:00",
+  "url": "https://downloads.claude.ai/claude-desktop/apt/stable/pool/main/c/claude-desktop/claude-desktop_5.11492.5_amd64.deb",
+  "exit": 28,
+  "httpStatus": 200,
+  "finalUrl": "https://downloads.claude.ai/claude-desktop/apt/stable/pool/main/c/claude-desktop/claude-desktop_5.11492.5_amd64.deb",
+  "file": "/tmp/orchester-official-linux-20261116-h1huoyvo/claude-desktop_5.11492.5_amd64.deb",
+  "bytes": 101141040,
+  "sha256": "5e0dc496de4ef3268ff63b259a0179cf986294e58178a4dafd3238ae2d503061",
+  "sizeMatchesSignedPackages": false,
+  "sha256MatchesSignedPackages": false,
+  "error": "curl: (28) Operation timed out after 180000 milliseconds with 101141040 out of 183335272 bytes received\n",
+  "trustVerificationDisabled": false,
+  "installed": false
+}

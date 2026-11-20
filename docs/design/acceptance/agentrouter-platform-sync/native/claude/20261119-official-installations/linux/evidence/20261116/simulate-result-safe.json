@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "mode": "simulate",
+  "startedAtUtc": "2026-11-16T10:36:57.041420+00:00",
+  "systemPackageActionAuthorizedByRoot": true,
+  "defaultUserOrPasswordChanged": false,
+  "service7337Actions": 0,
+  "modelOrAuthenticationCalls": 0,
+  "preinstall": {
+    "debBytes": 183335272,
+    "debSHA256": "b96208b207e450b740f7dbe304f6077fed80e7f3d37ddd545991c4e8201564cf",
+    "repositorySignatureExitCode": 0,
+    "repositoryValidFingerprint": "31DDDE24DDFAB679F42D7BD2BAA929FF1A7ECACE",
+    "packagesSHA256": "f3cc31278f67ef11687864b3f05a5e7274403d5e10eaa9fe9b02576a2ffc22fd",
+    "priorPackage": {
+      "argv": [
+        "dpkg-query",
+        "-W",
+        "-f=${Status}\n${Version}\n",
+        "claude-desktop"
+      ],
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": "dpkg-query: no packages found matching claude-desktop\n"
+    },
+    "existingClaudeDesktopProcesses": []
+  },
+  "simulation": {
+    "argv": [
+      "apt-get",
+      "-s",
+      "--no-install-recommends",
+      "install",
+      "/tmp/orchester-official-linux-20261116-h1huoyvo/claude-desktop_5.11492.5_amd64.deb"
+    ],
+    "exitCode": 0,
+    "removals": [],
+    "plannedChanges": [
+      "Inst bubblewrap (0.6.1-1ubuntu0.3 Ubuntu:22.04/jammy-updates, Ubuntu:22.04/jammy-security [amd64])",
+      "Inst libnotify4 (0.7.9-3ubuntu5.22.04.1 Ubuntu:22.04/jammy-updates [amd64])",
+      "Inst libnspr4 (2:4.35-0ubuntu0.22.04.1 Ubuntu:22.04/jammy-updates, Ubuntu:22.04/jammy-security [amd64])",
+      "Inst libnss3 (2:3.98-0ubuntu0.22.04.5 Ubuntu:22.04/jammy-updates, Ubuntu:22.04/jammy-security [amd64])",
+      "Inst xdg-utils (1.1.3-4.1ubuntu3~22.04.1 Ubuntu:22.04/jammy-updates [all])",
+      "Inst libsecret-common (0.20.5-2 Ubuntu:22.04/jammy [all])",
+      "Inst libsecret-1-0 (0.20.5-2 Ubuntu:22.04/jammy [amd64])",
+      "Inst libasound2-data (1.2.6.1-1ubuntu1.2 Ubuntu:22.04/jammy-updates, Ubuntu:22.04/jammy-security [all])",
+      "Inst libasound2 (1.2.6.1-1ubuntu1.2 Ubuntu:22.04/jammy-updates, Ubuntu:22.04/jammy-security [amd64])",
+      "Inst libwebrtc-audio-processing1 (0.3.1-0ubuntu5 Ubuntu:22.04/jammy [amd64])",
+      "Inst libspa-0.2-modules (0.3.48-1ubuntu3.2 Ubuntu:22.04/jammy-updates, Ubuntu:22.04/jammy-security [amd64])",
+      "Inst libpipewire-0.3-0 (0.3.48-1ubuntu3.2 Ubuntu:22.04/jammy-updates, Ubuntu:22.04/jammy-security [amd64])",
+      "Inst libjson-glib-1.0-common (1.6.6-1build1 Ubuntu:22.04/jammy [all])",
+      "Inst libjson-glib-1.0-0 (1.6.6-1build1 Ubuntu:22.04/jammy [amd64])",
+      "Inst xdg-desktop-portal (1.14.4-1ubuntu2~22.04.2 Ubuntu:22.04/jammy-updates [amd64])",
+      "Inst xdg-desktop-portal-gtk (1.14.0-1build1 Ubuntu:22.04/jammy [amd64])",
+      "Inst claude-desktop (5.11492.5 local-deb [amd64])",
+      "Conf bubblewrap (0.6.1-1ubuntu0.3 Ubuntu:22.04/jammy-updates, Ubuntu:22.04/jammy-security [amd64])",
+      "Conf libnotify4 (0.7.9-3ubuntu5.22.04.1 Ubuntu:22.04/jammy-updates [amd64])",
+      "Conf libnspr4 (2:4.35-0ubuntu0.22.04.1 Ubuntu:22.04/jammy-updates, Ubuntu:22.04/jammy-security [amd64])",
+      "Conf libnss3 (2:3.98-0ubuntu0.22.04.5 Ubuntu:22.04/jammy-updates, Ubuntu:22.04/jammy-security [amd64])",
+      "Conf xdg-utils (1.1.3-4.1ubuntu3~22.04.1 Ubuntu:22.04/jammy-updates [all])",
+      "Conf libsecret-common (0.20.5-2 Ubuntu:22.04/jammy [all])",
+      "Conf libsecret-1-0 (0.20.5-2 Ubuntu:22.04/jammy [amd64])",
+      "Conf libasound2-data (1.2.6.1-1ubuntu1.2 Ubuntu:22.04/jammy-updates, Ubuntu:22.04/jammy-security [all])",
+      "Conf libasound2 (1.2.6.1-1ubuntu1.2 Ubuntu:22.04/jammy-updates, Ubuntu:22.04/jammy-security [amd64])",
+      "Conf libwebrtc-audio-processing1 (0.3.1-0ubuntu5 Ubuntu:22.04/jammy [amd64])",
+      "Conf libspa-0.2-modules (0.3.48-1ubuntu3.2 Ubuntu:22.04/jammy-updates, Ubuntu:22.04/jammy-security [amd64])",
+      "Conf libpipewire-0.3-0 (0.3.48-1ubuntu3.2 Ubuntu:22.04/jammy-updates, Ubuntu:22.04/jammy-security [amd64])",
+      "Conf libjson-glib-1.0-common (1.6.6-1build1 Ubuntu:22.04/jammy [all])",
+      "Conf libjson-glib-1.0-0 (1.6.6-1build1 Ubuntu:22.04/jammy [amd64])",
+      "Conf xdg-desktop-portal (1.14.4-1ubuntu2~22.04.2 Ubuntu:22.04/jammy-updates [amd64])",
+      "Conf xdg-desktop-portal-gtk (1.14.0-1build1 Ubuntu:22.04/jammy [amd64])",
+      "Conf claude-desktop (5.11492.5 local-deb [amd64])"
+    ],
+    "stderr": ""
+  },
+  "actualInstallationInvocations": 0,
+  "exitCode": 0,
+  "finishedAtUtc": "2026-11-16T10:36:58.172138+00:00"
+}

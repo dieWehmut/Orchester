@@ -1,0 +1,130 @@
+{
+  "schemaVersion": 1,
+  "observedAtUtc": "2026-11-16T10:15:31.699318+00:00",
+  "packageVersion": "5.11492.5",
+  "packageArchitecture": "amd64",
+  "debSha256VerifiedAgainstSignedRepository": true,
+  "controlExtractionExit": 0,
+  "dataExtractionExit": 0,
+  "nativeExecutablesAndLinks": [
+    {
+      "relativePath": "usr/bin/claude-desktop",
+      "symlinkTarget": "../lib/claude-desktop/claude-desktop"
+    },
+    {
+      "relativePath": "usr/lib/claude-desktop/libffmpeg.so",
+      "bytes": 2794016,
+      "sha256": "c5612a9edd7c6b9e9fd2b9eb883a19fa4600e3aaa5687326d22e646438f9a195",
+      "fileMetadata": "ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, BuildID[sha1]=462267d6ff086e1c263f7080d14e66d07ff50162, stripped",
+      "executable": true,
+      "mode": "0o755"
+    },
+    {
+      "relativePath": "usr/lib/claude-desktop/chrome_crashpad_handler",
+      "bytes": 1683256,
+      "sha256": "763cbc3c3f69baf4b5cae739271fb6fc10181543c2f754644fd4a6aee9cc363d",
+      "fileMetadata": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0, BuildID[sha1]=d8d384a562ef1c4a9f478eaa6ba1e4b61d550ba1, stripped",
+      "executable": true,
+      "mode": "0o755"
+    },
+    {
+      "relativePath": "usr/lib/claude-desktop/libvk_swiftshader.so",
+      "bytes": 4575032,
+      "sha256": "319acdea5eafddc937ff07bebfe1e22a9e4d5cfa1ebec2c0ec4a8e22c303e92d",
+      "fileMetadata": "ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, BuildID[sha1]=57ffce4f4b29b1416b953e47a23e14e9644edec5, stripped",
+      "executable": true,
+      "mode": "0o755"
+    },
+    {
+      "relativePath": "usr/lib/claude-desktop/chrome-sandbox",
+      "bytes": 15216,
+      "sha256": "f16e2562837856845cfc8ebf4aa7f78b57fdadc6b69130509b1db87ce5d2f869",
+      "fileMetadata": "setuid ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0, BuildID[sha1]=8a59b10e83a70ed4fbd5e965ee9c8e2188207348, stripped",
+      "executable": true,
+      "mode": "0o4755"
+    },
+    {
+      "relativePath": "usr/lib/claude-desktop/libvulkan.so.1",
+      "bytes": 2509584,
+      "sha256": "935e26158b6318b0655917d4aca9dbf1433009684e463903a6ccd9d3ed414a54",
+      "fileMetadata": "ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, BuildID[sha1]=0d79779100b3f3c881bb0d1d1676797eeb4db2b5, with debug_info, not stripped",
+      "executable": true,
+      "mode": "0o755"
+    },
+    {
+      "relativePath": "usr/lib/claude-desktop/claude-desktop",
+      "bytes": 234466632,
+      "sha256": "fe6219735b2e67422a9a23de2fc35371b09980531601c019b7cc2b001e29c7a8",
+      "fileMetadata": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0, BuildID[sha1]=0ea95bc7af5add50acb7b4f888ae10fe47069cd8, stripped",
+      "executable": true,
+      "mode": "0o755"
+    },
+    {
+      "relativePath": "usr/lib/claude-desktop/resources/disclaimer",
+      "bytes": 17832,
+      "sha256": "8305c5fbcbffaf00b8aebb7a7b86b0978a04f3a951280638c6efa130a6d5da19",
+      "fileMetadata": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=d4b381af006a475de598767db6b21925be0a4c49, for GNU/Linux 3.2.0, not stripped",
+      "executable": true,
+      "mode": "0o755"
+    },
+    {
+      "relativePath": "usr/lib/claude-desktop/resources/claude-ssh-askpass",
+      "bytes": 2273464,
+      "sha256": "be7bc7f91c9299b2852edbfb433a6b04d8495dd3bb2fa988744a7f445d17c268",
+      "fileMetadata": "ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, BuildID[sha1]=6552171da6a1b24f34d05beb76a17cef34f63b77, stripped",
+      "executable": true,
+      "mode": "0o755"
+    },
+    {
+      "relativePath": "usr/lib/claude-desktop/resources/chrome-native-host",
+      "bytes": 1176752,
+      "sha256": "ba696f4b64bb39c6e532257d7db6eb2511b6104525776cdb5f64ebc9a86b0a5a",
+      "fileMetadata": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0, BuildID[sha1]=16925599855bc52e6155a0d25f1037d820ca407a, stripped",
+      "executable": true,
+      "mode": "0o755"
+    },
+    {
+      "relativePath": "usr/lib/claude-desktop/resources/cowork-linux-helper",
+      "bytes": 3272888,
+      "sha256": "06285288be8541d181de78acfbd43a0d9fa93141652441d2ae3d5cc60a2c4090",
+      "fileMetadata": "ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, BuildID[sha1]=a1abf11deb2f6e6e0e5ac2ead545b339d79766f3, stripped",
+      "executable": true,
+      "mode": "0o755"
+    },
+    {
+      "relativePath": "usr/lib/claude-desktop/resources/virtiofsd",
+      "bytes": 2675512,
+      "sha256": "0c9131b971875ec2868ad35e84a05b779bf04275c543d816ddd4b9d16a3bdddc",
+      "fileMetadata": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=7b487f0ecce282106b9cd92639cabc48ae2e34d7, for GNU/Linux 3.2.0, stripped",
+      "executable": true,
+      "mode": "0o755"
+    },
+    {
+      "relativePath": "usr/lib/claude-desktop/resources/app.asar.unpacked/resources/github-mcp/github-mcp-server",
+      "bytes": 24936610,
+      "sha256": "1b3e29b700fb17e1df9a9eecc323612374a439e21667ddeab38e28d52228f44b",
+      "fileMetadata": "ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, Go BuildID=wQADpV085F4Ff8AJjvog/SJDYtRQoBbYz_aYWZ_bK/JxZ6gWcnHcuBwPZquJUA/Tv5F4OiAYMJAcpMk64M5, BuildID[sha1]=ece578e5d0256bcf1a0614377d1a969644094bb4, stripped",
+      "executable": true,
+      "mode": "0o755"
+    },
+    {
+      "relativePath": "usr/lib/claude-desktop/resources/app.asar.unpacked/node_modules/node-pty/prebuilds/linux-x64/pty.node",
+      "bytes": 75976,
+      "sha256": "123792d8f22f36d519b21dfb6f4b716f9b18b9e579085ea2840d0773d88d35fd",
+      "fileMetadata": "ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, BuildID[sha1]=1a8a9d0144a2144b80b162f18125c975e2153579, not stripped",
+      "executable": false,
+      "mode": "0o644"
+    },
+    {
+      "relativePath": "usr/lib/claude-desktop/resources/app.asar.unpacked/node_modules/@ant/claude-native/claude-native-binding.node",
+      "bytes": 10302272,
+      "sha256": "10b6a5ff8f476b9f2a5a19669e5e95948673a5cf2bdf973c3644971665af42f1",
+      "fileMetadata": "ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, BuildID[sha1]=37db9a4325be304319231e4a5aaea988cc1994ae, stripped",
+      "executable": true,
+      "mode": "0o755"
+    }
+  ],
+  "maintainerScriptsExecuted": 0,
+  "installed": false,
+  "systemOrUserProfileMutations": 0
+}

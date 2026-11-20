@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "status": "derived-prior-failure-and-truncated-candidate-context",
+  "priorInstallObservedAtUtc": "2026-11-16T11:07:29.2241905Z",
+  "priorInstallStartedAtUtc": "2026-11-16T10:47:47.2604431Z",
+  "failedPinnedPackageVersion": "3.6556.2",
+  "pinnedVersionClaimedLatest": false,
+  "officialPayloadUrl": "https://downloads.claude.ai/releases/win32/x64/3.6556.2/Claude-20c019a1e61fa5b687616af57d31f97bb3181723.exe",
+  "officialPinnedPayloadBytes": 250525856,
+  "officialPinnedPayloadSha256": "945082290478e5c668e8aaa25a392e1cd129e6219173e907b7ff1f7f99ded45e",
+  "failedNativeInstallerExitCode": -1,
+  "priorOriginalCreatorAndQueryHandlesHeldToExit": true,
+  "priorObservedNativeIdentityCount": 2,
+  "priorAllObservedHandlesExited": true,
+  "priorObservedExitCodes": [
+    -1,
+    -1
+  ],
+  "nativeFailureLabel": "official-native-installer-nonzero-exit",
+  "staticOfficialInstallerLogClassification": {
+    "bytes": 6608,
+    "sha256": "7dcdb9a07097c9e5ec199cd25324f35c33dbc1803b60ba9b14e5228af1731d6e",
+    "squirrelInstallSilentCommandPresent": true,
+    "exceptionTypeArgumentException": true,
+    "staticExtractionFailureMessagePresent": true,
+    "profileOrAuthValuesRead": false
+  },
+  "partialFilesObservedAtUtc": "2026-11-19T05:50:54.4546115Z",
+  "retainedPartialFiles": [
+    {
+      "relativePath": "Update.exe",
+      "bytes": 1909920,
+      "sha256": "d2d57d8e997fd4cb650799f5a4b010c2865427e1a81003a0c30061efc849044a"
+    },
+    {
+      "relativePath": "app-3.6556.2\\chrome_100_percent.pak",
+      "bytes": 719654,
+      "sha256": "ab7c4b7b6cb8832a31d44b95ec50ce52294f49422a3bdde4e21968eca2930cbe"
+    },
+    {
+      "relativePath": "app-3.6556.2\\chrome_200_percent.pak",
+      "bytes": 1269017,
+      "sha256": "30fa4a6e27c9ff2fb0f939f01158477e621a67d86e9ecb84cf11b3947db8eb9d"
+    },
+    {
+      "relativePath": "app-3.6556.2\\claude.exe",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relativePath": "packages\\AnthropicClaude-3.6556.2-full.nupkg",
+      "bytes": 250498161,
+      "sha256": "cd4bba57a6f8f972f3e5072edcfffa11e146c30eaa5882b2d2848046bccf6fcd"
+    }
+  ],
+  "partialFilesPreserved": true,
+  "truncatedCandidateObservedAtUtc": "2026-11-19T06:01:04.179796+00:00",
+  "truncatedCandidateBytes": 164608233,
+  "truncatedCandidateSha256": "4919b1590b69b29294ebf55f025fb8e66a5b2bbe573fcb4064803f6759970d7a",
+  "truncatedCandidateCertificateTableOffset": 250515456,
+  "truncatedCandidateCertificateTableBytes": 10400,
+  "truncatedCertificateTableWithinFile": false,
+  "truncatedExactlyMatchesPinnedExePrefix": true,
+  "truncatedCandidateExecuted": false,
+  "truncatedCandidateAcceptedAsCurrentSetup": false,
+  "binariesOrRawInstallerLogsIncluded": false,
+  "actualSuccessfulInstallationChannel": "Microsoft Store native WinGet install, 2026-11-19, 5.11492.5.0",
+  "processSignals": 0,
+  "modelOrAuthenticationCalls": 0
+}

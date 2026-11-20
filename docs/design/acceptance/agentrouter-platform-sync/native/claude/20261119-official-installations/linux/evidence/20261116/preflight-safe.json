@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "observedAtUtc": "2026-11-16T10:28:09.451326+00:00",
+  "scope": "Current installation/own-process preflight; no package mutations yet",
+  "packageQuery": {
+    "argv": [
+      "dpkg-query",
+      "-W",
+      "-f=${Status}\n${Version}\n${Architecture}\n",
+      "claude-desktop"
+    ],
+    "exitCode": 1,
+    "stdout": "",
+    "stderr": "dpkg-query: no packages found matching claude-desktop"
+  },
+  "sudoNoninteractive": {
+    "argv": [
+      "sudo",
+      "-n",
+      "true"
+    ],
+    "exitCode": 1,
+    "stdout": "",
+    "stderr": "sudo: a password is required"
+  },
+  "existingClaudeDesktopProcesses": [],
+  "displayPresent": true,
+  "waylandPresent": true,
+  "nativePidfdAvailable": true,
+  "uid": 1000,
+  "targetVersion": "5.11492.5"
+}

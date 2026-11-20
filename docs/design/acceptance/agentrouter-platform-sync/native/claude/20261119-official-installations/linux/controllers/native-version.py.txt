@@ -1,0 +1,84 @@
+from pathlib import Path
+from datetime import datetime, timezone
+import os, subprocess, json, hashlib, ctypes, signal, select, time
+
+BASE = Path(__file__).parent
+EXPECTED = 'fe6219735b2e67422a9a23de2fc35371b09980531601c019b7cc2b001e29c7a8'
+def now(): return datetime.now(timezone.utc).isoformat()
+def sha(path):
+    h = hashlib.sha256()
+    with Path(path).open('rb') as f:
+        while chunk := f.read(1024*1024): h.update(chunk)
+    return h.hexdigest()
+def ticks(pid):
+    s=Path(f'/proc/{pid}/stat').read_text()
+    return s[s.rindex(')')+2:].split()[19]
+def save(name, row):
+    f=BASE/(name+'.tmp');f.write_text(json.dumps(row,indent=2)+'\n');os.chmod(f,0o644);os.replace(f,BASE/name)
+
+assert os.getuid()==1000 and hasattr(os,'pidfd_open')
+assert sha('/usr/lib/claude-desktop/claude-desktop')==EXPECTED
+source=Path('/tmp/orchester-official-linux-20261116-h1huoyvo/deb-data/usr/lib/claude-desktop/resources/app.asar')
+asar_sha=sha('/usr/lib/claude-desktop/resources/app.asar')
+assert asar_sha==sha(source), 'Installed ASAR must match the signed prepared package'
+profile=BASE/'version-only-fresh-profile'
+profile.mkdir(mode=0o700)
+for name in ['config','cache','data','claude-code','electron']: (profile/name).mkdir(mode=0o700)
+environment={k:os.environ[k] for k in ['HOME','USER','LOGNAME','DISPLAY','WAYLAND_DISPLAY','XDG_RUNTIME_DIR','DBUS_SESSION_BUS_ADDRESS','XAUTHORITY'] if k in os.environ}
+environment.update({'PATH':'/usr/bin:/bin','LANG':'C.UTF-8','XDG_CONFIG_HOME':str(profile/'config'),'XDG_CACHE_HOME':str(profile/'cache'),'XDG_DATA_HOME':str(profile/'data'),'CLAUDE_CONFIG_DIR':str(profile/'claude-code')})
+libc=ctypes.CDLL(None,use_errno=True)
+assert libc.prctl(36,1,0,0,0)==0, 'Own child-subreaper setup failed'
+argv=['/usr/bin/claude-desktop','--version','--user-data-dir='+str(profile/'electron'),'--password-store=basic']
+stdout=BASE/'version.stdout.private.log';stderr=BASE/'version.stderr.private.log'
+out=stdout.open('wb');err=stderr.open('wb');os.chmod(stdout,0o600);os.chmod(stderr,0o600)
+started=now()
+process=subprocess.Popen(argv,stdin=subprocess.DEVNULL,stdout=out,stderr=err,env=environment,start_new_session=True)
+rootfd=os.pidfd_open(process.pid)
+identity={'pid':process.pid,'startTicks':ticks(process.pid),'pidfdHeld':True,'expectedInstalledElfSHA256':EXPECTED}
+status={'schemaVersion':1,'status':'running','startedAtUtc':started,'uid':os.getuid(),'controllerPid':os.getpid(),'controllerStartTicks':ticks(os.getpid()),'root':identity,'profileInitiallyEmpty':True}
+save('native-version-status-safe.json',status)
+held={process.pid:{'fd':rootfd,**identity,'ppid':os.getpid()}}
+forced=[]
+deadline=time.monotonic()+30
+while process.poll() is None:
+    states={}
+    for p in Path('/proc').iterdir():
+        if not p.name.isdigit(): continue
+        try:
+            s=(p/'stat').read_text();fields=s[s.rindex(')')+2:].split()
+            states[int(p.name)]={'ppid':int(fields[1]),'startTicks':fields[19]}
+        except OSError: pass
+    known=set(held)|{os.getpid()}
+    changed=True
+    while changed:
+        changed=False
+        for pid,state in states.items():
+            if state['ppid'] in known and pid not in known:
+                known.add(pid);changed=True
+                try:held[pid]={'fd':os.pidfd_open(pid),'pid':pid,**state,'pidfdHeld':True}
+                except ProcessLookupError:pass
+    if time.monotonic()>deadline:
+        signal.pidfd_send_signal(rootfd,signal.SIGTERM)
+        forced.append({'pid':process.pid,'signal':'SIGTERM','originalPidfdUsed':True,'reason':'version-timeout'})
+        deadline=float('inf')
+    time.sleep(.01)
+actual=process.wait()
+until=time.monotonic()+5
+while time.monotonic()<until and any(not select.select([r['fd']],[],[],0)[0] for r in held.values()):time.sleep(.02)
+for pid,row in held.items():
+    if not select.select([row['fd']],[],[],0)[0]:
+        signal.pidfd_send_signal(row['fd'],signal.SIGTERM)
+        forced.append({'pid':pid,'signal':'SIGTERM','originalPidfdUsed':True,'reason':'owned-helper-timeout'})
+for pid in list(held):
+    if pid==process.pid:continue
+    try:os.waitpid(pid,os.WNOHANG)
+    except ChildProcessError:pass
+out.close();err.close()
+terminal=[{'pid':pid,'startTicks':r['startTicks'],'pidfdHeld':True,'terminalByOriginalPidfd':bool(select.select([r['fd']],[],[],0)[0])} for pid,r in held.items()]
+for row in held.values():os.close(row['fd'])
+text=stdout.read_text().strip()
+result={'schemaVersion':1,'startedAtUtc':started,'finishedAtUtc':now(),'scope':'Actual UID1000 installed native --version execution and owned process lifecycle; no GUI or login/model run','uid':os.getuid(),'argv':argv,'installedElfSHA256':EXPECTED,'installedASARSHA256':asar_sha,'installedASARMatchesSignedPackage':True,'profileInitiallyEmpty':True,'inheritedEnvironmentKeys':sorted(environment),'providerSecretEnvironmentKeysPassed':False,'root':identity,'actualExitCode':actual,'versionOutput':text,'versionMatchesPackage':text=='5.11492.5','heldObjects':terminal,'signalCleanupActions':forced,'stderrBytes':stderr.stat().st_size,'stderrSHA256':sha(stderr),'success':actual==0 and text=='5.11492.5' and not forced and all(r['terminalByOriginalPidfd'] for r in terminal),'loginOrModelActions':0,'service7337Actions':0}
+save('native-version-result-safe.json',result)
+status.update({'status':'complete' if result['success'] else 'failed','actualExitCode':actual,'finishedAtUtc':now()});save('native-version-status-safe.json',status)
+print(json.dumps(result))
+raise SystemExit(0 if result['success'] else 1)

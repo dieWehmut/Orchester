@@ -1,0 +1,16 @@
+{
+  "atUtc": "2026-11-19T05:53:20.747678+00:00",
+  "installedPackageVersion": "5.11492.5",
+  "dpkgVerifyExitCode": 0,
+  "dpkgVerifyMismatchCount": 0,
+  "nativeGuiReceiptSHA256": "1d1fa14dbecb7d4ff9b3a98b85868788f20dc000a9fc3b5eb8d4bc3b0e7c3683",
+  "originalControllerSHA256": "279819ec1eae15cf9c2250df9520a8d5da54fde07e451249f5286604484d0a4c",
+  "observedRootExitCode": 0,
+  "heldObjectCount": 16,
+  "allHeldObjectsTerminal": true,
+  "nativeProcessCountAfterExit": 0,
+  "renderedState": "Official App unavailable in region page",
+  "nativeGuiSmokeSuccess": true,
+  "loginOrModelAvailabilityProven": false,
+  "signalCleanupActionCount": 0
+}

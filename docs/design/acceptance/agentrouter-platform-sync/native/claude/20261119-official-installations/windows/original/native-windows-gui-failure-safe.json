@@ -1,0 +1,13 @@
+{
+    "status":  "native-Claude-Windows-GUI-smoke-incomplete",
+    "observedAtUtc":  "2026-11-19T06:09:17.0844548Z",
+    "stage":  "native-GUI-preflight",
+    "started":  false,
+    "errorType":  "System.Management.Automation.RuntimeException",
+    "staticCode":  "existing-Claude-process-do-not-duplicate",
+    "originalHeldLiveCount":  0,
+    "window":  null,
+    "privateProfileContentsRead":  false,
+    "processSignals":  0,
+    "forcedTerminations":  0
+}

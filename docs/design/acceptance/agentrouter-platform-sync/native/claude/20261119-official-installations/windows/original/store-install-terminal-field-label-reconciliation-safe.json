@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "status": "official-Store-native-install-terminal-field-label-reconciliation",
+  "observedAtUtc": "2026-11-19T06:12:55.150198+00:00",
+  "actualCommandArguments": "install --id 9P6K58THS811 --source msstore --exact --accept-source-agreements --accept-package-agreements --disable-interactivity --silent",
+  "actualNativeInstallExitCode": 0,
+  "originalTerminalReceiptSha256": "ce0474ec6f0db7196baa00956b4664d749fc37159e2223a082a7e94b34e2b4f1",
+  "originalReceiptPreserved": true,
+  "fieldLabelClarification": {
+    "nativeShowReturnedSuccess": "This inherited field describes the successful native INSTALL invocation; this terminal receipt is not a show operation.",
+    "showStdoutBytes": "Byte count of native INSTALL stdout.",
+    "showStderrBytes": "Byte count of native INSTALL stderr.",
+    "storeInstallerMetadataPresent": "This inherited show-only text classification is not evidence of package installation."
+  },
+  "installationProvedBySeparateNativeGetAppxAndActualFiles": "installed-windows-native-final-safe.json",
+  "privateProfileContentsRead": false,
+  "processSignals": 0,
+  "newInstallOperations": 0
+}

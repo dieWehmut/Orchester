@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "status": "dated-native-backup-and-default-directory-update-verified-post-promotion-runtime-and-full-platform-delivery-pending",
+  "status": "official-claude-installations-verified-other-platform-continuation-in-progress",
   "finalCodeRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
   "historicalSourceRevision": "a96a06e445ab6bdc4483ac297c69f8a0e2382bc9",
   "historicalCatalogProductCount": 20,
@@ -510,6 +510,10 @@
     {
       "scope": "Default Desktop and Remote same-volume staged-directory promotion completed with actual nativeOS0/result0 at16:14:27/16:16:12UTC; promoted frozen71 EXE hashes e4aa765b/24c8f980 match reviewed candidates. Original installations preserved as sibling backups, external state byte-exact and own read locks released; Desktop uninstaller/other installed files preserved by the pinned inventory guard. Source-built Authenticode is NotSigned, no native/NSIS installer or auto-defaultlaunch. Original Desktop promotion1/CimException and readonly diagnostic0 preserved; timeout60 successor did not establish the original exception cause. Default GUI/213-record task retention and managed7338 runtime acceptance remain unexecuted by these promotion jobs; current Windows-five wire/vendor/Linux reboot remain separate.",
       "proof": "native/windows/default-directory-promotion-20261113T1616/source-bindings-and-scope-safe.json"
+    },
+    {
+      "scope": "Official Windows Store package5.11492.5.0/Valid Anthropic installedEXE+ASAR5.11492.5; official signed Linux repository/APT/nativeversion5.11492.5; WSLg region-page observed/normalCtrlQ exit0/all16pidfds terminal. Installation only, no model availability claim.",
+      "proof": "native/claude/20261119-official-installations/summary-safe.json"
     }
   ],
   "completedHistoricalEpochs": [
@@ -524,7 +528,7 @@
     "Actually launch the promoted default Desktop and verify the original GUI/task state, including all213 records, then start and verify managed Remote7338/current-instance resources, authentication and original state retention. Fresh offline original backup and Desktop/Remote default-directory promotion are already complete; promotion jobs performed no default launches and did not prove post-promotion runtime.",
     "Canonical user bus/managed7337 normal start-stop-start and Linux native original-one saved GET200 separately verified. Worker4 Windows existing sixSDK/AVD pins and own preflight0 passed; original-five manager attempts1/2 failed before app/credential/HTTP and completed normal owned creator/port cleanup, attempt3 failed fresh preflight before children. Current correct Android target, actual Windows run-as UID/alias and five native saved Credentials.get/current7337 saved-token GET remain pending.",
     "OfficialDeepSeekWindows installation/signature/HKCU/ASARrc1verified afteroriginalnumericPEverifierfailure; GUI/model/auth nottested; DataElementoriginalcurrentmetadataretained, wholeoldEXEbeforeafterhashnotproved",
-    "InternationalWorkBuddy nativeWSL usablepackage/profile isolation pending: currentfourofficialmetadata200 butfouradvertisedpayloads404/0bytes; publichomepage/clientbytes equalhistory. OfficialClaudeApp Windows payload/LinuxGUI release evidence remains pending.",
+    "InternationalWorkBuddy nativeWSL usablepackage/profile isolation pending: currentfourofficialmetadata200 butfouradvertisedpayloads404/0bytes; publichomepage/clientbytes equalhistory.",
     "Historical boundary only: unregistered suspended-child identity/HANDLE closure and wrong-Linux full-package rollback were not independently established; no retrospective recovery, claim, signal or new execution task is implied.",
     "Correct Windows Android original five retained/full PTY+cleanup and ASCII composite659 verified; prior thirteenth managed Linux lifecycle checkpoint delivered. Isolated native Desktop18/normalMSAA cleanup, fresh offline backup and default Desktop/Remote directory promotion passed. Remaining actual default launch/213-record task retention/managed7338 runtime, official clients and current original Windows-phone token wire retain separate pending scopes.",
     "Managed Linux listener2888962/6300089/ELFd983 current ownership is linked to the Linux native original-one saved credential GET200 receipt; no simultaneous server-side packet trace is claimed. Original XML retained and own Android foreground/forward/Dex cleaned. Original Windows-phone five wire remains pending on the new November 16 boot; historical SQL formatting differences are retained.",
@@ -546,7 +550,7 @@
   "historicalObservationsAreNotCurrentProcessLiveness": true,
   "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsIncluded": false,
   "historical38Unmodified": true,
-  "updatedAt": "2026-11-19T05:52:28.229457+00:00",
+  "updatedAt": "2026-11-20T02:11:47.324395+00:00",
   "currentCompiledInputUnionCount": 731,
   "currentWindowsCoreGateCount": 16,
   "currentWindowsCoreGatesPassed": true,
@@ -584,7 +588,6 @@
   "currentWSLInstalledUniqueProductsIncludingLegacy3": 19,
   "currentWSLDeepSeekInstalledProduct": "Official Harness Web/CLI0.2.2-rc.1",
   "currentDeepSeekLinuxDesktopOfficialReleaseUnsupported": true,
-  "currentClaudeLinuxDesktopPlatformAndPackageVerified": false,
   "currentWindowsAndroidMediumTargetIdentityVerified": true,
   "historicalPre20AbsoluteAVDFingerprintProven": false,
   "correctWindowsCurrent21NativeBridgeTests": 4,
@@ -785,7 +788,6 @@
   "currentWindowsFreshRuntimeInputsFrozen": true,
   "currentWindowsFreshRuntimeInputFreezeActualExitCode": 0,
   "currentWindowsFreshRuntimeInputFreezeFailureProof": "native/windows/fresh-runtime-input-freeze-attempt1-20261112/actual-root-execution-safe.json",
-  "currentWindowsClaudeOriginalAttemptsCurrentAbsenceProof": "native/windows/claude-current-readonly-20261112T1510/current-completion-safe.json",
   "currentOfficialMissingPlatformProof": "sources/official-platform-current-20261112T1500/final-current-official-availability-safe.json",
   "currentWindowsFreshRuntimeInputFreezeProof": "native/windows/fresh-runtime-input-freeze-success-20261112T1538/actual-root-execution-safe.json",
   "currentWindowsFreshRuntimeInputSha256": "b364598c896cbcd8f4c7a70129a3ecbb6088f8930a0ea591a3860aaba6c7f86f",
@@ -842,29 +844,7 @@
   "currentInternationalWorkBuddyOfficialHomepageAndClientsBytesEqualHistory": true,
   "currentInternationalWorkBuddyLinuxInstalled": false,
   "currentInternationalWorkBuddyLinuxActualProfileNamespaceVerified": false,
-  "currentClaudeOfficialWindowsPayloadPreparationProof": "native/windows/claude-current-payload-20261113/final-claude-payload-preparation-safe.json",
-  "currentClaudeOfficialWindowsPayloadPreparationObservedAtUtc": "2026-11-12T22:39:08.253479+00:00",
-  "currentClaudeStoreCatalogPackageVersions": [
-    "5.11492.0.0"
-  ],
-  "currentClaudeStoreCatalogDiffersFromHistorical5123120": true,
-  "currentClaudeWinGetIndependentChannelVersion": "3.6556.2",
-  "currentClaudeOfficialX64PayloadDownloadExitCodes": [
-    35,
-    35
-  ],
-  "currentClaudeOfficialX64PayloadHttpStatuses": [
-    null,
-    null
-  ],
-  "currentClaudeOfficialX64PayloadBytesReceived": [
-    0,
-    0
-  ],
-  "currentClaudeOfficialApplicationPayloadPrepared": false,
-  "currentClaudeInstallationVerified": false,
   "historicalWindowsStoreBootstrapperActualExitCode": 1612,
-  "currentClaudeNativeInvocationCountInPayloadPreparation": 0,
   "prior607EleventhContinuationCheckpointDelivered": true,
   "currentMergedWorktreeCleanupProof": "maintenance/workspace-current/20261113/actual-local-worktree-cleanup-safe.json",
   "currentMergedRemoteBranchCleanupProof": "maintenance/workspace-current/20261113/actual-remote-branch-cleanup-safe.json",
@@ -923,8 +903,6 @@
   "currentWindowsPersistentFileWorkerActualStartupVerified": true,
   "currentWindowsNativeWorkerAstFailureObserved": true,
   "currentWindowsNativeWorkerAstFollowupProof": "native/windows/interop-memory-investigation-20261113/syntax-diagnostic-and-followup-safe.json",
-  "currentClaudeLinuxMcpDocumentationMentionsLinux": true,
-  "currentClaudeLinuxMcpDocumentationProof": "sources/claude-linux-current-mcp-20261113/source-binding-and-vendor-boundary-safe.json",
   "lastWindowsOwnedFileWorkerBootstrapExitZeroObserved": true,
   "lastWindowsOwnedFileWorkerBootstrapReadyWasTransient": false,
   "currentWindowsOwnedFileWorkerHeartbeatFixPrepared": true,
@@ -937,10 +915,6 @@
   "currentWindowsFreshOriginalGuiAndCdpAncestorHandlesVerified": true,
   "currentWindowsFreshOriginalGuiAndCdpAncestorHandlesCount": 2,
   "currentWindowsGuiAndCdpObservationIsDesktop18Acceptance": false,
-  "currentWindowsNativeCurrentClaudeDownloadProof": "native/windows/claude-native-current-payload-20261113/native-official-payload-failure-scope-safe.json",
-  "currentWindowsNativeCurrentClaudeDownloadCollectorOsExitCode": 13,
-  "currentWindowsNativeCurrentClaudeDownloadSystemCurlExitCode": 35,
-  "currentWindowsNativeCurrentClaudeDownloadBytes": 0,
   "currentWindowsPersistentFileWorkerCompletedJobsObservedCount": 10,
   "currentWindowsPersistentFileWorkerObservedJobOsExitCodes": [
     0,
@@ -983,12 +957,6 @@
   "currentWindowsAndroidFiveCurrentNativeCredentialGetCount": null,
   "currentWindowsAndroidCurrent7337SavedCredentialHttpGetVerified": false,
   "currentWindowsAndroidPrivatePortsReserved": false,
-  "currentWindowsClaudeOriginalUserProxyTransportProof": "native/windows/claude-user-proxy-transport-20261113/safe-derived-scope.json",
-  "currentWindowsClaudeForcedOriginalUserProxyDownloadCollectorOsExitCode": 13,
-  "currentWindowsClaudeForcedOriginalUserProxyDownloadChildOsExitCode": 13,
-  "currentWindowsClaudeForcedOriginalUserProxyDownloadWebExceptionStatus": "SendFailure",
-  "currentWindowsClaudeForcedOriginalUserProxyDownloadHttpStatus": null,
-  "currentWindowsClaudeForcedOriginalUserProxyDownloadBytes": 0,
   "currentWindowsNormalTrayQuitProof": "native/windows/original-gui-msaa-normal-exit-20261113/independent-assembly-binding-proof-safe.json",
   "currentWindowsNormalTrayQuitObservedAtUtc": "2026-11-13T14:56:30.4286338Z",
   "currentWindowsOriginalGuiNormalNativeExitCode": 0,
@@ -1094,5 +1062,49 @@
     "lastObservedAtUtc": "2026-11-19T05:52:28.148101+00:00",
     "original7337ElfAndProcessExact": true,
     "cleanupExecutedOnce": true
-  }
+  },
+  "historicalBefore20261119_currentClaudeLinuxDesktopPlatformAndPackageVerified": false,
+  "historicalBefore20261119_currentWindowsClaudeOriginalAttemptsCurrentAbsenceProof": "native/windows/claude-current-readonly-20261112T1510/current-completion-safe.json",
+  "historicalBefore20261119_currentClaudeOfficialWindowsPayloadPreparationProof": "native/windows/claude-current-payload-20261113/final-claude-payload-preparation-safe.json",
+  "historicalBefore20261119_currentClaudeOfficialWindowsPayloadPreparationObservedAtUtc": "2026-11-12T22:39:08.253479+00:00",
+  "historicalBefore20261119_currentClaudeStoreCatalogPackageVersions": [
+    "5.11492.0.0"
+  ],
+  "historicalBefore20261119_currentClaudeStoreCatalogDiffersFromHistorical5123120": true,
+  "historicalBefore20261119_currentClaudeWinGetIndependentChannelVersion": "3.6556.2",
+  "historicalBefore20261119_currentClaudeOfficialX64PayloadDownloadExitCodes": [
+    35,
+    35
+  ],
+  "historicalBefore20261119_currentClaudeOfficialX64PayloadHttpStatuses": [
+    null,
+    null
+  ],
+  "historicalBefore20261119_currentClaudeOfficialX64PayloadBytesReceived": [
+    0,
+    0
+  ],
+  "historicalBefore20261119_currentClaudeOfficialApplicationPayloadPrepared": false,
+  "historicalBefore20261119_currentClaudeInstallationVerified": false,
+  "historicalBefore20261119_currentClaudeNativeInvocationCountInPayloadPreparation": 0,
+  "historicalBefore20261119_currentClaudeLinuxMcpDocumentationMentionsLinux": true,
+  "historicalBefore20261119_currentClaudeLinuxMcpDocumentationProof": "sources/claude-linux-current-mcp-20261113/source-binding-and-vendor-boundary-safe.json",
+  "historicalBefore20261119_currentWindowsNativeCurrentClaudeDownloadProof": "native/windows/claude-native-current-payload-20261113/native-official-payload-failure-scope-safe.json",
+  "historicalBefore20261119_currentWindowsNativeCurrentClaudeDownloadCollectorOsExitCode": 13,
+  "historicalBefore20261119_currentWindowsNativeCurrentClaudeDownloadSystemCurlExitCode": 35,
+  "historicalBefore20261119_currentWindowsNativeCurrentClaudeDownloadBytes": 0,
+  "historicalBefore20261119_currentWindowsClaudeOriginalUserProxyTransportProof": "native/windows/claude-user-proxy-transport-20261113/safe-derived-scope.json",
+  "historicalBefore20261119_currentWindowsClaudeForcedOriginalUserProxyDownloadCollectorOsExitCode": 13,
+  "historicalBefore20261119_currentWindowsClaudeForcedOriginalUserProxyDownloadChildOsExitCode": 13,
+  "historicalBefore20261119_currentWindowsClaudeForcedOriginalUserProxyDownloadWebExceptionStatus": "SendFailure",
+  "historicalBefore20261119_currentWindowsClaudeForcedOriginalUserProxyDownloadHttpStatus": null,
+  "historicalBefore20261119_currentWindowsClaudeForcedOriginalUserProxyDownloadBytes": 0,
+  "currentClaudeInstallationVerified": true,
+  "currentClaudeLinuxDesktopPlatformAndPackageVerified": true,
+  "currentClaudeOfficialInstallationProof": "native/claude/20261119-official-installations/summary-safe.json",
+  "currentWindowsClaudeRegisteredPackageVersion": "5.11492.5.0",
+  "currentClaudeInstalledApplicationVersion": "5.11492.5",
+  "currentClaudeWindowsIndependentGuiVerified": false,
+  "currentClaudeLinuxNativeGuiNormalExitVerified": true,
+  "currentClaudeAccountOrModelAvailabilityVerified": false
 }

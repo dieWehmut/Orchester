@@ -1,0 +1,12 @@
+{
+  "packageName": "@ant/desktop",
+  "productName": "Claude",
+  "asarPackageVersion": "5.11492.5",
+  "dpkgExitCode": 0,
+  "dpkgOutput": "claude-desktop\t5.11492.5\tinstall ok installed",
+  "packagedElectronRuntimeVersion": "45.2.1",
+  "nativeProcessCount": 0,
+  "allHeldProcessesTerminal": true,
+  "receiptSuccess": true,
+  "controllerSHA256": "279819ec1eae15cf9c2250df9520a8d5da54fde07e451249f5286604484d0a4c"
+}

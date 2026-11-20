@@ -1,0 +1,21 @@
+{
+    "status":  "fresh-post-official-Store-native-install-Appx-observation",
+    "observedAtUtc":  "2026-11-19T06:01:06.7130687Z",
+    "nativeInstallerExitCode":  0,
+    "currentUserPackageCount":  1,
+    "currentUserPackages":  [
+                                {
+                                    "name":  "AnthropicPBC.Claude",
+                                    "version":  "5.11492.5.0",
+                                    "packageFullName":  "AnthropicPBC.Claude_5.11492.5.0_x64__fnn82j28hfe8t",
+                                    "familyName":  "AnthropicPBC.Claude_fnn82j28hfe8t",
+                                    "installLocation":  "C:\\Program Files\\WindowsApps\\AnthropicPBC.Claude_5.11492.5.0_x64__fnn82j28hfe8t",
+                                    "status":  "Ok",
+                                    "publisher":  "CN=0ED83B57-1FA9-465C-98F8-41F190D0DF7F",
+                                    "signatureKind":  "Store"
+                                }
+                            ],
+    "installedFilesNotYetVerified":  true,
+    "privateProfileContentsRead":  false,
+    "processSignals":  0
+}

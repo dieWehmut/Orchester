@@ -1,0 +1,32 @@
+{
+  "observedAtUtc": "2026-11-16T10:07:30.886749+00:00",
+  "keyFingerprint": "31DDDE24DDFAB679F42D7BD2BAA929FF1A7ECACE",
+  "keyFingerprintMatchesVendorSupport": true,
+  "gpgvExit": 0,
+  "validSig": "[GNUPG:] NEWSIG\n[GNUPG:] KEY_CONSIDERED 31DDDE24DDFAB679F42D7BD2BAA929FF1A7ECACE 0\n[GNUPG:] SIG_ID lIyWkNk03bRpp9SEgqNlJS4gewA 2026-11-14 1794614789\n[GNUPG:] GOODSIG BAA929FF1A7ECACE Anthropic Claude Code Release Signing <security@anthropic.com>\n[GNUPG:] VALIDSIG 31DDDE24DDFAB679F42D7BD2BAA929FF1A7ECACE 2026-11-14 1794614789 0 4 0 1 10 01 31DDDE24DDFAB679F42D7BD2BAA929FF1A7ECACE\n[GNUPG:] VERIFICATION_COMPLIANCE_MODE 23",
+  "repositoryValidUntil": "Sat, 21 Nov 2026 00:01:47 UTC",
+  "repositoryNotExpired": true,
+  "packagesSha256": "f3cc31278f67ef11687864b3f05a5e7274403d5e10eaa9fe9b02576a2ffc22fd",
+  "packagesMatchesSignedRelease": true,
+  "selectedPackage": {
+    "Package": "claude-desktop",
+    "Version": "5.11492.5",
+    "Architecture": "amd64",
+    "Maintainer": "Anthropic PBC <support@anthropic.com>",
+    "Installed-Size": "641188",
+    "Depends": "libgtk-3-0, libnotify4, libnss3, xdg-utils, libatspi2.0-0, libdrm2, libgbm1, libxcb-dri3-0, libsecret-1-0, kde-cli-tools | kde-runtime | trash-cli | libglib2.0-bin | gvfs, libc6 (>= 2.34), libxtst6, libuuid1, libpipewire-0.3-0, xdg-desktop-portal, xdg-desktop-portal-gtk | xdg-desktop-portal-gnome | xdg-desktop-portal-kde",
+    "Recommends": "libasound2t64 | libasound2 | pulseaudio, libayatana-appindicator3-1 | libappindicator3-1, ca-certificates, gnome-keyring | plasma-workspace, bubblewrap, socat, openssh-client, qemu-system-x86, ovmf, virtiofsd",
+    "Suggests": "gnome-keyring, lsb-release",
+    "Filename": "pool/main/c/claude-desktop/claude-desktop_5.11492.5_amd64.deb",
+    "Size": "183335272",
+    "MD5sum": "960eac02a12429a4c47e3e91455f1223",
+    "SHA1": "61fdb9cb6c19dd4d67bdf2e3d0c32be51fccd699",
+    "SHA256": "b96208b207e450b740f7dbe304f6077fed80e7f3d37ddd545991c4e8201564cf",
+    "Section": "utils",
+    "Priority": "optional",
+    "Homepage": "https://claude.ai",
+    "Description": "Desktop application for Claude.ai"
+  },
+  "selectedUrl": "https://downloads.claude.ai/claude-desktop/apt/stable/pool/main/c/claude-desktop/claude-desktop_5.11492.5_amd64.deb",
+  "installed": false
+}

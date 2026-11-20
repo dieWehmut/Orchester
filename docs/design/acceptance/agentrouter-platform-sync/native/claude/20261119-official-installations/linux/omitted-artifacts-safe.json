@@ -1,0 +1,133 @@
+{
+  "schemaVersion": 1,
+  "artifacts": [
+    {
+      "sourceId": "deb-5.11492.5",
+      "sourceFileName": "claude-desktop_5.11492.5_amd64.deb",
+      "bytes": 183335272,
+      "sha256": "b96208b207e450b740f7dbe304f6077fed80e7f3d37ddd545991c4e8201564cf",
+      "excluded": true,
+      "reason": "Official binary package excluded",
+      "sourceUrl": "https://downloads.claude.ai/claude-desktop/apt/stable/pool/main/c/claude-desktop/claude-desktop_5.11492.5_amd64.deb"
+    },
+    {
+      "sourceId": "apt-install-stdout",
+      "sourceFileName": "apt-install.stdout.log",
+      "bytes": 8498,
+      "sha256": "32b01e0d68a36b6c8d2f7615302120cb734213bf29959309b7f335401f2a5aa1",
+      "excluded": true,
+      "reason": "Private raw native output excluded"
+    },
+    {
+      "sourceId": "apt-install-stderr",
+      "sourceFileName": "apt-install.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "excluded": true,
+      "reason": "Private raw native output excluded"
+    },
+    {
+      "sourceId": "apt-simulation-stdout",
+      "sourceFileName": "apt-simulation.stdout.log",
+      "bytes": 4072,
+      "sha256": "2390d51897264fedc19d2eb18f78409db33835e8dca91e138c181cc4b4a3542e",
+      "excluded": true,
+      "reason": "Private raw native output excluded"
+    },
+    {
+      "sourceId": "apt-simulation-stderr",
+      "sourceFileName": "apt-simulation.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "excluded": true,
+      "reason": "Private raw native output excluded"
+    },
+    {
+      "sourceId": "version-stdout",
+      "sourceFileName": "version.stdout.private.log",
+      "bytes": 10,
+      "sha256": "3f7bf19cc7b3e374f323d1197e6b958eddbd240f4b67aefc34ee546e6edd2190",
+      "excluded": true,
+      "reason": "Private raw native output excluded"
+    },
+    {
+      "sourceId": "version-stderr",
+      "sourceFileName": "version.stderr.private.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "excluded": true,
+      "reason": "Private raw native output excluded"
+    },
+    {
+      "sourceId": "gui-stdout",
+      "sourceFileName": "native.stdout.private.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "excluded": true,
+      "reason": "Private raw native output excluded"
+    },
+    {
+      "sourceId": "gui-stderr",
+      "sourceFileName": "native.stderr.private.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "excluded": true,
+      "reason": "Private raw native output excluded"
+    },
+    {
+      "sourceId": "own-WSLg-window-image",
+      "sourceFileName": "own-fresh-profile-window.private.png",
+      "bytes": 44207,
+      "sha256": "0513b5492d70ad5d7630a8245e9e930ee7964b773a3b997eb039b00d378a3ee6",
+      "excluded": true,
+      "reason": "Private image bytes excluded; historical visual observation only"
+    },
+    {
+      "sourceId": "installed-native-ELF",
+      "bytes": 234466632,
+      "sha256": "fe6219735b2e67422a9a23de2fc35371b09980531601c019b7cc2b001e29c7a8",
+      "excluded": true,
+      "representation": "historical-native-receipt-field",
+      "recordedIn": "evidence/20261116/install-result-safe.json"
+    },
+    {
+      "sourceId": "installed-ASAR",
+      "sha256": "33a8a05f5704a7159711c7aa9ab99086ea2b04f17ac9e494fb1df54c19a142e6",
+      "excluded": true,
+      "representation": "historical-native-receipt-field",
+      "recordedIn": "evidence/20261116/native-version-result-safe.json",
+      "byteSizeNotRecordedInOriginalReceipt": true,
+      "packageExtractionSnapshotBytes": 88571006,
+      "packageExtractionSnapshotSha256": "33a8a05f5704a7159711c7aa9ab99086ea2b04f17ac9e494fb1df54c19a142e6",
+      "packageExtractionSnapshotMetadataObservedAtUtc": "2026-11-19T06:25:32.208348+00:00",
+      "packageExtractionSnapshotIsNativeInstallReceipt": false,
+      "packageExtractionSnapshotHashMatchesNativeReceipt": true
+    },
+    {
+      "sourceId": "official-Linux-documentation-HTML",
+      "sourceFileName": "claude-linux-docs.body",
+      "bytes": 326057,
+      "sha256": "3c7736953c2dad1dad1123ab98be69d4916e10913c9770b626ee0fbec8c36440",
+      "excluded": true,
+      "reason": "Public documentation body omitted; source URL/hash/size retained instead of full-page content",
+      "sourceUrl": "https://code.claude.com/docs/en/desktop-linux"
+    },
+    {
+      "sourceId": "derived-public-signing-keyring",
+      "sourceFileName": "claude-desktop-keyring.gpg",
+      "bytes": 1188,
+      "sha256": "0e122272125dd4bed96be0034cd95c84e9db07b4cf9bcddbe7c3ae01f3580646",
+      "excluded": true,
+      "reason": "Binary public-keyring export omitted; archive includes original ASCII key for offline dearmor"
+    }
+  ],
+  "freshProfiles": {
+    "excluded": true,
+    "contentsReadForArchive": false
+  },
+  "userProfiles": {
+    "excluded": true,
+    "contentsReadForArchive": false
+  },
+  "binaryOrRawLogOrImageBytesArchived": false
+}

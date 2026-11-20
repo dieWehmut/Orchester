@@ -1,0 +1,186 @@
+from pathlib import Path
+from datetime import datetime, timezone
+import os, sys, json, hashlib, ctypes as C, ctypes.util, subprocess, select, time, signal, struct, zlib
+
+BASE = Path(__file__).parent
+EXPECTED = 'fe6219735b2e67422a9a23de2fc35371b09980531601c019b7cc2b001e29c7a8'
+EXPECTED_ASAR = '33a8a05f5704a7159711c7aa9ab99086ea2b04f17ac9e494fb1df54c19a142e6'
+def now(): return datetime.now(timezone.utc).isoformat()
+def sha(p):
+    h=hashlib.sha256()
+    with Path(p).open('rb') as f:
+        while b:=f.read(1024*1024): h.update(b)
+    return h.hexdigest()
+def save(name,value):
+    p=BASE/(name+'.tmp');p.write_text(json.dumps(value,indent=2)+'\n');os.chmod(p,0o600);os.replace(p,BASE/name)
+def stat(pid):
+    s=Path(f'/proc/{pid}/stat').read_text();v=s[s.rindex(')')+2:].split()
+    return {'pid':pid,'ppid':int(v[1]),'startTicks':v[19]}
+
+X=C.CDLL(ctypes.util.find_library('X11'))
+Display=C.c_void_p; Window=C.c_ulong; Atom=C.c_ulong
+class Attr(C.Structure):
+    _fields_=[('x',C.c_int),('y',C.c_int),('width',C.c_int),('height',C.c_int),('border_width',C.c_int),('depth',C.c_int),('visual',C.c_void_p),('root',Window),('cls',C.c_int),('bit_gravity',C.c_int),('win_gravity',C.c_int),('backing_store',C.c_int),('backing_planes',C.c_ulong),('backing_pixel',C.c_ulong),('save_under',C.c_int),('colormap',C.c_ulong),('map_installed',C.c_int),('map_state',C.c_int),('all_event_masks',C.c_long),('your_event_mask',C.c_long),('do_not_propagate_mask',C.c_long),('override_redirect',C.c_int),('screen',C.c_void_p)]
+class Key(C.Structure):
+    _fields_=[('type',C.c_int),('serial',C.c_ulong),('send_event',C.c_int),('display',Display),('window',Window),('root',Window),('subwindow',Window),('time',C.c_ulong),('x',C.c_int),('y',C.c_int),('x_root',C.c_int),('y_root',C.c_int),('state',C.c_uint),('keycode',C.c_uint),('same_screen',C.c_int)]
+class Event(C.Union): _fields_=[('xkey',Key),('pad',C.c_long*24)]
+class XImage(C.Structure):
+    _fields_=[('width',C.c_int),('height',C.c_int),('xoffset',C.c_int),('format',C.c_int),('data',C.c_void_p),('byte_order',C.c_int),('bitmap_unit',C.c_int),('bitmap_bit_order',C.c_int),('bitmap_pad',C.c_int),('depth',C.c_int),('bytes_per_line',C.c_int),('bits_per_pixel',C.c_int),('red_mask',C.c_ulong),('green_mask',C.c_ulong),('blue_mask',C.c_ulong)]
+X.XOpenDisplay.argtypes=[C.c_char_p];X.XOpenDisplay.restype=Display
+X.XDefaultRootWindow.argtypes=[Display];X.XDefaultRootWindow.restype=Window
+X.XInternAtom.argtypes=[Display,C.c_char_p,C.c_int];X.XInternAtom.restype=Atom
+X.XQueryTree.argtypes=[Display,Window,C.POINTER(Window),C.POINTER(Window),C.POINTER(C.POINTER(Window)),C.POINTER(C.c_uint)];X.XQueryTree.restype=C.c_int
+X.XGetWindowAttributes.argtypes=[Display,Window,C.POINTER(Attr)];X.XGetWindowAttributes.restype=C.c_int
+X.XGetWindowProperty.argtypes=[Display,Window,Atom,C.c_long,C.c_long,C.c_int,Atom,C.POINTER(Atom),C.POINTER(C.c_int),C.POINTER(C.c_ulong),C.POINTER(C.c_ulong),C.POINTER(C.POINTER(C.c_ubyte))];X.XGetWindowProperty.restype=C.c_int
+X.XFree.argtypes=[C.c_void_p]
+X.XFlush.argtypes=[Display];X.XSync.argtypes=[Display,C.c_int]
+X.XGetImage.argtypes=[Display,Window,C.c_int,C.c_int,C.c_uint,C.c_uint,C.c_ulong,C.c_int];X.XGetImage.restype=C.POINTER(XImage)
+X.XDestroyImage.argtypes=[C.POINTER(XImage)]
+X.XKeysymToKeycode.argtypes=[Display,C.c_ulong];X.XKeysymToKeycode.restype=C.c_ubyte
+X.XSendEvent.argtypes=[Display,Window,C.c_int,C.c_long,C.POINTER(Event)];X.XSendEvent.restype=C.c_int
+errors=[]
+@C.CFUNCTYPE(C.c_int,Display,C.c_void_p)
+def onerror(d,e): errors.append(True);return 0
+X.XSetErrorHandler.argtypes=[C.c_void_p];X.XSetErrorHandler(onerror)
+display=X.XOpenDisplay(os.environ.get('DISPLAY',':0').encode())
+assert display,'Actual WSLg X11 display unavailable'
+root=X.XDefaultRootWindow(display)
+pidatom=X.XInternAtom(display,b'_NET_WM_PID',False)
+nameatom=X.XInternAtom(display,b'_NET_WM_NAME',False)
+def prop(w,atom):
+    typ=Atom();fmt=C.c_int();n=C.c_ulong();after=C.c_ulong();p=C.POINTER(C.c_ubyte)()
+    rc=X.XGetWindowProperty(display,w,atom,0,256,False,0,C.byref(typ),C.byref(fmt),C.byref(n),C.byref(after),C.byref(p))
+    if rc or not p:return None
+    try:
+        if fmt.value==32:return list(C.cast(p,C.POINTER(C.c_ulong))[:n.value])
+        if fmt.value==8:return C.string_at(p,n.value)
+    finally:X.XFree(p)
+def children(w):
+    r=Window();par=Window();p=C.POINTER(Window)();n=C.c_uint()
+    if not X.XQueryTree(display,w,C.byref(r),C.byref(par),C.byref(p),C.byref(n)):return []
+    try:return list(p[:n.value])
+    finally:
+        if p:X.XFree(p)
+def window_rows(owned):
+    rows=[];todo=[root];seen=set()
+    while todo:
+        w=todo.pop()
+        if w in seen:continue
+        seen.add(w);todo.extend(children(w))
+        pid=prop(w,pidatom)
+        if not pid or pid[0] not in owned:continue
+        a=Attr()
+        if not X.XGetWindowAttributes(display,w,C.byref(a)):continue
+        name=prop(w,nameatom) or b''
+        rows.append({'window':w,'pid':pid[0],'mapped':a.map_state==2,'width':a.width,'height':a.height,'titleBytes':len(name),'titleSHA256':hashlib.sha256(name).hexdigest(),'titleContainsClaude':b'claude' in name.lower()})
+    X.XSync(display,False)
+    return rows
+def screenshot(row):
+    im=X.XGetImage(display,row['window'],0,0,row['width'],row['height'],0xffffffffffffffff,2)
+    assert im,'Own mapped X11 window image unavailable'
+    try:
+        a=im.contents;raw=C.string_at(a.data,a.bytes_per_line*a.height)
+        assert a.bits_per_pixel in (24,32)
+        masks=[a.red_mask,a.green_mask,a.blue_mask]
+        shifts=[(m&-m).bit_length()-1 for m in masks]
+        width=a.width;height=a.height;step=a.bits_per_pixel//8
+        endian='little' if a.byte_order==0 else 'big';data=bytearray();unique=set()
+        for y in range(height):
+            data.append(0)
+            for x in range(width):
+                off=y*a.bytes_per_line+x*step;pixel=int.from_bytes(raw[off:off+step],endian)
+                rgb=tuple(((pixel&m)>>s)*255//(m>>s) for m,s in zip(masks,shifts))
+                data.extend(rgb)
+                if x%16==0 and y%16==0:unique.add(rgb)
+        def chunk(kind,data):return struct.pack('>I',len(data))+kind+data+struct.pack('>I',zlib.crc32(kind+data)&0xffffffff)
+        png=b'\x89PNG\r\n\x1a\n'+chunk(b'IHDR',struct.pack('>IIBBBBB',width,height,8,2,0,0,0))+chunk(b'IDAT',zlib.compress(bytes(data)))+chunk(b'IEND',b'')
+        p=BASE/'own-fresh-profile-window.private.png';p.write_bytes(png);os.chmod(p,0o600)
+        return {'path':str(p),'bytes':len(png),'sha256':hashlib.sha256(png).hexdigest(),'sampledDistinctColors':len(unique),'pixelFormat':a.bits_per_pixel,'width':width,'height':height,'actualXGetImage':True}
+    finally:X.XDestroyImage(im)
+def ctrl_q(row):
+    keys=[]
+    for typ in (2,3):
+        ev=Event();k=ev.xkey;k.type=typ;k.send_event=True;k.display=display;k.window=row['window'];k.root=root;k.state=4;k.keycode=X.XKeysymToKeycode(display,ord('q'));k.same_screen=True
+        keys.append(X.XSendEvent(display,row['window'],True,1 if typ==2 else 2,C.byref(ev)))
+    X.XFlush(display);X.XSync(display,False)
+    return {'method':'XSendEvent Ctrl+Q to owned product window','window':row['window'],'pid':row['pid'],'eventsAccepted':keys,'atUtc':now(),'sourceVerifiedAccelerator':'Ctrl+Q','globalInputActions':0}
+
+assert os.getuid()==1000 and hasattr(os,'pidfd_open')
+assert sha('/usr/lib/claude-desktop/claude-desktop')==EXPECTED
+assert sha('/usr/lib/claude-desktop/resources/app.asar')==EXPECTED_ASAR
+prior=[]
+for p in Path('/proc').iterdir():
+    if p.name.isdigit():
+        try:
+            if os.readlink(p/'exe').startswith('/usr/lib/claude-desktop/'):prior.append(int(p.name))
+        except OSError:pass
+assert not prior,'Existing native Claude processes; refuse duplicate GUI start'
+profile=BASE/'fresh-profile';profile.mkdir(mode=0o700)
+for name in ['home','config','cache','data','claude-code','electron']:(profile/name).mkdir(mode=0o700)
+environment={k:os.environ[k] for k in ['DISPLAY','WAYLAND_DISPLAY','XDG_RUNTIME_DIR','DBUS_SESSION_BUS_ADDRESS','XAUTHORITY'] if k in os.environ}
+environment.update({'HOME':str(profile/'home'),'USER':'<LOCAL_ACCOUNT>','LOGNAME':'<LOCAL_ACCOUNT>','PATH':'/usr/bin:/bin','LANG':'C.UTF-8','XDG_CONFIG_HOME':str(profile/'config'),'XDG_CACHE_HOME':str(profile/'cache'),'XDG_DATA_HOME':str(profile/'data'),'CLAUDE_CONFIG_DIR':str(profile/'claude-code')})
+libc=C.CDLL(None,use_errno=True);assert libc.prctl(36,1,0,0,0)==0
+argv=['/usr/bin/claude-desktop','--user-data-dir='+str(profile/'electron'),'--password-store=basic','--ozone-platform=x11']
+stdout=BASE/'native.stdout.private.log';stderr=BASE/'native.stderr.private.log'
+out=stdout.open('wb');err=stderr.open('wb');os.chmod(stdout,0o600);os.chmod(stderr,0o600)
+started=now();process=subprocess.Popen(argv,stdin=subprocess.DEVNULL,stdout=out,stderr=err,env=environment,start_new_session=True)
+held={process.pid:{'fd':os.pidfd_open(process.pid),**stat(process.pid),'nativeElf':True}}
+status={'schemaVersion':1,'status':'running','startedAtUtc':started,'controller':stat(os.getpid()),'root':{k:v for k,v in held[process.pid].items() if k!='fd'},'profileInitiallyEmpty':True,'uid':os.getuid(),'originalPidfdsHeld':True,'guiLaunches':1,'controlFile':str(BASE/'control.json')}
+save('native-gui-status-safe.json',status);print(json.dumps(status),flush=True)
+def capture_children():
+    states={}
+    for p in Path('/proc').iterdir():
+        if p.name.isdigit():
+            try:states[int(p.name)]=stat(int(p.name))
+            except OSError:pass
+    known=set(held)|{os.getpid()};changed=True
+    while changed:
+        changed=False
+        for pid,state in states.items():
+            if state['ppid'] not in known or pid in known:continue
+            known.add(pid);changed=True
+            try:
+                fd=os.pidfd_open(pid)
+                if stat(pid)['startTicks']!=state['startTicks']:os.close(fd);continue
+                exe=os.readlink(f'/proc/{pid}/exe')
+                held[pid]={'fd':fd,**state,'nativeElf':exe=='/usr/lib/claude-desktop/claude-desktop','executablePath':exe}
+            except OSError:pass
+    return states
+window=None;image=None;actions=[];last=0;initial=time.monotonic();capture_time=None;quit_time=None;observed=[]
+while process.poll() is None:
+    capture_children()
+    if time.monotonic()-last>.4:
+        rows=window_rows(set(held));mapped=[r for r in rows if r['mapped'] and r['width']>=200 and r['height']>=150]
+        last=time.monotonic()
+        if mapped and not window:
+            window=max(mapped,key=lambda r:r['width']*r['height']);capture_time=time.monotonic();observed=rows
+            status.update({'status':'mapped-window-observed','ownedWindow':window,'heldObjectCount':len(held)});save('native-gui-status-safe.json',status);print(json.dumps({'ownMappedWindow':window}),flush=True)
+        if window and not image and time.monotonic()-capture_time>8:
+            current=[r for r in mapped if r['window']==window['window']]
+            if current:
+                window=current[0];image=screenshot(window)
+                status.update({'status':'window-image-captured','image':image});save('native-gui-status-safe.json',status);print(json.dumps({'image':image}),flush=True)
+                actions.append(ctrl_q(window));quit_time=time.monotonic();status.update({'status':'normal-product-quit-sent','quitActions':actions});save('native-gui-status-safe.json',status)
+    control=BASE/'control.json'
+    if control.exists():
+        c=json.loads(control.read_text());control.unlink()
+        if c.get('action')=='quit' and window:actions.append(ctrl_q(window));quit_time=time.monotonic()
+    if time.monotonic()-initial>45 and not window and status['status']!='window-not-yet-observed':
+        status.update({'status':'window-not-yet-observed','heldObjectCount':len(held)});save('native-gui-status-safe.json',status);print(json.dumps({'status':'window-not-yet-observed'}),flush=True)
+    if quit_time and time.monotonic()-quit_time>30 and status['status']!='product-quit-awaiting-exit':
+        status.update({'status':'product-quit-awaiting-exit','ownedWindows':window_rows(set(held))});save('native-gui-status-safe.json',status);print(json.dumps({'status':'product-quit-awaiting-exit'}),flush=True)
+    time.sleep(.03)
+capture_children();actual=process.wait();until=time.monotonic()+30
+while time.monotonic()<until and any(not select.select([r['fd']],[],[],0)[0] for r in held.values()):
+    capture_children();time.sleep(.05)
+terminal=[{k:v for k,v in r.items() if k!='fd'}|{'originalPidfdHeld':True,'terminalByOriginalPidfd':bool(select.select([r['fd']],[],[],0)[0])} for r in held.values()]
+for r in held.values():
+    try:os.waitpid(r['pid'],os.WNOHANG)
+    except ChildProcessError:pass
+out.close();err.close()
+success=actual==0 and bool(window and image and image['sampledDistinctColors']>1) and bool(actions) and all(r['terminalByOriginalPidfd'] for r in terminal)
+result={'schemaVersion':1,'scope':'Actual UID1000 installed native WSLg X11 GUI launch with fresh isolated profile and normal product Ctrl+Q exit','startedAtUtc':started,'finishedAtUtc':now(),'uid':os.getuid(),'installedVersion':Path('/usr/lib/claude-desktop/version').read_text().strip(),'installedElfSHA256':EXPECTED,'installedASARSHA256':EXPECTED_ASAR,'profileInitiallyEmpty':True,'realHomePassed':False,'providerSecretEnvironmentKeysPassed':False,'inheritedEnvironmentKeys':sorted(environment),'display':environment.get('DISPLAY'),'argv':argv,'preexistingClaudeNativeProcessCount':0,'actualNativeGuiLaunches':1,'ownedWindow':window,'ownedWindowObservations':observed,'image':image,'normalProductQuitActions':actions,'signalCleanupActions':[],'actualExitCode':actual,'heldObjects':terminal,'stderrBytes':stderr.stat().st_size,'stderrSHA256':sha(stderr),'stdoutBytes':stdout.stat().st_size,'stdoutSHA256':sha(stdout),'x11ErrorCount':len(errors),'loginOrModelActions':0,'userProfileReads':0,'service7337Actions':0,'success':success}
+save('native-gui-result-safe.json',result);status.update({'status':'complete' if success else 'failed','finishedAtUtc':now(),'actualExitCode':actual,'success':success});save('native-gui-status-safe.json',status)
+for r in held.values():os.close(r['fd'])
+print(json.dumps(result),flush=True)
+raise SystemExit(0 if success else 1)

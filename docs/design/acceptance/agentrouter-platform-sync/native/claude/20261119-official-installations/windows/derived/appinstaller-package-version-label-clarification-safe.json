@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "status": "derived-original-start-package-version-label-clarification",
+  "originalStartReceiptsPreserved": true,
+  "showStartReportedWingetVersion": "1.29.379.0",
+  "installStartReportedWingetVersion": "1.29.379.0",
+  "actualMeaningOfOriginalWingetVersionField": "Microsoft.DesktopAppInstaller Appx package Version, obtained from Get-AppxPackage; it is not a winget.exe CLI --version observation.",
+  "sourceExpression": "wingetVersion=$pkg[0].Version.ToString()",
+  "appInstallerPackageVersion": "1.29.379.0",
+  "wingetCliVersionIndependentlyObserved": false,
+  "installedClaudeVersionUnaffected": "5.11492.5",
+  "nativeExeIdentityAndExitEvidenceUnchanged": true,
+  "transformation": "Derived label explanation only. No source/start receipt bytes, native outcomes, hashes or dates changed."
+}

@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "status": "optional-independent-Windows-GUI-smoke-not-completed-existing-external-app-retained",
+  "observedAtUtc": "2026-11-19T06:11:31.8367255Z",
+  "existingInstalledImageProcessCount": 6,
+  "existingRootCreatedUtc": "2026-11-19T06:05:01.5002410Z",
+  "existingNativeSessionIds": [
+    1
+  ],
+  "currentParentImageClass": "Windows Explorer; current parent metadata is not original creator-handle provenance",
+  "observerVisibleWindowCount": 0,
+  "existingProcessesCreatedAfterThisTaskInstallerExited": true,
+  "existingProcessesStartedByThisTask": false,
+  "independentGuiSmokeAttemptStartedAnyProcess": false,
+  "duplicateLaunchRejectedBeforeCreateProcess": true,
+  "existingExternalProcessesStoppedOrSignaled": false,
+  "existingUserWindowScreenshotIncluded": false,
+  "privateProfileContentsRead": false,
+  "WindowsVisibleWindowOrNormalGuiExitClaimed": false,
+  "WindowsInstallationVerifiedSeparately": true,
+  "authenticationOrModelAvailabilityClaimed": false,
+  "processSignals": 0,
+  "GUIActions": 0
+}

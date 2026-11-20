@@ -1,0 +1,277 @@
+{
+  "schemaVersion": 1,
+  "scope": "Actual UID1000 installed native WSLg X11 GUI launch with fresh isolated profile and normal product Ctrl+Q exit",
+  "startedAtUtc": "2026-11-19T05:51:55.508580+00:00",
+  "finishedAtUtc": "2026-11-19T05:52:06.038406+00:00",
+  "uid": 1000,
+  "installedVersion": "5.11492.5",
+  "installedElfSHA256": "fe6219735b2e67422a9a23de2fc35371b09980531601c019b7cc2b001e29c7a8",
+  "installedASARSHA256": "33a8a05f5704a7159711c7aa9ab99086ea2b04f17ac9e494fb1df54c19a142e6",
+  "profileInitiallyEmpty": true,
+  "realHomePassed": false,
+  "providerSecretEnvironmentKeysPassed": false,
+  "inheritedEnvironmentKeys": [
+    "CLAUDE_CONFIG_DIR",
+    "DBUS_SESSION_BUS_ADDRESS",
+    "DISPLAY",
+    "HOME",
+    "LANG",
+    "LOGNAME",
+    "PATH",
+    "USER",
+    "WAYLAND_DISPLAY",
+    "XDG_CACHE_HOME",
+    "XDG_CONFIG_HOME",
+    "XDG_DATA_HOME",
+    "XDG_RUNTIME_DIR"
+  ],
+  "display": ":0",
+  "argv": [
+    "/usr/bin/claude-desktop",
+    "--user-data-dir=/tmp/orchester-claude-linux-smoke-20261119-busojqo9/fresh-profile/electron",
+    "--password-store=basic",
+    "--ozone-platform=x11"
+  ],
+  "preexistingClaudeNativeProcessCount": 0,
+  "actualNativeGuiLaunches": 1,
+  "ownedWindow": {
+    "window": 8388612,
+    "pid": 70542,
+    "mapped": true,
+    "width": 1200,
+    "height": 800,
+    "titleBytes": 6,
+    "titleSHA256": "0615570f9ea136946c5dc08a250010320707646f57f72cedab1dfb73d95eade6",
+    "titleContainsClaude": true
+  },
+  "ownedWindowObservations": [
+    {
+      "window": 10485762,
+      "pid": 70542,
+      "mapped": false,
+      "width": 1,
+      "height": 1,
+      "titleBytes": 14,
+      "titleSHA256": "0470e756400c202185b67f1a52d463c424868e2b39add3c6e1c7c7fd20960812",
+      "titleContainsClaude": true
+    },
+    {
+      "window": 8388612,
+      "pid": 70542,
+      "mapped": true,
+      "width": 1200,
+      "height": 800,
+      "titleBytes": 6,
+      "titleSHA256": "0615570f9ea136946c5dc08a250010320707646f57f72cedab1dfb73d95eade6",
+      "titleContainsClaude": true
+    },
+    {
+      "window": 10485761,
+      "pid": 70542,
+      "mapped": false,
+      "width": 10,
+      "height": 10,
+      "titleBytes": 14,
+      "titleSHA256": "0470e756400c202185b67f1a52d463c424868e2b39add3c6e1c7c7fd20960812",
+      "titleContainsClaude": true
+    }
+  ],
+  "image": {
+    "path": "/tmp/orchester-claude-linux-smoke-20261119-busojqo9/own-fresh-profile-window.private.png",
+    "bytes": 44207,
+    "sha256": "0513b5492d70ad5d7630a8245e9e930ee7964b773a3b997eb039b00d378a3ee6",
+    "sampledDistinctColors": 47,
+    "pixelFormat": 32,
+    "width": 1200,
+    "height": 800,
+    "actualXGetImage": true
+  },
+  "normalProductQuitActions": [
+    {
+      "method": "XSendEvent Ctrl+Q to owned product window",
+      "window": 8388612,
+      "pid": 70542,
+      "eventsAccepted": [
+        1,
+        1
+      ],
+      "atUtc": "2026-11-19T05:52:05.665868+00:00",
+      "sourceVerifiedAccelerator": "Ctrl+Q",
+      "globalInputActions": 0
+    }
+  ],
+  "signalCleanupActions": [],
+  "actualExitCode": 0,
+  "heldObjects": [
+    {
+      "pid": 70542,
+      "ppid": 70533,
+      "startTicks": "24473460",
+      "nativeElf": true,
+      "originalPidfdHeld": true,
+      "terminalByOriginalPidfd": true
+    },
+    {
+      "pid": 70545,
+      "ppid": 70542,
+      "startTicks": "24473483",
+      "nativeElf": true,
+      "executablePath": "/usr/lib/claude-desktop/claude-desktop",
+      "originalPidfdHeld": true,
+      "terminalByOriginalPidfd": true
+    },
+    {
+      "pid": 70546,
+      "ppid": 70542,
+      "startTicks": "24473485",
+      "nativeElf": true,
+      "executablePath": "/usr/lib/claude-desktop/claude-desktop",
+      "originalPidfdHeld": true,
+      "terminalByOriginalPidfd": true
+    },
+    {
+      "pid": 70548,
+      "ppid": 70546,
+      "startTicks": "24473491",
+      "nativeElf": true,
+      "executablePath": "/usr/lib/claude-desktop/claude-desktop",
+      "originalPidfdHeld": true,
+      "terminalByOriginalPidfd": true
+    },
+    {
+      "pid": 70568,
+      "ppid": 70533,
+      "startTicks": "24473512",
+      "nativeElf": false,
+      "executablePath": "/usr/lib/claude-desktop/chrome_crashpad_handler",
+      "originalPidfdHeld": true,
+      "terminalByOriginalPidfd": true
+    },
+    {
+      "pid": 70618,
+      "ppid": 70545,
+      "startTicks": "24473542",
+      "nativeElf": true,
+      "executablePath": "/usr/lib/claude-desktop/claude-desktop",
+      "originalPidfdHeld": true,
+      "terminalByOriginalPidfd": true
+    },
+    {
+      "pid": 70621,
+      "ppid": 70542,
+      "startTicks": "24473543",
+      "nativeElf": true,
+      "executablePath": "/usr/lib/claude-desktop/claude-desktop",
+      "originalPidfdHeld": true,
+      "terminalByOriginalPidfd": true
+    },
+    {
+      "pid": 70634,
+      "ppid": 70548,
+      "startTicks": "24473546",
+      "nativeElf": true,
+      "executablePath": "/usr/lib/claude-desktop/claude-desktop",
+      "originalPidfdHeld": true,
+      "terminalByOriginalPidfd": true
+    },
+    {
+      "pid": 70645,
+      "ppid": 70542,
+      "startTicks": "24473551",
+      "nativeElf": true,
+      "executablePath": "/usr/lib/claude-desktop/claude-desktop",
+      "originalPidfdHeld": true,
+      "terminalByOriginalPidfd": true
+    },
+    {
+      "pid": 70665,
+      "ppid": 70645,
+      "startTicks": "24473556",
+      "nativeElf": false,
+      "executablePath": "/usr/bin/bash",
+      "originalPidfdHeld": true,
+      "terminalByOriginalPidfd": true
+    },
+    {
+      "pid": 70675,
+      "ppid": 70665,
+      "startTicks": "24473560",
+      "nativeElf": false,
+      "executablePath": "/usr/bin/id",
+      "originalPidfdHeld": true,
+      "terminalByOriginalPidfd": true
+    },
+    {
+      "pid": 70676,
+      "ppid": 70665,
+      "startTicks": "24473560",
+      "nativeElf": false,
+      "executablePath": "/usr/bin/bash",
+      "originalPidfdHeld": true,
+      "terminalByOriginalPidfd": true
+    },
+    {
+      "pid": 70677,
+      "ppid": 70676,
+      "startTicks": "24473560",
+      "nativeElf": false,
+      "executablePath": "/usr/bin/python3.10",
+      "originalPidfdHeld": true,
+      "terminalByOriginalPidfd": true
+    },
+    {
+      "pid": 70687,
+      "ppid": 70548,
+      "startTicks": "24473575",
+      "nativeElf": true,
+      "executablePath": "/usr/lib/claude-desktop/claude-desktop",
+      "originalPidfdHeld": true,
+      "terminalByOriginalPidfd": true
+    },
+    {
+      "pid": 70688,
+      "ppid": 70548,
+      "startTicks": "24473575",
+      "nativeElf": true,
+      "executablePath": "/usr/lib/claude-desktop/claude-desktop",
+      "originalPidfdHeld": true,
+      "terminalByOriginalPidfd": true
+    },
+    {
+      "pid": 71184,
+      "ppid": 70548,
+      "startTicks": "24473734",
+      "nativeElf": true,
+      "executablePath": "/usr/lib/claude-desktop/claude-desktop",
+      "originalPidfdHeld": true,
+      "terminalByOriginalPidfd": true
+    }
+  ],
+  "stderrBytes": 0,
+  "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdoutBytes": 0,
+  "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "x11ErrorCount": 0,
+  "loginOrModelActions": 0,
+  "service7337Actions": 0,
+  "success": true,
+  "installedPackageVersion": "5.11492.5",
+  "packagedElectronRuntimeVersion": "45.2.1",
+  "dpkgIdentity": "claude-desktop\t5.11492.5\tinstall ok installed",
+  "testControllerUserProfileReads": 0,
+  "successScope": "Native GUI launch, owned mapped WSLg window and normal product quit only",
+  "renderedState": "Official App unavailable in region page",
+  "renderedStateEvidence": "Visual inspection of own-fresh-profile-window.private.png; no existing user profile or authentication was used",
+  "loginOrModelAvailabilityProven": false,
+  "metadataCorrection": {
+    "atUtc": "2026-11-19T05:53:19.299071+00:00",
+    "originalReceiptFile": "native-gui-result-original-safe.json",
+    "originalReceiptSHA256": "2934e7b4f1c89b226eb8b136ab969c2b96780adf2908a0be26eef803a7267617",
+    "field": "installedVersion",
+    "oldValue": "45.2.1",
+    "oldSource": "/usr/lib/claude-desktop/version is packaged Electron runtime version",
+    "newValue": "5.11492.5",
+    "newSource": "Installed app.asar package.json corroborated by dpkg-query",
+    "guiRerunPerformed": false
+  }
+}

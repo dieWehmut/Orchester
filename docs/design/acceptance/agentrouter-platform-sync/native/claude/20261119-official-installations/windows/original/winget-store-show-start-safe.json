@@ -1,0 +1,13 @@
+{
+    "status":  "native-winget-current-official-Store-show-actually-started",
+    "observedAtUtc":  "2026-11-19T05:58:28.5909400Z",
+    "arguments":  "show --id 9P6K58THS811 --source msstore --exact --accept-source-agreements --disable-interactivity",
+    "wingetVersion":  "1.29.379.0",
+    "wingetImageSha256":  "ce0bb2b4871cb7f41f40d34ad47e8414a426dc5f6a303c14cee335a71d8602ed",
+    "wingetAuthenticodeStatus":  "Valid",
+    "nativePid":  314792,
+    "nativeCreatedFileTimeExact":  "134395415085143474",
+    "originalCreatorAndQueryHandlesHeld":  true,
+    "installOperations":  0,
+    "processSignals":  0
+}
